@@ -3,7 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    addToCart
+    addToCart,
+    viewCart,
+    updateCart,
+    deleteCartItem
 } = require("../controllers/cartController");
 
 // =============================
@@ -17,5 +20,19 @@ router.get("/test", (req, res) => {
 // ADD TO CART
 // =============================
 router.post("/add", addToCart);
+
+// =============================
+// VIEW CART
+// =============================
+router.get("/:user_id", viewCart);
+
+// =============================
+// UPDATE CART
+// =============================
+router.put("/update/:id", updateCart);
+// =============================
+// DELETE CART ITEM
+// =============================
+router.delete("/delete/:id", deleteCartItem);
 
 module.exports = router;
