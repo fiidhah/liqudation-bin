@@ -64,7 +64,83 @@ const addToWishlist = (req, res) => {
     });
 
 };
+// =============================
+// VIEW WISHLIST
+// =============================
+const viewWishlist = (req, res) => {
+
+    const { user_id } = req.params;
+
+    const sql = `
+        SELECT
+            w.wishlist_id,
+            p.product_id,
+            p.product_name,
+            p.description,
+            p.category,
+            p.brand,
+            p.quantity,
+            p.image
+        FROM wishlist w
+        JOIN products p
+        ON w.product_id = p.product_id
+        WHERE w.user_id = ?
+    `;
+
+    db.query(sql, [user_id], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            totalItems: result.length,
+            data: result
+        });
+
+    });
+
+};
+// =============================
+// DELETE WISHLIST ITEM
+// =============================
+const deleteWishlistItem = (req, res) => {
+
+    const { id } = req.params;
+
+    const sql = "DELETE FROM wishlist WHERE wishlist_id = ?";
+
+    db.query(sql, [id], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Wishlist item not found."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Wishlist item deleted successfully."
+        });
+
+    });
+
+};
 
 module.exports = {
-    addToWishlist
+    addToWishlist,
+    viewWishlist,
+    deleteWishlistItem
 };

@@ -3,7 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    addToWishlist
+    addToWishlist,
+    viewWishlist,
+    deleteWishlistItem
 } = require("../controllers/wishlistController");
 
 // =============================
@@ -17,5 +19,13 @@ router.get("/test", (req, res) => {
 // ADD TO WISHLIST
 // =============================
 router.post("/add", addToWishlist);
+// =============================
+// VIEW WISHLIST
+// =============================
+router.get("/:user_id", viewWishlist);
+// =============================
+// DELETE WISHLIST ITEM
+// =============================
+router.delete("/delete/:id", deleteWishlistItem);
 
 module.exports = router;
