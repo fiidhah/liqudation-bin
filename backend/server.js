@@ -12,6 +12,7 @@ const productRoutes = require("./routes/productRoutes");
 const managerRoutes = require("./routes/managerRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -36,6 +37,9 @@ app.use("/api/cart", cartRoutes);
 
 // Wishlist Routes
 app.use("/api/wishlist", wishlistRoutes);
+
+// Order Routes
+app.use("/api/orders", orderRoutes);
 
 // =============================
 // Home Route
