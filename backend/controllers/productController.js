@@ -228,11 +228,64 @@ const deleteProduct = (req, res) => {
     });
 
 };
+// =============================
+// UPDATE PRODUCT PRICE
+// =============================
+const updateProductPrice = (req, res) => {
+
+    const { id } = req.params;
+    const { price } = req.body;
+
+    if (price === undefined || price === null || price === "") {
+        return res.status(400).json({
+            success: false,
+            message: "Price is required."
+        });
+    }
+
+    if (Number(price) < 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Price cannot be negative."
+        });
+    }
+
+    const sql = `
+        UPDATE products
+        SET price = ?
+        WHERE product_id = ?
+    `;
+
+    db.query(sql, [price, id], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Product price updated successfully."
+        });
+
+    });
+
+};
 
 module.exports = {
     getAllProducts,
     addProduct,
     getProductById,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    updateProductPrice
 };

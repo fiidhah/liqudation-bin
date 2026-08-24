@@ -7,7 +7,8 @@ const {
     addProduct,
     getProductById,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    updateProductPrice
 } = require("../controllers/productController");
 
 // =============================
@@ -41,5 +42,10 @@ router.put("/update/:id", updateProduct);
 // DELETE PRODUCT
 // =============================
 router.delete("/delete/:id", deleteProduct);
+
+// =============================
+// UPDATE PRODUCT PRICE
+// =============================
+router.put("/update-price/:id", updateProductPrice);
 
 module.exports = router;
