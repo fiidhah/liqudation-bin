@@ -3,20 +3,27 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+// =============================
 // Database Connection
+// =============================
 require("./config/db");
 
+// =============================
 // Routes
+// =============================
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const managerRoutes = require("./routes/managerRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
+// =============================
 // Middleware
+// =============================
 app.use(express.json());
 
 // =============================
@@ -26,11 +33,11 @@ app.use(express.json());
 // User Routes
 app.use("/api/users", userRoutes);
 
-// Manager Routes
-app.use("/api/managers", managerRoutes);
-
 // Product Routes
 app.use("/api/products", productRoutes);
+
+// Manager Routes
+app.use("/api/managers", managerRoutes);
 
 // Cart Routes
 app.use("/api/cart", cartRoutes);
@@ -40,6 +47,9 @@ app.use("/api/wishlist", wishlistRoutes);
 
 // Order Routes
 app.use("/api/orders", orderRoutes);
+
+// Admin Routes
+app.use("/api/admin", adminRoutes);
 
 // =============================
 // Home Route
