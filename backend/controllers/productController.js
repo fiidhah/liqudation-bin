@@ -280,6 +280,59 @@ const updateProductPrice = (req, res) => {
     });
 
 };
+// =============================
+// SEARCH PRODUCTS
+// =============================
+const searchProducts = (req, res) => {
+
+    const { keyword } = req.query;
+
+    if (!keyword) {
+        return res.status(400).json({
+            success: false,
+            message: "Search keyword is required."
+        });
+    }
+
+    const sql = `
+        SELECT *
+        FROM products
+        WHERE
+            product_name LIKE ?
+            OR description LIKE ?
+            OR category LIKE ?
+            OR brand LIKE ?
+    `;
+
+    const searchValue = `%${keyword}%`;
+
+    db.query(
+        sql,
+        [
+            searchValue,
+            searchValue,
+            searchValue,
+            searchValue
+        ],
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                totalProducts: result.length,
+                data: result
+            });
+
+        }
+    );
+
+};
 
 module.exports = {
     getAllProducts,
@@ -287,5 +340,6 @@ module.exports = {
     getProductById,
     updateProduct,
     deleteProduct,
-    updateProductPrice
+    updateProductPrice,
+    searchProducts
 };

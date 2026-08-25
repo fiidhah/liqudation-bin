@@ -8,7 +8,8 @@ const {
     getProductById,
     updateProduct,
     deleteProduct,
-    updateProductPrice
+    updateProductPrice,
+    searchProducts
 } = require("../controllers/productController");
 
 // =============================
@@ -22,6 +23,12 @@ router.get("/test", (req, res) => {
 // GET ALL PRODUCTS
 // =============================
 router.get("/", getAllProducts);
+
+// =============================
+// SEARCH PRODUCTS
+// IMPORTANT: Must be before /:id
+// =============================
+router.get("/search", searchProducts);
 
 // =============================
 // GET PRODUCT BY ID

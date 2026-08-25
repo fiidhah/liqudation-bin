@@ -8,7 +8,8 @@ const {
     getAllOrders,
     updateOrderStatus,
     cancelOrder,
-    getOrderDetails
+    getOrderDetails,
+    getPurchaseHistory
 } = require("../controllers/orderController");
 
 // =============================
@@ -42,5 +43,9 @@ router.put("/cancel/:id", cancelOrder);
 // GET ORDER DETAILS
 // =============================
 router.get("/:id", getOrderDetails);
+// =============================
+// PURCHASE HISTORY
+// =============================
+router.get("/purchase-history/:user_id", getPurchaseHistory);
 
 module.exports = router;

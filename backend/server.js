@@ -18,7 +18,25 @@ const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const offerRoutes = require("./routes/offerRoutes");
+const luckyDrawRoutes = require("./routes/luckyDrawRoutes");
 
+// =============================
+// Check Route Imports
+// =============================
+console.log("User Routes:", typeof userRoutes);
+console.log("Product Routes:", typeof productRoutes);
+console.log("Manager Routes:", typeof managerRoutes);
+console.log("Cart Routes:", typeof cartRoutes);
+console.log("Wishlist Routes:", typeof wishlistRoutes);
+console.log("Order Routes:", typeof orderRoutes);
+console.log("Admin Routes:", typeof adminRoutes);
+console.log("Offer Routes:", typeof offerRoutes);
+console.log("Lucky Draw Routes:", typeof luckyDrawRoutes);
+
+// =============================
+// Create Express App
+// =============================
 const app = express();
 
 // =============================
@@ -50,6 +68,12 @@ app.use("/api/orders", orderRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);
+
+// Offer Routes
+app.use("/api/offers", offerRoutes);
+
+// Lucky Draw Routes
+app.use("/api/lucky-draws", luckyDrawRoutes);
 
 // =============================
 // Home Route

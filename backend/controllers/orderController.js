@@ -397,6 +397,42 @@ const getOrderDetails = (req, res) => {
     });
 
 };
+// =============================
+// PURCHASE HISTORY
+// =============================
+const getPurchaseHistory = (req, res) => {
+
+    const { user_id } = req.params;
+
+    const sql = `
+        SELECT
+            o.order_id,
+            o.total_amount,
+            o.order_status,
+            o.order_date
+        FROM orders o
+        WHERE o.user_id = ?
+        ORDER BY o.order_date DESC
+    `;
+
+    db.query(sql, [user_id], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            totalPurchases: result.length,
+            data: result
+        });
+
+    });
+
+};
 
 module.exports = {
     placeOrder,
@@ -404,5 +440,6 @@ module.exports = {
     getAllOrders,
     updateOrderStatus,
     cancelOrder,
-    getOrderDetails
+    getOrderDetails,
+    getPurchaseHistory
 };

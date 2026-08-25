@@ -337,32 +337,16 @@ const updateManager = (req, res) => {
 // =============================
 const getSalesReport = (req, res) => {
 
-    const sql = `
-        SELECT
-            COUNT(*) AS totalOrders,
+    const report = {};
 
-            COALESCE(SUM(total_amount), 0) AS totalSales,
-
-            SUM(
-                CASE
-                    WHEN order_status = 'Delivered'
-                    THEN 1
-                    ELSE 0
-                END
-            ) AS deliveredOrders,
-
-            SUM(
-                CASE
-                    WHEN order_status = 'Cancelled'
-                    THEN 1
-                    ELSE 0
-                END
-            ) AS cancelledOrders
-
+    // Total Sales
+    const salesSql = `
+        SELECT IFNULL(SUM(total_amount), 0) AS totalSales
         FROM orders
+        WHERE order_status != 'Cancelled'
     `;
 
-    db.query(sql, (err, result) => {
+    db.query(salesSql, (err, salesResult) => {
 
         if (err) {
             return res.status(500).json({
@@ -371,14 +355,78 @@ const getSalesReport = (req, res) => {
             });
         }
 
-        res.status(200).json({
-            success: true,
-            report: result[0]
+        report.totalSales = salesResult[0].totalSales;
+
+        // Total Orders
+        const ordersSql = `
+            SELECT COUNT(*) AS totalOrders
+            FROM orders
+        `;
+
+        db.query(ordersSql, (err, orderResult) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            report.totalOrders = orderResult[0].totalOrders;
+
+            // Delivered Orders
+            const deliveredSql = `
+                SELECT COUNT(*) AS deliveredOrders
+                FROM orders
+                WHERE order_status = 'Delivered'
+            `;
+
+            db.query(deliveredSql, (err, deliveredResult) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err.message
+                    });
+                }
+
+                report.deliveredOrders =
+                    deliveredResult[0].deliveredOrders;
+
+                // Pending Orders
+                const pendingSql = `
+                    SELECT COUNT(*) AS pendingOrders
+                    FROM orders
+                    WHERE order_status = 'Pending'
+                `;
+
+                db.query(pendingSql, (err, pendingResult) => {
+
+                    if (err) {
+                        return res.status(500).json({
+                            success: false,
+                            message: err.message
+                        });
+                    }
+
+                    report.pendingOrders =
+                        pendingResult[0].pendingOrders;
+
+                    res.status(200).json({
+                        success: true,
+                        salesReport: report
+                    });
+
+                });
+
+            });
+
         });
 
     });
 
 };
+
 
 
 module.exports = {
