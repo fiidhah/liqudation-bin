@@ -1,0 +1,13 @@
+{
+  "name": "smartbin-liquidation-store",
+  "version": "1.0.0",
+  "description": "Smart Liquidation Bin Store E-Commerce Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["liquidation", "bin-store", "e-commerce", "bootstrap"],
+  "author": "Fidha M Rahman",
+  "license": "ISC"
+}
