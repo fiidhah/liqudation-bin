@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBin - Smart Liquidation Bin Store</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">
+                <i class="bi bi-box2-heart-fill text-warning fs-3"></i>
+                <span>SmartBin</span>
+                <span class="brand-badge">Liquidation Store</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+                    <li class="nav-item"><a class="nav-link active" href="/index.html"><i class="bi bi-house-door me-1"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products.html"><i class="bi bi-grid-3x3-gap me-1"></i>Browse Bins</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/offers.html"><i class="bi bi-tag-fill me-1 text-warning"></i>Offers & Deals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/lucky-draw.html"><i class="bi bi-gift-fill me-1 text-info"></i>Weekend Lucky Draw</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Track Order</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/wishlist.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Wishlist">
+                        <i class="bi bi-heart fs-6"></i>
+                    </a>
+                    <a href="/cart.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Shopping Cart">
+                        <i class="bi bi-cart3 fs-6"></i>
+                        <span id="cartCountBadge" class="badge-cart">0</span>
+                    </a>
+                    <div id="navAuthSection"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- DAILY PRICE HERO (Liquidation Bin Store Feature) -->
+        <section class="daily-price-hero">
+            <div class="container position-relative">
+                <div id="todayPriceBanner">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-light" role="status"></div>
+                    </div>
+                </div>
+
+                <!-- WEEKLY PRICE SCHEDULE TIMELINE -->
+                <div class="mt-4 pt-3 border-top border-white-50">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-uppercase small fw-bold text-white-50">
+                            <i class="bi bi-calendar3 me-1"></i> Weekly Liquidation Markdown Schedule
+                        </span>
+                        <span class="small text-white-50">Price drops every morning until restock!</span>
+                    </div>
+                    <div class="row row-cols-2 row-cols-sm-4 row-cols-md-7 g-2" id="weeklyScheduleContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIN LOCATIONS & PRICE TIERS -->
+        <section class="container my-5">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <span class="text-uppercase small fw-bold text-danger">Explore Store Sections</span>
+                    <h2 class="fw-black text-dark mb-0">Browse By Liquidation Bin</h2>
+                </div>
+                <a href="/products.html" class="btn btn-outline-custom btn-sm rounded-pill px-3">View All Products →</a>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+A'">
+                        <div class="fs-1 text-danger mb-2">🔥</div>
+                        <h5 class="fw-bold mb-1">Bin A (Tier 1)</h5>
+                        <p class="text-muted small mb-2">Premium Overstock & High-End Tech</p>
+                        <span class="badge bg-danger rounded-pill px-3 py-1">Top Tier Deals</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+B'">
+                        <div class="fs-1 text-primary mb-2">⚡</div>
+                        <h5 class="fw-bold mb-1">Bin B (Tier 2)</h5>
+                        <p class="text-muted small mb-2">Home Appliances & Fashion Apparel</p>
+                        <span class="badge bg-primary rounded-pill px-3 py-1">Best Value</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+C'">
+                        <div class="fs-1 text-warning mb-2">🛠️</div>
+                        <h5 class="fw-bold mb-1">Bin C (Tier 3)</h5>
+                        <p class="text-muted small mb-2">Tools, Hardware & Gadget Accessories</p>
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1">Crazy Bargains</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+D'">
+                        <div class="fs-1 text-success mb-2">💥</div>
+                        <h5 class="fw-bold mb-1">Bin D (Clearance)</h5>
+                        <p class="text-muted small mb-2">Blowout Clearance & $2 Mystery Finds</p>
+                        <span class="badge bg-success rounded-pill px-3 py-1">Lowest Prices</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED LIQUIDATION DEALS -->
+        <section class="container my-5">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                <div>
+                    <span class="text-uppercase small fw-bold text-danger">Hot From The Bins</span>
+                    <h2 class="fw-black text-dark mb-0">Today's Featured Liquidation Deals</h2>
+                </div>
+                <div class="d-flex gap-2">
+                    <input type="text" id="searchProductsInput" class="form-control rounded-pill px-3" placeholder="Search brand, gadget..." style="max-width: 250px;">
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="row g-4" id="productGrid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- WEEKEND LUCKY DRAW PROMO BANNER -->
+        <section class="container my-5">
+            <div class="lucky-draw-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-2">
+                            <i class="bi bi-stars me-1"></i> CUSTOMER ENGAGEMENT BONANZA
+                        </span>
+                        <h2 class="display-6 fw-black text-white mb-2">Weekend Lucky Draw: Win A 55" 4K Smart TV!</h2>
+                        <p class="text-white-50 lead mb-3">Every checkout this week automatically issues 1 verified Lucky Draw entry ticket. Winners announced live on Sunday!</p>
+                        <div class="d-flex gap-3">
+                            <a href="/lucky-draw.html" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold text-dark">
+                                <i class="bi bi-gift-fill me-1"></i> View Draw & Past Winners
+                            </a>
+                            <a href="/products.html" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
+                                Shop To Enter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW SMARTBIN WORKS -->
+        <section class="container my-5 py-4">
+            <div class="text-center mb-5">
+                <span class="text-uppercase small fw-bold text-danger">Simple & Transparent</span>
+                <h2 class="fw-black text-dark">How SmartBin Liquidation Works</h2>
+                <p class="text-muted">Overstock inventory from top retail giants sold at massive daily discounts.</p>
+            </div>
+            <div class="row g-4 text-center">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                        <div class="display-4 text-danger mb-3"><i class="bi bi-truck-flatbed"></i></div>
+                        <h5 class="fw-bold">1. Retail Overstock</h5>
+                        <p class="text-muted small">We buy bulk truckloads of excess inventory, clearance stock & customer returns.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                        <div class="display-4 text-warning mb-3"><i class="bi bi-clipboard2-check"></i></div>
+                        <h5 class="fw-bold">2. Quality Checked</h5>
+                        <p class="text-muted small">Every item is tested and labeled with condition tags (Brand New, Open Box, Refurbished).</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                        <div class="display-4 text-primary mb-3"><i class="bi bi-graph-down-arrow"></i></div>
+                        <h5 class="fw-bold">3. Daily Price Drops</h5>
+                        <p class="text-muted small">Prices start at $14 on Friday restock and drop every day down to $2 by Thursday!</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                        <div class="display-4 text-success mb-3"><i class="bi bi-trophy"></i></div>
+                        <h5 class="fw-bold">4. Weekend Lucky Draw</h5>
+                        <p class="text-muted small">Every order enters you into our weekly lucky draws for high-ticket mega prizes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PRODUCT QUICK VIEW MODAL -->
+    <div class="modal fade" id="productQuickViewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg p-3">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0" id="quickViewModalBody">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-box2-heart-fill text-warning fs-3"></i>
+                        <h4 class="fw-black text-white mb-0">SmartBin Store</h4>
+                    </div>
+                    <p class="small text-white-50">Transforming traditional liquidation bin stores into an automated e-commerce experience with daily price drops, verified conditions, and exciting lucky draws.</p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h6 class="text-white text-uppercase fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a href="/products.html">Browse Products</a></li>
+                        <li><a href="/offers.html">Promotions & Coupons</a></li>
+                        <li><a href="/lucky-draw.html">Weekend Lucky Draw</a></li>
+                        <li><a href="/order-tracking.html">Track Shipment</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h6 class="text-white text-uppercase fw-bold mb-3">Portals</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a href="/login.html">Customer Login</a></li>
+                        <li><a href="/manager/index.html">Manager Portal</a></li>
+                        <li><a href="/admin/index.html">Admin Dashboard</a></li>
+                        <li><a href="/orders.html">My Purchases</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white text-uppercase fw-bold mb-3">Store Information</h6>
+                    <p class="small text-white-50 mb-1"><i class="bi bi-geo-alt me-2 text-warning"></i> 100 Liquidation Way, Suite 400</p>
+                    <p class="small text-white-50 mb-1"><i class="bi bi-clock me-2 text-warning"></i> Restock Day: Every Friday 8:00 AM</p>
+                    <p class="small text-white-50"><i class="bi bi-shield-check me-2 text-warning"></i> 100% Secure Simulated Checkout</p>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-top border-secondary text-center small text-white-50">
+                &copy; 2026 SmartBin - Smart Liquidation Bin Store E-Commerce Management System.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- App Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

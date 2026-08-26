@@ -1,58 +1,49 @@
 const express = require("express");
-
 const router = express.Router();
+const upload = require("../middleware/upload");
 
 const {
     getAllProducts,
     addProduct,
     getProductById,
     updateProduct,
+    updateStock,
     deleteProduct,
     updateProductPrice,
-    searchProducts
+    searchProducts,
+    uploadProductImage
 } = require("../controllers/productController");
 
-// =============================
-// TEST ROUTE
-// =============================
+// Test Route
 router.get("/test", (req, res) => {
     res.send("Product Route Working");
 });
 
-// =============================
-// GET ALL PRODUCTS
-// =============================
-router.get("/", getAllProducts);
+// Image Upload Route (Must be before /:id)
+router.post("/upload-image", upload.single("image"), uploadProductImage);
 
-// =============================
-// SEARCH PRODUCTS
-// IMPORTANT: Must be before /:id
-// =============================
+// Search Products (Must be before /:id)
 router.get("/search", searchProducts);
 
-// =============================
-// GET PRODUCT BY ID
-// =============================
+// Get All Products (supports query params: ?bin_number=Bin+A&category=Electronics&min_price=0&max_price=15&sort=savings)
+router.get("/", getAllProducts);
+
+// Get Product by ID
 router.get("/:id", getProductById);
 
-// =============================
-// ADD PRODUCT
-// =============================
-router.post("/add", addProduct);
+// Add Product
+router.post("/add", upload.single("image"), addProduct);
 
-// =============================
-// UPDATE PRODUCT
-// =============================
+// Update Product
 router.put("/update/:id", updateProduct);
 
-// =============================
-// DELETE PRODUCT
-// =============================
-router.delete("/delete/:id", deleteProduct);
+// Update Stock
+router.put("/update-stock/:id", updateStock);
 
-// =============================
-// UPDATE PRODUCT PRICE
-// =============================
+// Update Product Price
 router.put("/update-price/:id", updateProductPrice);
+
+// Delete Product
+router.delete("/delete/:id", deleteProduct);
 
 module.exports = router;

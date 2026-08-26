@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquidation Bins Catalog - SmartBin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">
+                <i class="bi bi-box2-heart-fill text-warning fs-3"></i>
+                <span>SmartBin</span>
+                <span class="brand-badge">Catalog</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+                    <li class="nav-item"><a class="nav-link" href="/index.html"><i class="bi bi-house-door me-1"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/products.html"><i class="bi bi-grid-3x3-gap me-1"></i>Browse Bins</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/offers.html"><i class="bi bi-tag-fill me-1 text-warning"></i>Offers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/lucky-draw.html"><i class="bi bi-gift-fill me-1 text-info"></i>Lucky Draw</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Track Order</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/wishlist.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Wishlist">
+                        <i class="bi bi-heart fs-6"></i>
+                    </a>
+                    <a href="/cart.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Shopping Cart">
+                        <i class="bi bi-cart3 fs-6"></i>
+                        <span id="cartCountBadge" class="badge-cart">0</span>
+                    </a>
+                    <div id="navAuthSection"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-4 my-md-5">
+        <!-- HEADER -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom gap-2">
+            <div>
+                <h2 class="fw-black text-dark mb-1">Liquidation Bin Items</h2>
+                <p class="text-muted mb-0" id="productsCount">Showing all items across store bins</p>
+            </div>
+            <!-- SEARCH BAR -->
+            <div class="d-flex gap-2 w-100 w-md-auto" style="max-width: 380px;">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" id="searchProductsInput" class="form-control border-start-0 rounded-end-pill" placeholder="Search by name, brand, bin...">
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- SIDEBAR FILTERS -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 85px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0"><i class="bi bi-funnel-fill text-danger me-1"></i> Filters</h5>
+                        <button class="btn btn-link text-decoration-none text-muted small p-0" onclick="App.resetFilters()">Reset All</button>
+                    </div>
+
+                    <!-- Bin Filter Pills -->
+                    <div class="mb-4">
+                        <label class="form-label text-uppercase small text-muted fw-bold">Select Bin Tier</label>
+                        <div class="d-flex flex-wrap gap-1">
+                            <button class="btn btn-sm btn-outline-dark rounded-pill active" data-filter-bin="All">All Bins</button>
+                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin A">Bin A ($14)</button>
+                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin B">Bin B ($10)</button>
+                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin C">Bin C ($6)</button>
+                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin D">Bin D ($2)</button>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="mb-4">
+                        <label class="form-label text-uppercase small text-muted fw-bold">Category</label>
+                        <select class="form-select rounded-3" id="categoryFilter">
+                            <option value="All">All Categories</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Home & Kitchen">Home & Kitchen</option>
+                            <option value="Fashion & Footwear">Fashion & Footwear</option>
+                            <option value="Gadgets & Office">Gadgets & Office</option>
+                            <option value="Tools & Hardware">Tools & Hardware</option>
+                        </select>
+                    </div>
+
+                    <!-- Condition Filter -->
+                    <div class="mb-4">
+                        <label class="form-label text-uppercase small text-muted fw-bold">Item Condition</label>
+                        <select class="form-select rounded-3" id="conditionFilter">
+                            <option value="All">All Conditions</option>
+                            <option value="Brand New">Brand New (Sealed)</option>
+                            <option value="Like New">Like New (Inspected)</option>
+                            <option value="Open Box">Open Box (Overstock)</option>
+                            <option value="Refurbished">Refurbished</option>
+                            <option value="Clearance">Clearance</option>
+                        </select>
+                    </div>
+
+                    <!-- Sort By -->
+                    <div class="mb-3">
+                        <label class="form-label text-uppercase small text-muted fw-bold">Sort Deals</label>
+                        <select class="form-select rounded-3" id="sortFilter">
+                            <option value="latest">Newest Restocked</option>
+                            <option value="savings">Highest Savings ($)</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CATALOG GRID -->
+            <div class="col-lg-9">
+                <div class="row g-4" id="productGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PRODUCT QUICK VIEW MODAL -->
+    <div class="modal fade" id="productQuickViewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg p-3">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0" id="quickViewModalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- App Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        // Check URL params for preselected bin
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const binParam = params.get("bin");
+            if (binParam) {
+                App.activeFilters.bin_number = binParam;
+                document.querySelectorAll("[data-filter-bin]").forEach(btn => {
+                    if (btn.dataset.filterBin === binParam) {
+                        btn.classList.add("active", "btn-primary");
+                    } else {
+                        btn.classList.remove("active", "btn-primary");
+                    }
+                });
+                App.loadProducts();
+            }
+        });
+    </script>
+</body>
+</html>

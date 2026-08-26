@@ -4,11 +4,7 @@ const db = require("../config/db");
 // ADD TO WISHLIST
 // =============================
 const addToWishlist = (req, res) => {
-
-    const {
-        user_id,
-        product_id
-    } = req.body;
+    const { user_id, product_id } = req.body;
 
     if (!user_id || !product_id) {
         return res.status(400).json({
@@ -17,14 +13,9 @@ const addToWishlist = (req, res) => {
         });
     }
 
-    // Check if already exists
-    const checkSql = `
-        SELECT * FROM wishlist
-        WHERE user_id = ? AND product_id = ?
-    `;
+    const checkSql = "SELECT * FROM wishlist WHERE user_id = ? AND product_id = ?";
 
     db.query(checkSql, [user_id, product_id], (err, result) => {
-
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -39,13 +30,9 @@ const addToWishlist = (req, res) => {
             });
         }
 
-        const insertSql = `
-            INSERT INTO wishlist (user_id, product_id)
-            VALUES (?, ?)
-        `;
+        const insertSql = "INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)";
 
         db.query(insertSql, [user_id, product_id], (err, result) => {
-
             if (err) {
                 return res.status(500).json({
                     success: false,
@@ -58,17 +45,14 @@ const addToWishlist = (req, res) => {
                 message: "Product added to wishlist successfully.",
                 wishlistId: result.insertId
             });
-
         });
-
     });
-
 };
+
 // =============================
 // VIEW WISHLIST
 // =============================
 const viewWishlist = (req, res) => {
-
     const { user_id } = req.params;
 
     const sql = `
@@ -79,16 +63,16 @@ const viewWishlist = (req, res) => {
             p.description,
             p.category,
             p.brand,
+            p.price,
             p.quantity,
             p.image
         FROM wishlist w
-        JOIN products p
-        ON w.product_id = p.product_id
+        JOIN products p ON w.product_id = p.product_id
         WHERE w.user_id = ?
+        ORDER BY w.wishlist_id DESC
     `;
 
     db.query(sql, [user_id], (err, result) => {
-
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -101,21 +85,18 @@ const viewWishlist = (req, res) => {
             totalItems: result.length,
             data: result
         });
-
     });
-
 };
+
 // =============================
 // DELETE WISHLIST ITEM
 // =============================
 const deleteWishlistItem = (req, res) => {
-
     const { id } = req.params;
 
     const sql = "DELETE FROM wishlist WHERE wishlist_id = ?";
 
     db.query(sql, [id], (err, result) => {
-
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -132,11 +113,9 @@ const deleteWishlistItem = (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Wishlist item deleted successfully."
+            message: "Wishlist item removed successfully."
         });
-
     });
-
 };
 
 module.exports = {

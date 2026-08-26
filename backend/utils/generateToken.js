@@ -1,20 +1,19 @@
 const jwt = require("jsonwebtoken");
 
-const generateToken = (user) => {
+const generateToken = (account, role = "User") => {
+    const payload = {
+        id: account.user_id || account.manager_id || account.admin_id,
+        user_id: account.user_id,
+        manager_id: account.manager_id,
+        admin_id: account.admin_id,
+        full_name: account.full_name,
+        email: account.email,
+        role: account.role || role
+    };
 
-    const token = jwt.sign(
-        {
-            user_id: user.user_id,
-            email: user.email
-        },
-        process.env.JWT_SECRET,
-        {
-            expiresIn: "1d"
-        }
-    );
-
-    return token;
-
+    return jwt.sign(payload, process.env.JWT_SECRET || "smartbin_super_secret_jwt_key_2026", {
+        expiresIn: "7d"
+    });
 };
 
 module.exports = generateToken;
