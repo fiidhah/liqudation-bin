@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 660" width="900" height="660" style="background: #ffffff;">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#000000"/>
+        </marker>
+        <marker id="arrow-start" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 8 1.5 L 0 5 L 8 8.5 z" fill="#000000"/>
+        </marker>
+    </defs>
+
+    <!-- Top Heading -->
+    <text x="450" y="42" text-anchor="middle" font-size="17" font-weight="bold" font-family="Arial, sans-serif" letter-spacing="0.5" fill="#000">DATA FLOW DIAGRAM (DFD) - LEVEL 1 USER</text>
+    <line x1="230" y1="52" x2="670" y2="52" stroke="#000000" stroke-width="2"/>
+
+    <!-- Login Table (Top Left Data Store) -->
+    <line x1="195" y1="85" x2="315" y2="85" stroke="#000000" stroke-width="1.8"/>
+    <line x1="195" y1="135" x2="315" y2="135" stroke="#000000" stroke-width="1.8"/>
+    <line x1="195" y1="85" x2="195" y2="135" stroke="#000000" stroke-width="1.8"/>
+    <line x1="210" y1="85" x2="210" y2="135" stroke="#000000" stroke-width="1.8"/>
+    <text x="262" y="114" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Users Table</text>
+
+    <!-- Entity (Left Box) -->
+    <rect x="50" y="310" width="110" height="60" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="105" y="346" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial, sans-serif" fill="#000">User</text>
+
+    <!-- Arrow Entity to Login -->
+    <line x1="160" y1="340" x2="216" y2="340" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Login Process (Circle) -->
+    <ellipse cx="255" cy="340" rx="36" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+    <text x="255" y="345" text-anchor="middle" font-size="14" font-family="Arial, sans-serif" fill="#000">Login</text>
+
+    <!-- Double-headed arrow between Login and Login Table -->
+    <line x1="255" y1="302" x2="255" y2="139" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+
+    <!-- Horizontal connector from Login to Trunk -->
+    <line x1="293" y1="340" x2="340" y2="340" stroke="#000000" stroke-width="1.5"/>
+
+    <!-- Vertical Branching Trunk -->
+    <line x1="340" y1="110" x2="340" y2="570" stroke="#000000" stroke-width="1.8"/>
+
+    <!-- Processes and Data Stores -->
+    
+        <!-- Process 1 -->
+        <line x1="340" y1="110" x2="386" y2="110" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="490" cy="110" rx="102" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="490" y="106" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Browse Products</text>
+               <text x="490" y="124" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">&amp; Daily Price Drops</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="594" y1="110" x2="684" y2="110" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store 1 -->
+        <line x1="688" y1="85" x2="850" y2="85" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="135" x2="850" y2="135" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="85" x2="688" y2="135" stroke="#000000" stroke-width="1.8"/>
+        <line x1="703" y1="85" x2="703" y2="135" stroke="#000000" stroke-width="1.8"/>
+        <text x="776" y="115" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Products</text>
+        
+        <!-- Process 2 -->
+        <line x1="340" y1="225" x2="386" y2="225" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="490" cy="225" rx="102" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="490" y="221" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Manage Cart</text>
+               <text x="490" y="239" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">&amp; Wishlist</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="594" y1="225" x2="684" y2="225" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store 2 -->
+        <line x1="688" y1="200" x2="850" y2="200" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="250" x2="850" y2="250" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="200" x2="688" y2="250" stroke="#000000" stroke-width="1.8"/>
+        <line x1="703" y1="200" x2="703" y2="250" stroke="#000000" stroke-width="1.8"/>
+        <text x="776" y="230" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Cart &amp; Wishlist</text>
+        
+        <!-- Process 3 -->
+        <line x1="340" y1="340" x2="386" y2="340" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="490" cy="340" rx="102" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="490" y="336" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Place Order</text>
+               <text x="490" y="354" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">&amp; Make Payment</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="594" y1="340" x2="684" y2="340" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store 3 -->
+        <line x1="688" y1="315" x2="850" y2="315" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="365" x2="850" y2="365" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="315" x2="688" y2="365" stroke="#000000" stroke-width="1.8"/>
+        <line x1="703" y1="315" x2="703" y2="365" stroke="#000000" stroke-width="1.8"/>
+        <text x="776" y="345" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Orders &amp; Payments</text>
+        
+        <!-- Process 4 -->
+        <line x1="340" y1="455" x2="386" y2="455" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="490" cy="455" rx="102" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="490" y="451" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Track Live Order</text>
+               <text x="490" y="469" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Delivery Status</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="594" y1="455" x2="684" y2="455" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store 4 -->
+        <line x1="688" y1="430" x2="850" y2="430" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="480" x2="850" y2="480" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="430" x2="688" y2="480" stroke="#000000" stroke-width="1.8"/>
+        <line x1="703" y1="430" x2="703" y2="480" stroke="#000000" stroke-width="1.8"/>
+        <text x="776" y="460" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Shipment Tracking</text>
+        
+        <!-- Process 5 -->
+        <line x1="340" y1="570" x2="386" y2="570" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="490" cy="570" rx="102" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="490" y="566" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Participate in</text>
+               <text x="490" y="584" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Lucky Draw &amp; Deals</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="594" y1="570" x2="684" y2="570" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store 5 -->
+        <line x1="688" y1="545" x2="850" y2="545" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="595" x2="850" y2="595" stroke="#000000" stroke-width="1.8"/>
+        <line x1="688" y1="545" x2="688" y2="595" stroke="#000000" stroke-width="1.8"/>
+        <line x1="703" y1="545" x2="703" y2="595" stroke="#000000" stroke-width="1.8"/>
+        <text x="776" y="575" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#000">Lucky Draw &amp; Deals</text>
+        
+</svg>

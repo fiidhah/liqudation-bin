@@ -1,5 +1,5 @@
 /**
- * SmartBin Promotional Offers & Deals Controller
+ * SmartBin Promotional Offers Controller
  */
 const OffersPage = {
     offers: [],
@@ -19,7 +19,7 @@ const OffersPage = {
                 this.renderOffers();
             }
         } catch (e) {
-            container.innerHTML = `<div class="alert alert-danger">Failed to load offers: ${e.message}</div>`;
+            container.innerHTML = `<div class="alert alert-secondary">Could not load offers: ${e.message}</div>`;
         }
     },
 
@@ -29,46 +29,35 @@ const OffersPage = {
 
         if (this.offers.length === 0) {
             container.innerHTML = `
-                <div class="col-12 text-center py-5">
-                    <p class="text-muted">No active promotional vouchers right now. Check back soon for flash bin discounts!</p>
+                <div class="col-12">
+                    <div class="card p-5 text-center border-0 shadow-sm rounded-3 bg-white">
+                        <i class="bi bi-tag fs-1 text-muted mb-2"></i>
+                        <h5 class="fw-bold">No Active Coupons</h5>
+                        <p class="text-muted small">Check back soon for new discount offers!</p>
+                    </div>
                 </div>
             `;
             return;
         }
 
         container.innerHTML = this.offers.map(offer => {
-            const validUntil = new Date(offer.end_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-            const minSpend = Number(offer.min_order_amount) || 0;
-
+            const discPercent = Number(offer.discount_percentage || 15);
             return `
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white position-relative overflow-hidden">
-                        <div class="position-absolute top-0 end-0 bg-danger text-white px-3 py-1 rounded-bottom-start small fw-bold">
-                            ${Number(offer.discount_percentage)}% OFF
-                        </div>
-                        <div class="mb-3">
-                            <span class="badge bg-warning-subtle text-dark px-3 py-2 rounded-pill fw-bold">
-                                <i class="bi bi-tag-fill text-warning me-1"></i> Promo Voucher
-                            </span>
-                        </div>
-                        <h4 class="fw-bold text-dark mb-2">${offer.title}</h4>
-                        <p class="text-muted small flex-grow-1">${offer.description || 'Valid on all liquidation bin categories and overstock checkouts.'}</p>
-                        
-                        <div class="bg-light p-3 rounded-3 my-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <small class="text-muted d-block">PROMO CODE</small>
-                                    <strong class="fs-5 text-dark font-monospace">${offer.code}</strong>
-                                </div>
-                                <button class="btn btn-outline-dark btn-sm rounded-pill px-3" onclick="OffersPage.copyCoupon('${offer.code}')">
-                                    <i class="bi bi-clipboard me-1"></i> Copy
-                                </button>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border rounded-3 p-4 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-dark text-white px-2 py-1">Save ${discPercent}%</span>
+                                <small class="text-muted"><i class="bi bi-clock me-1"></i>Active Deal</small>
                             </div>
+                            <h5 class="fw-bold text-dark mb-2">${offer.title}</h5>
+                            <p class="text-secondary small mb-3">${offer.description || 'Apply this promo discount at checkout.'}</p>
                         </div>
-
-                        <div class="d-flex justify-content-between align-items-center text-muted small pt-2 border-top">
-                            <span>Min spend: <strong>$${minSpend.toFixed(2)}</strong></span>
-                            <span>Expires: <strong>${validUntil}</strong></span>
+                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                            <span class="font-monospace fw-bold text-primary">${offer.title.toUpperCase().replace(/\s+/g, '')}</span>
+                            <button class="btn btn-outline-dark btn-sm" onclick="OffersPage.copyCode('${offer.title.toUpperCase().replace(/\s+/g, '')}')">
+                                <i class="bi bi-copy me-1"></i> Copy
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -76,12 +65,9 @@ const OffersPage = {
         }).join("");
     },
 
-    copyCoupon(code) {
-        navigator.clipboard.writeText(code).then(() => {
-            API.showToast(`Coupon code "${code}" copied to clipboard! Paste it in your cart.`, "success");
-        }).catch(() => {
-            API.showToast(`Code: ${code}`, "info");
-        });
+    copyCode(code) {
+        navigator.clipboard.writeText(code);
+        API.showToast(`Coupon "${code}" copied to clipboard!`, "success");
     }
 };
 

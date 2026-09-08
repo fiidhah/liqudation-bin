@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 730" width="940" height="730" style="background: #ffffff;">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#000000"/>
+        </marker>
+        <marker id="arrow-start" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 8 1.5 L 0 5 L 8 8.5 z" fill="#000000"/>
+        </marker>
+    </defs>
+
+    <!-- Top Heading -->
+    <text x="470" y="38" text-anchor="middle" font-size="17" font-weight="bold" font-family="Arial, sans-serif" letter-spacing="0.5" fill="#000">DATA FLOW DIAGRAM (DFD) - LEVEL 2 MANAGER MODULE</text>
+    <line x1="200" y1="48" x2="740" y2="48" stroke="#000000" stroke-width="2"/>
+
+    <!-- Manager Table (Top Left Data Store) -->
+    <line x1="175" y1="75" x2="305" y2="75" stroke="#000000" stroke-width="1.8"/>
+    <line x1="175" y1="120" x2="305" y2="120" stroke="#000000" stroke-width="1.8"/>
+    <line x1="175" y1="75" x2="175" y2="120" stroke="#000000" stroke-width="1.8"/>
+    <line x1="190" y1="75" x2="190" y2="120" stroke="#000000" stroke-width="1.8"/>
+    <text x="247" y="102" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">Manager Table</text>
+
+    <!-- Entity (Left Box: Manager) -->
+    <rect x="40" y="335" width="110" height="60" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="95" y="371" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial, sans-serif" fill="#000">Manager</text>
+
+    <!-- Arrow Entity to Login -->
+    <line x1="150" y1="365" x2="202" y2="365" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Process: Login (Circle) -->
+    <ellipse cx="240" cy="365" rx="38" ry="38" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+    <text x="240" y="370" text-anchor="middle" font-size="14" font-family="Arial, sans-serif" fill="#000">Login</text>
+
+    <!-- Double-headed arrow between Login and Manager Table -->
+    <line x1="240" y1="327" x2="240" y2="124" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+
+    <!-- Horizontal connector from Login to Trunk -->
+    <line x1="278" y1="365" x2="330" y2="365" stroke="#000000" stroke-width="1.5"/>
+
+    <!-- Vertical Branching Trunk -->
+    <line x1="330" y1="95" x2="330" y2="635" stroke="#000000" stroke-width="1.8"/>
+
+    <!-- Processes and Data Stores -->
+    
+        <!-- Process 1 -->
+        <line x1="330" y1="95" x2="385" y2="95" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="95" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="91" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.1 Verify Manager Login</text>
+               <text x="505" y="108" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">&amp; Portal Privileges</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="95" x2="710" y2="95" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="72" x2="890" y2="72" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="118" x2="890" y2="118" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="72" x2="715" y2="118" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="72" x2="730" y2="118" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="100" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Managers Table</text>
+        
+        <!-- Process 2 -->
+        <line x1="330" y1="185" x2="385" y2="185" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="185" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="181" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.2 Intake Liquidation Stock</text>
+               <text x="505" y="198" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">&amp; Assign Bin (A-Z)</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="185" x2="710" y2="185" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="162" x2="890" y2="162" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="208" x2="890" y2="208" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="162" x2="715" y2="208" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="162" x2="730" y2="208" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="190" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Products Table</text>
+        
+        <!-- Process 3 -->
+        <line x1="330" y1="275" x2="385" y2="275" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="275" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="271" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.3 Inspect Product Condition</text>
+               <text x="505" y="288" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">&amp; Stock Quantity</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="275" x2="710" y2="275" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="252" x2="890" y2="252" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="298" x2="890" y2="298" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="252" x2="715" y2="298" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="252" x2="730" y2="298" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="280" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Products Table</text>
+        
+        <!-- Process 4 -->
+        <line x1="330" y1="365" x2="385" y2="365" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="365" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="361" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.4 Set Daily Markdown Price</text>
+               <text x="505" y="378" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">Overrides for Bins</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="365" x2="710" y2="365" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="342" x2="890" y2="342" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="388" x2="890" y2="388" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="342" x2="715" y2="388" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="342" x2="730" y2="388" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="370" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Daily Prices</text>
+        
+        <!-- Process 5 -->
+        <line x1="330" y1="455" x2="385" y2="455" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="455" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="451" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.5 Retrieve Pending Orders</text>
+               <text x="505" y="468" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">&amp; Pick Items from Bins</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="455" x2="710" y2="455" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="432" x2="890" y2="432" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="478" x2="890" y2="478" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="432" x2="715" y2="478" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="432" x2="730" y2="478" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="460" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Orders &amp; Items</text>
+        
+        <!-- Process 6 -->
+        <line x1="330" y1="545" x2="385" y2="545" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="545" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="541" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.6 Package Orders &amp; Decrement</text>
+               <text x="505" y="558" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">Available Stock Count</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="545" x2="710" y2="545" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="522" x2="890" y2="522" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="568" x2="890" y2="568" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="522" x2="715" y2="568" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="522" x2="730" y2="568" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="550" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Products Table</text>
+        
+        <!-- Process 7 -->
+        <line x1="330" y1="635" x2="385" y2="635" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <ellipse cx="505" cy="635" rx="120" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+        <text x="505" y="631" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">2.7 Update Step-by-Step Delivery</text>
+               <text x="505" y="648" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#000">Tracking (Shipped/Delivered)</text>
+        
+        <!-- Arrow to Data Store -->
+        <line x1="625" y1="635" x2="710" y2="635" stroke="#000000" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow)"/>
+        
+        <!-- Data Store -->
+        <line x1="715" y1="612" x2="890" y2="612" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="658" x2="890" y2="658" stroke="#000000" stroke-width="1.8"/>
+        <line x1="715" y1="612" x2="715" y2="658" stroke="#000000" stroke-width="1.8"/>
+        <line x1="730" y1="612" x2="730" y2="658" stroke="#000000" stroke-width="1.8"/>
+        <text x="810" y="640" text-anchor="middle" font-size="12.5" font-family="Arial, sans-serif" fill="#000">Shipment Tracking</text>
+        
+</svg>

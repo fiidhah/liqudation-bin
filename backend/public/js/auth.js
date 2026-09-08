@@ -37,8 +37,14 @@ const Auth = {
 
         const role = this.getRole();
         if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-            alert(`Access Denied. You need ${allowedRoles.join(" or ")} privileges.`);
-            window.location.href = "/index.html";
+            if (typeof API !== "undefined" && typeof API.showErrorModal === "function") {
+                API.showErrorModal("Access Denied", `You need ${allowedRoles.join(" or ")} privileges to view this portal.`).then(() => {
+                    window.location.href = "/index.html";
+                });
+            } else {
+                alert(`Access Denied. You need ${allowedRoles.join(" or ")} privileges.`);
+                window.location.href = "/index.html";
+            }
             return false;
         }
 
@@ -63,12 +69,12 @@ const Auth = {
 
             navAuthContainer.innerHTML = `
                 <div class="dropdown">
-                    <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3 py-1" type="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle fs-5"></i>
-                        <span>${displayName}</span>
-                        <span class="badge bg-warning text-dark ms-1">${role}</span>
+                    <button class="btn btn-dark dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3 py-1 shadow-sm" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle fs-6 text-warning"></i>
+                        <span class="small fw-bold">${displayName}</span>
+                        <span class="badge bg-warning text-dark ms-1" style="font-size: 10px;">${role}</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3">
                         ${portalLink}
                         ${role === "User" ? `
                             <li><a class="dropdown-item" href="/orders.html"><i class="bi bi-box-seam me-2"></i>My Orders & Invoices</a></li>
@@ -82,8 +88,8 @@ const Auth = {
         } else {
             navAuthContainer.innerHTML = `
                 <div class="d-flex align-items-center gap-2">
-                    <a href="/login.html" class="btn btn-outline-light btn-sm rounded-pill px-3"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
-                    <a href="/register.html" class="btn btn-primary-custom btn-sm rounded-pill px-3">Register</a>
+                    <a href="/login.html" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-bold"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
+                    <a href="/register.html" class="btn btn-dark btn-sm rounded-pill px-3 fw-bold">Register</a>
                 </div>
             `;
         }

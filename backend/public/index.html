@@ -3,43 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartBin - Smart Liquidation Bin Store</title>
+    <title>SmartBin – Certified Daily Liquidation Store</title>
+    <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Custom CSS -->
+    <!-- Custom Style -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <i class="bi bi-box2-heart-fill text-warning fs-3"></i>
-                <span>SmartBin</span>
-                <span class="brand-badge">Liquidation Store</span>
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <!-- VERTICAL LEFT FLOATING SOCIAL BAR (Matching Reference Image) -->
+    <aside class="social-vertical-bar d-none d-xl-flex">
+        <a href="https://twitter.com" target="_blank" class="social-vertical-item">
+            <span>Twitter</span>
+            <div class="social-vertical-icon"><i class="bi bi-twitter-x"></i></div>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="social-vertical-item">
+            <span>Instagram</span>
+            <div class="social-vertical-icon"><i class="bi bi-instagram"></i></div>
+        </a>
+        <a href="https://facebook.com" target="_blank" class="social-vertical-item">
+            <span>Facebook</span>
+            <div class="social-vertical-icon"><i class="bi bi-facebook"></i></div>
+        </a>
+    </aside>
+
+    <!-- SPLIT EDITORIAL NAVBAR (White Left / Yellow Right) -->
+    <nav class="navbar navbar-expand-lg navbar-editorial sticky-top">
+        <div class="container-fluid px-lg-5">
+            <!-- Left Navigation -->
+            <div class="d-none d-lg-flex align-items-center gap-1" style="width: 32%;">
+                <a class="nav-link-left active" href="/index.html">Home</a>
+                <a class="nav-link-left" href="/products.html">Browse Bins</a>
+                <a class="nav-link-left" href="/offers.html">Deals & Coupons</a>
+                <a class="nav-link-left" href="/lucky-draw.html">Lucky Draw</a>
+            </div>
+
+            <!-- Mobile Toggler -->
+            <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEditorial">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
-                    <li class="nav-item"><a class="nav-link active" href="/index.html"><i class="bi bi-house-door me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/products.html"><i class="bi bi-grid-3x3-gap me-1"></i>Browse Bins</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/offers.html"><i class="bi bi-tag-fill me-1 text-warning"></i>Offers & Deals</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/lucky-draw.html"><i class="bi bi-gift-fill me-1 text-info"></i>Weekend Lucky Draw</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Track Order</a></li>
-                </ul>
 
-                <div class="d-flex align-items-center gap-3">
-                    <a href="/wishlist.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Wishlist">
+            <!-- Center Brand Logo -->
+            <div class="text-center mx-auto">
+                <a class="brand-logo-text text-decoration-none" href="/index.html">
+                    <div class="logo-icon-wrap">
+                        <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <span>SmartBin</span>
+                </a>
+            </div>
+
+            <!-- Right Navigation & Actions -->
+            <div class="collapse navbar-collapse d-lg-flex justify-content-end align-items-center gap-2" id="navbarEditorial" style="width: 32%;">
+                <div class="d-flex align-items-center gap-1 me-2">
+                    <a class="nav-link-right" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Tracker</a>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 ms-auto ms-lg-0">
+                    <a href="/wishlist.html" class="nav-icon-editorial" title="Wishlist">
                         <i class="bi bi-heart fs-6"></i>
                     </a>
-                    <a href="/cart.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Shopping Cart">
+                    <a href="/cart.html" class="nav-icon-editorial" title="Cart">
                         <i class="bi bi-cart3 fs-6"></i>
-                        <span id="cartCountBadge" class="badge-cart">0</span>
+                        <span id="cartCountBadge" class="badge-cart-editorial">0</span>
                     </a>
                     <div id="navAuthSection"></div>
                 </div>
@@ -47,156 +79,313 @@
         </div>
     </nav>
 
-    <main>
-        <!-- DAILY PRICE HERO (Liquidation Bin Store Feature) -->
-        <section class="daily-price-hero">
-            <div class="container position-relative">
-                <div id="todayPriceBanner">
-                    <div class="text-center py-5">
-                        <div class="spinner-border text-light" role="status"></div>
+    <!-- SPLIT-SCREEN HERO SECTION (White & Sunshine Yellow) -->
+    <header class="hero-editorial-wrapper">
+        <div class="hero-editorial-bg">
+            <div class="hero-split-left"></div>
+            <div class="hero-split-right"></div>
+        </div>
+
+        <div class="container-fluid px-lg-5 hero-editorial-content">
+            <div class="row align-items-center position-relative min-vh-50">
+                <!-- Left Column (White Half) -->
+                <div class="col-lg-6 ps-lg-5 py-4 z-2">
+                    <div class="d-inline-flex align-items-center gap-1 small fw-bold text-uppercase mb-3 text-danger">
+                        <span>💖</span>
+                        <span>BE A FAN OF DAILY DROPS</span>
+                    </div>
+
+                    <!-- Massive Split Title -->
+                    <div class="hero-giant-title">
+                        <span class="title-left">SMART</span><span class="title-right">BIN</span>
+                    </div>
+
+                    <p class="text-secondary mb-4" style="max-width: 440px; font-size: 1rem; line-height: 1.6;">
+                        Certified liquidation & overstock bins store. Prices drop dynamically every day at midnight from Friday restock down to Thursday blowout clearance.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                        <a href="/products.html" class="btn-pill-dark">
+                            Shop Now
+                        </a>
+                        <div class="d-flex align-items-center gap-2 ps-2">
+                            <span class="badge bg-dark px-3 py-2 rounded-pill small">Today's Active Day:</span>
+                            <span class="fs-5 fw-black text-dark" id="heroTodayDayDisplay">Saturday</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- WEEKLY PRICE SCHEDULE TIMELINE -->
-                <div class="mt-4 pt-3 border-top border-white-50">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-uppercase small fw-bold text-white-50">
-                            <i class="bi bi-calendar3 me-1"></i> Weekly Liquidation Markdown Schedule
-                        </span>
-                        <span class="small text-white-50">Price drops every morning until restock!</span>
-                    </div>
-                    <div class="row row-cols-2 row-cols-sm-4 row-cols-md-7 g-2" id="weeklyScheduleContainer">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-        </section>
+                <!-- Center Liquidation Product Showcase & Right Half (Sunshine Yellow) -->
+                <div class="col-lg-6 text-center position-relative z-2 py-4">
+                    <!-- Main Liquidation Hero Showcase Stage -->
+                    <div class="hero-product-stage position-relative d-inline-block">
+                        <div class="hero-product-frame">
+                            <img src="/uploads/products/product-1787760697290-824779285.webp"
+                                 id="heroMainProductImg"
+                                 alt="SmartBin Liquidation Overstock"
+                                 class="img-fluid"
+                                 onerror="this.src='https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&q=80'">
+                            <div class="hero-product-pill-tag">
+                                <i class="bi bi-shield-check text-warning me-1"></i> Certified Bin Drop • Inspected
+                            </div>
+                        </div>
 
-        <!-- BIN LOCATIONS & PRICE TIERS -->
-        <section class="container my-5">
-            <div class="d-flex justify-content-between align-items-end mb-4">
-                <div>
-                    <span class="text-uppercase small fw-bold text-danger">Explore Store Sections</span>
-                    <h2 class="fw-black text-dark mb-0">Browse By Liquidation Bin</h2>
-                </div>
-                <a href="/products.html" class="btn btn-outline-custom btn-sm rounded-pill px-3">View All Products →</a>
-            </div>
+                        <!-- Floating Product Badge 1 (Top Right over yellow) -->
+                        <div class="hero-floating-card card-top" id="heroFloatCard1" onclick="App.openQuickView(8)" title="Click to view liquidation schedule">
+                            <img id="heroFloatImg1" src="/uploads/products/product-1787760697290-824779285.webp" alt="iphone 18 pro max" onerror="this.src='https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&q=80'">
+                            <div class="text-start">
+                                <div class="card-title-text" id="heroFloatTitle1">iphone 18 pro max</div>
+                                <div class="card-price-text" id="heroFloatPrice1">₹850.00</div>
+                                <div class="card-stars">★★★★★</div>
+                            </div>
+                            <div class="card-arrow-circle">
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </div>
 
-            <div class="row g-3">
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+A'">
-                        <div class="fs-1 text-danger mb-2">🔥</div>
-                        <h5 class="fw-bold mb-1">Bin A (Tier 1)</h5>
-                        <p class="text-muted small mb-2">Premium Overstock & High-End Tech</p>
-                        <span class="badge bg-danger rounded-pill px-3 py-1">Top Tier Deals</span>
+                        <!-- Floating Product Badge 2 (Bottom Center/Right) -->
+                        <div class="hero-floating-card card-bottom" id="heroFloatCard2" onclick="App.openQuickView(7)" title="Click to view liquidation schedule">
+                            <img id="heroFloatImg2" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&q=80" alt="Apple iPad Pro 11-inch M2" onerror="this.src='/uploads/products/product-1787764087325-561671949.webp'">
+                            <div class="text-start">
+                                <div class="card-title-text" id="heroFloatTitle2">Apple iPad Pro M2</div>
+                                <div class="card-price-text" id="heroFloatPrice2">₹11.00</div>
+                                <div class="card-stars">★★★★★</div>
+                            </div>
+                            <div class="card-arrow-circle">
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+B'">
-                        <div class="fs-1 text-primary mb-2">⚡</div>
-                        <h5 class="fw-bold mb-1">Bin B (Tier 2)</h5>
-                        <p class="text-muted small mb-2">Home Appliances & Fashion Apparel</p>
-                        <span class="badge bg-primary rounded-pill px-3 py-1">Best Value</span>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+C'">
-                        <div class="fs-1 text-warning mb-2">🛠️</div>
-                        <h5 class="fw-bold mb-1">Bin C (Tier 3)</h5>
-                        <p class="text-muted small mb-2">Tools, Hardware & Gadget Accessories</p>
-                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1">Crazy Bargains</span>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 bg-white hover-shadow transition" style="cursor: pointer;" onclick="location.href='/products.html?bin=Bin+D'">
-                        <div class="fs-1 text-success mb-2">💥</div>
-                        <h5 class="fw-bold mb-1">Bin D (Clearance)</h5>
-                        <p class="text-muted small mb-2">Blowout Clearance & $2 Mystery Finds</p>
-                        <span class="badge bg-success rounded-pill px-3 py-1">Lowest Prices</span>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- FEATURED LIQUIDATION DEALS -->
-        <section class="container my-5">
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                <div>
-                    <span class="text-uppercase small fw-bold text-danger">Hot From The Bins</span>
-                    <h2 class="fw-black text-dark mb-0">Today's Featured Liquidation Deals</h2>
-                </div>
-                <div class="d-flex gap-2">
-                    <input type="text" id="searchProductsInput" class="form-control rounded-pill px-3" placeholder="Search brand, gadget..." style="max-width: 250px;">
-                </div>
-            </div>
-
-            <!-- Product Grid -->
-            <div class="row g-4" id="productGrid">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
-        <!-- WEEKEND LUCKY DRAW PROMO BANNER -->
-        <section class="container my-5">
-            <div class="lucky-draw-card">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-2">
-                            <i class="bi bi-stars me-1"></i> CUSTOMER ENGAGEMENT BONANZA
-                        </span>
-                        <h2 class="display-6 fw-black text-white mb-2">Weekend Lucky Draw: Win A 55" 4K Smart TV!</h2>
-                        <p class="text-white-50 lead mb-3">Every checkout this week automatically issues 1 verified Lucky Draw entry ticket. Winners announced live on Sunday!</p>
-                        <div class="d-flex gap-3">
-                            <a href="/lucky-draw.html" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold text-dark">
-                                <i class="bi bi-gift-fill me-1"></i> View Draw & Past Winners
-                            </a>
-                            <a href="/products.html" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
-                                Shop To Enter
-                            </a>
+                    <!-- Right edge mini thumbnails (Authentic Liquidation Items) -->
+                    <div class="hero-mini-thumbs d-none d-sm-flex">
+                        <div class="hero-carousel-arrow" onclick="App.openQuickView(21)" title="Instant Camera">
+                            <i class="bi bi-chevron-left"></i>
+                        </div>
+                        <div class="hero-mini-thumb" onclick="App.openQuickView(21)" title="Instant Camera" style="cursor: pointer;">
+                            <img src="/uploads/products/product-1788179968963-247884174.jpg" alt="Instant Camera">
+                        </div>
+                        <div class="hero-mini-thumb" onclick="App.openQuickView(9)" title="Sweeping Robot" style="cursor: pointer;">
+                            <img src="/uploads/products/product-1787764087325-561671949.webp" alt="Sweeping Robot">
+                        </div>
+                        <div class="hero-carousel-arrow" onclick="App.openQuickView(9)" title="Sweeping Robot">
+                            <i class="bi bi-chevron-right"></i>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </header>
 
-        <!-- HOW SMARTBIN WORKS -->
-        <section class="container my-5 py-4">
-            <div class="text-center mb-5">
-                <span class="text-uppercase small fw-bold text-danger">Simple & Transparent</span>
-                <h2 class="fw-black text-dark">How SmartBin Liquidation Works</h2>
-                <p class="text-muted">Overstock inventory from top retail giants sold at massive daily discounts.</p>
+    <!-- WEEKLY 7-DAY SCHEDULE STRIP -->
+    <section class="container schedule-strip my-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 px-1 gap-2">
+            <div>
+                <span class="badge bg-warning text-dark fw-bold text-uppercase px-3 py-1 rounded-pill small">Reverse Markdown Schedule</span>
+                <span class="text-muted small ms-2">Click any day to view all products at that day's liquidated price</span>
             </div>
-            <div class="row g-4 text-center">
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
-                        <div class="display-4 text-danger mb-3"><i class="bi bi-truck-flatbed"></i></div>
-                        <h5 class="fw-bold">1. Retail Overstock</h5>
-                        <p class="text-muted small">We buy bulk truckloads of excess inventory, clearance stock & customer returns.</p>
+            <a href="/products.html" class="text-dark small fw-bold text-decoration-none">
+                Browse Full Catalog <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="row g-2 row-cols-2 row-cols-sm-3 row-cols-md-7" id="weeklyScheduleContainer">
+            <!-- Populated dynamically by App.renderScheduleTimeline() -->
+        </div>
+    </section>
+
+    <!-- BEST SELLER MAGAZINE SECTION (Matching Reference Image Exactly) -->
+    <section class="section-bestseller">
+        <!-- Giant Faint Background Watermark -->
+        <div class="watermark-background">BEST SELLER</div>
+
+        <div class="container position-relative z-1">
+            <div class="text-center mb-4">
+                <div class="editorial-tag">Every Day</div>
+                <h2 class="editorial-heading">Best Seller</h2>
+                <p class="editorial-desc">
+                    Hand-picked liquidation overstock items inspected and certified by bin specialists. Prices drop every day.
+                </p>
+            </div>
+
+            <!-- 5-Column Magazine Grid (Authentic User Liquidation Items) -->
+            <div class="row g-4 align-items-center justify-content-center">
+                <!-- Left 2 Cards (iPad & Sweeping Robot) -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="d-flex flex-column gap-4">
+                        <!-- Card 1: Apple iPad Pro -->
+                        <div class="magazine-card" id="bestSellerCard1" onclick="App.openQuickView(7)" style="cursor: pointer;">
+                            <div class="magazine-card-img-wrap">
+                                <img id="bestSellerImg1" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80" alt="Apple iPad Pro 11-inch M2">
+                            </div>
+                            <div>
+                                <div class="magazine-card-title" id="bestSellerTitle1">Apple iPad Pro M2</div>
+                                <div class="magazine-card-price" id="bestSellerPrice1">₹11.00</div>
+                            </div>
+                            <button class="circle-arrow-btn" title="View details & price drop schedule">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card 2: Sweeping Robot -->
+                        <div class="magazine-card" id="bestSellerCard2" onclick="App.openQuickView(9)" style="cursor: pointer;">
+                            <div class="magazine-card-img-wrap">
+                                <img id="bestSellerImg2" src="/uploads/products/product-1787764087325-561671949.webp" alt="Sweeping robot" onerror="this.src='https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80'">
+                            </div>
+                            <div>
+                                <div class="magazine-card-title" id="bestSellerTitle2">Sweeping robot</div>
+                                <div class="magazine-card-price" id="bestSellerPrice2">₹40.00</div>
+                            </div>
+                            <button class="circle-arrow-btn" title="View details & price drop schedule">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
-                        <div class="display-4 text-warning mb-3"><i class="bi bi-clipboard2-check"></i></div>
-                        <h5 class="fw-bold">2. Quality Checked</h5>
-                        <p class="text-muted small">Every item is tested and labeled with condition tags (Brand New, Open Box, Refurbished).</p>
+
+                <!-- Center Tall Yellow Feature Card (Product-Centric Feature) -->
+                <div class="col-12 col-lg-5 my-3 my-lg-0">
+                    <div class="center-featured-card" id="centerFeaturedCard" onclick="App.openQuickView(8)" style="cursor: pointer;" title="Click to view liquidation schedule">
+                        <span class="center-featured-badge" id="centerFeaturedBadge">#1 TOP LIQUIDATION PICK</span>
+                        <div class="center-featured-img-wrap">
+                            <img id="centerFeaturedImg"
+                                 src="/uploads/products/product-1787760697290-824779285.webp" 
+                                 alt="iphone 18 pro max"
+                                 onerror="this.src='https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&q=80'">
+                        </div>
+                        <div class="center-featured-overlay">
+                            <div class="center-featured-title" id="centerFeaturedTitle">iphone 18 pro max</div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="center-featured-price" id="centerFeaturedPrice">₹850.00</span>
+                                <span class="badge bg-dark rounded-pill px-3 py-1 text-warning fw-bold">Liquidation Star</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
-                        <div class="display-4 text-primary mb-3"><i class="bi bi-graph-down-arrow"></i></div>
-                        <h5 class="fw-bold">3. Daily Price Drops</h5>
-                        <p class="text-muted small">Prices start at $14 on Friday restock and drop every day down to $2 by Thursday!</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
-                        <div class="display-4 text-success mb-3"><i class="bi bi-trophy"></i></div>
-                        <h5 class="fw-bold">4. Weekend Lucky Draw</h5>
-                        <p class="text-muted small">Every order enters you into our weekly lucky draws for high-ticket mega prizes.</p>
+
+                <!-- Right 2 Cards (Camera & Lotus Lamp) -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="d-flex flex-column gap-4">
+                        <!-- Card 3: Instant Camera -->
+                        <div class="magazine-card" id="bestSellerCard3" onclick="App.openQuickView(21)" style="cursor: pointer;">
+                            <div class="magazine-card-img-wrap">
+                                <img id="bestSellerImg3" src="/uploads/products/product-1788179968963-247884174.jpg" alt="INSTANT CAMERA" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80'">
+                            </div>
+                            <div>
+                                <div class="magazine-card-title" id="bestSellerTitle3">INSTANT CAMERA</div>
+                                <div class="magazine-card-price" id="bestSellerPrice3">₹566.00</div>
+                            </div>
+                            <button class="circle-arrow-btn" title="View details & price drop schedule">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card 4: Lotus Lamp -->
+                        <div class="magazine-card" id="bestSellerCard4" onclick="App.openQuickView(20)" style="cursor: pointer;">
+                            <div class="magazine-card-img-wrap">
+                                <img id="bestSellerImg4" src="/uploads/products/product-1788179895216-305750348.jpg" alt="LOTUS LAMP" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80'">
+                            </div>
+                            <div>
+                                <div class="magazine-card-title" id="bestSellerTitle4">LOTUS LAMP</div>
+                                <div class="magazine-card-price" id="bestSellerPrice4">₹566.00</div>
+                            </div>
+                            <button class="circle-arrow-btn" title="View details & price drop schedule">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- Indicator Dots -->
+            <div class="editorial-dots">
+                <div class="editorial-dot active"></div>
+                <div class="editorial-dot"></div>
+                <div class="editorial-dot"></div>
+                <div class="editorial-dot"></div>
+                <div class="editorial-dot"></div>
+            </div>
+
+            <!-- View More Button -->
+            <div class="text-center mt-3">
+                <a href="/products.html" class="btn-pill-dark">
+                    Browse All Liquidation Bins <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEAL OF THE MONTH SECTION (Authentic Overstock Liquidation Spotlight) -->
+    <section class="section-deal-month bg-white py-5" id="aboutSection">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-5 text-center">
+                    <div class="deal-month-image-wrap shadow-sm">
+                        <img id="dealMonthImg"
+                             src="/uploads/products/product-1787764087325-561671949.webp" 
+                             alt="Deal of the Month Item"
+                             class="img-fluid"
+                             onerror="this.src='https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&q=80'">
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="editorial-tag">Certified Overstock Drop</div>
+                    <h2 class="editorial-heading mb-3" id="dealMonthTitle">Sweeping Robot Smart Cleaner</h2>
+                    <p class="text-secondary mb-4" style="line-height: 1.7; max-width: 520px;">
+                        Certified liquidation overstock bins reset every midnight with automatic reverse markdown prices. Top tech, appliances, and electronics priced to clear.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-4 mb-4">
+                        <div class="p-3 bg-light rounded-3 text-center" style="min-width: 90px;">
+                            <div class="fs-2 fw-black text-dark" id="dealCountdownDays">04</div>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 11px;">Days</small>
+                        </div>
+                        <div class="p-3 bg-light rounded-3 text-center" style="min-width: 90px;">
+                            <div class="fs-2 fw-black text-dark" id="dealCountdownHours">18</div>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 11px;">Hours</small>
+                        </div>
+                        <div class="p-3 bg-light rounded-3 text-center" style="min-width: 90px;">
+                            <div class="fs-2 fw-black text-dark" id="dealCountdownMins">42</div>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 11px;">Mins</small>
+                        </div>
+                        <div class="p-3 bg-light rounded-3 text-center" style="min-width: 90px;">
+                            <div class="fs-2 fw-black text-warning" id="dealCountdownSecs">15</div>
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 11px;">Secs</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                        <a href="/products.html" class="btn-pill-dark">
+                            Explore Today's Drops
+                        </a>
+                        <a href="/offers.html" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-semibold">
+                            View Coupons <i class="bi bi-tag ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE PRODUCT CATALOG (Dynamic Daily Pricing Engine) -->
+    <main class="container my-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2 border-top pt-5">
+            <div>
+                <div class="editorial-tag">Live Warehouse Bins</div>
+                <h3 class="editorial-heading mb-0 fs-2" id="productsCount">Today's Liquidation Items</h3>
+                <small class="text-muted">Prices drop daily across all bin aisles</small>
+            </div>
+            <a href="/products.html" class="btn btn-outline-dark rounded-pill px-4 py-2 btn-sm fw-semibold">
+                Browse Full Catalog <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <!-- PRODUCT GRID -->
+        <div class="row g-3 g-md-4" id="productGrid">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-dark" role="status"></div>
+                <p class="mt-3 text-muted">Calculating daily liquidation prices...</p>
+            </div>
+        </div>
     </main>
 
     <!-- PRODUCT QUICK VIEW MODAL -->
@@ -206,59 +395,69 @@
                 <div class="modal-header border-0 pb-0">
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body pt-0" id="quickViewModalBody">
-                    <!-- Populated by JS -->
-                </div>
+                <div class="modal-body" id="quickViewModalBody"></div>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
+    <!-- EDITORIAL LUXURY FOOTER -->
+    <footer class="footer-luxury pt-5 pb-4" style="background-color: #0F172A; color: #E2E8F0;">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-box2-heart-fill text-warning fs-3"></i>
-                        <h4 class="fw-black text-white mb-0">SmartBin Store</h4>
+                        <div class="logo-icon-wrap" style="width: 34px; height: 34px; background: var(--color-yellow); color: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                            <i class="bi bi-box-seam-fill"></i>
+                        </div>
+                        <h4 class="fw-black text-white mb-0" style="font-family: 'Plus Jakarta Sans', sans-serif;">SmartBin</h4>
                     </div>
-                    <p class="small text-white-50">Transforming traditional liquidation bin stores into an automated e-commerce experience with daily price drops, verified conditions, and exciting lucky draws.</p>
+                    <p class="small mb-3" style="color: #CBD5E1; line-height: 1.6;">
+                        Automated liquidation bin store management platform with daily dynamic reverse pricing for retail overstocks and certified brand returns.
+                    </p>
                 </div>
-                <div class="col-md-2 col-6">
-                    <h6 class="text-white text-uppercase fw-bold mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><a href="/products.html">Browse Products</a></li>
-                        <li><a href="/offers.html">Promotions & Coupons</a></li>
-                        <li><a href="/lucky-draw.html">Weekend Lucky Draw</a></li>
-                        <li><a href="/order-tracking.html">Track Shipment</a></li>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Explore</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/index.html" style="color: #CBD5E1;">Home</a></li>
+                        <li><a href="/products.html" style="color: #CBD5E1;">Browse Bins</a></li>
+                        <li><a href="/offers.html" style="color: #CBD5E1;">Deals & Coupons</a></li>
+                        <li><a href="/lucky-draw.html" style="color: #CBD5E1;">Weekend Lucky Draw</a></li>
                     </ul>
                 </div>
-                <div class="col-md-2 col-6">
-                    <h6 class="text-white text-uppercase fw-bold mb-3">Portals</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><a href="/login.html">Customer Login</a></li>
-                        <li><a href="/manager/index.html">Manager Portal</a></li>
-                        <li><a href="/admin/index.html">Admin Dashboard</a></li>
-                        <li><a href="/orders.html">My Purchases</a></li>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Portals</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/login.html" style="color: #CBD5E1;">Sign In</a></li>
+                        <li><a href="/register.html" style="color: #CBD5E1;">Register</a></li>
+                        <li><a href="/manager/index.html" style="color: #CBD5E1;">Manager Portal</a></li>
+                        <li><a href="/admin/index.html" style="color: #CBD5E1;">Admin Dashboard</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h6 class="text-white text-uppercase fw-bold mb-3">Store Information</h6>
-                    <p class="small text-white-50 mb-1"><i class="bi bi-geo-alt me-2 text-warning"></i> 100 Liquidation Way, Suite 400</p>
-                    <p class="small text-white-50 mb-1"><i class="bi bi-clock me-2 text-warning"></i> Restock Day: Every Friday 8:00 AM</p>
-                    <p class="small text-white-50"><i class="bi bi-shield-check me-2 text-warning"></i> 100% Secure Simulated Checkout</p>
+
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Restock Alerts</h6>
+                    <p class="small mb-2" style="color: #CBD5E1;">Subscribe to get notifications whenever fresh bins restock on Friday.</p>
+                    <form id="newsletterForm" onsubmit="App.handleSubscribe(event)" novalidate>
+                        <div class="input-group">
+                            <input type="email" id="newsletterEmail" class="form-control rounded-start-pill border-0 px-3" placeholder="Enter your email address" style="background: #FFFFFF; color: #111;" autocomplete="email" required>
+                            <button id="btnSubscribe" class="btn btn-warning rounded-end-pill px-4 fw-bold text-dark" type="submit">Subscribe</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-top border-secondary text-center small text-white-50">
-                &copy; 2026 SmartBin - Smart Liquidation Bin Store E-Commerce Management System.
+
+            <div class="pt-3 border-top border-secondary border-opacity-25 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 small" style="color: #94A3B8;">
+                <div>© 2026 SmartBin Liquidation Store. All Rights Reserved.</div>
+                <div>Certified Liquidation Bins & Daily Markdown Engine</div>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap & SweetAlert JS -->
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- App Scripts -->
     <script src="/js/api.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/app.js"></script>

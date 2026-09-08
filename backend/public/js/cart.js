@@ -1,5 +1,5 @@
 /**
- * SmartBin Cart Controller
+ * SmartBin Cart Controller (Indian Rupees ₹)
  */
 const CartPage = {
     cartItems: [],
@@ -31,7 +31,7 @@ const CartPage = {
 
         container.innerHTML = `
             <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status"></div>
+                <div class="spinner-border text-dark" role="status"></div>
                 <p class="mt-2 text-muted">Loading your cart items...</p>
             </div>
         `;
@@ -47,7 +47,7 @@ const CartPage = {
             }
         } catch (e) {
             container.innerHTML = `
-                <div class="alert alert-danger">Error loading cart: ${e.message}</div>
+                <div class="alert alert-secondary">Error loading cart: ${e.message}</div>
             `;
         }
     },
@@ -60,11 +60,11 @@ const CartPage = {
         if (this.cartItems.length === 0) {
             container.innerHTML = `
                 <div class="text-center py-5">
-                    <div class="card p-5 border-0 shadow-sm rounded-4 text-center">
+                    <div class="card p-5 border-0 shadow-sm rounded-3 text-center">
                         <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
                         <h4 class="fw-bold">Your Liquidation Cart is Empty</h4>
-                        <p class="text-muted">Explore our daily bins and grab high-value overstock before it sells out!</p>
-                        <a href="/products.html" class="btn btn-primary-custom px-4 py-2 rounded-pill mx-auto mt-2">
+                        <p class="text-muted small">Explore our daily bins and grab overstock deals before they sell out!</p>
+                        <a href="/products.html" class="btn btn-primary-custom px-4 py-2 rounded-2 mx-auto mt-2">
                             <i class="bi bi-search me-1"></i> Browse Products
                         </a>
                     </div>
@@ -82,7 +82,6 @@ const CartPage = {
                     <thead class="table-light text-uppercase small text-muted">
                         <tr>
                             <th>Product</th>
-                            <th>Bin & Condition</th>
                             <th>Unit Price</th>
                             <th style="width: 140px;">Quantity</th>
                             <th>Total</th>
@@ -92,13 +91,12 @@ const CartPage = {
                     <tbody>
                         ${this.cartItems.map(item => {
                             const itemTotal = Number(item.price) * item.quantity;
-                            const origPrice = Number(item.original_price || item.price);
                             return `
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
                                             <img src="${item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'}" 
-                                                 class="rounded-3 shadow-sm" style="width: 60px; height: 60px; object-fit: cover;"
+                                                 class="rounded-2 shadow-sm border" style="width: 55px; height: 55px; object-fit: contain; background: #F8FAFC; padding: 2px;"
                                                  onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'">
                                             <div>
                                                 <h6 class="fw-bold mb-0 text-dark">${item.product_name}</h6>
@@ -107,14 +105,7 @@ const CartPage = {
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-dark">${item.bin_number || 'Bin A'}</span>
-                                        <span class="badge bg-primary-subtle text-primary">${item.condition_type || 'Open Box'}</span>
-                                    </td>
-                                    <td>
-                                        <div class="fw-bold text-danger">$${Number(item.price).toFixed(2)}</div>
-                                        ${origPrice > item.price ? `
-                                            <small class="text-muted text-decoration-line-through">$${origPrice.toFixed(2)}</small>
-                                        ` : ''}
+                                        <div class="fw-bold text-dark">₹${Number(item.price).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm">
@@ -124,10 +115,10 @@ const CartPage = {
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="fw-black fs-6 text-dark">$${itemTotal.toFixed(2)}</div>
+                                        <div class="fw-bold fs-6 text-dark">₹${itemTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</div>
                                     </td>
                                     <td>
-                                        <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="CartPage.deleteItem(${item.cart_id})" title="Remove">
+                                        <button class="btn btn-outline-danger btn-sm" onclick="CartPage.deleteItem(${item.cart_id})" title="Remove">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
@@ -138,10 +129,10 @@ const CartPage = {
                 </table>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="CartPage.clearCart()">
+                <button class="btn btn-outline-danger btn-sm rounded-2" onclick="CartPage.clearCart()">
                     <i class="bi bi-trash3 me-1"></i> Clear Cart
                 </button>
-                <a href="/products.html" class="btn btn-outline-secondary btn-sm rounded-pill">
+                <a href="/products.html" class="btn btn-outline-secondary btn-sm rounded-2">
                     <i class="bi bi-arrow-left me-1"></i> Continue Shopping
                 </a>
             </div>
@@ -151,7 +142,6 @@ const CartPage = {
     updateSummary() {
         const subtotalEl = document.getElementById("cartSubtotal");
         const discountEl = document.getElementById("cartDiscount");
-        const savingsEl = document.getElementById("cartSavings");
         const totalEl = document.getElementById("cartFinalTotal");
         const couponBadge = document.getElementById("appliedCouponBadge");
 
@@ -163,20 +153,15 @@ const CartPage = {
         }
 
         const finalTotal = Math.max(0, this.totalAmount - discountAmount);
-        const totalSavings = Math.max(0, this.totalOriginal - finalTotal);
 
-        subtotalEl.textContent = `$${this.totalAmount.toFixed(2)}`;
-        discountEl.textContent = `-$${discountAmount.toFixed(2)}`;
-        totalEl.textContent = `$${finalTotal.toFixed(2)}`;
-
-        if (savingsEl) {
-            savingsEl.textContent = `$${totalSavings.toFixed(2)}`;
-        }
+        subtotalEl.textContent = `₹${this.totalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+        discountEl.textContent = `-₹${discountAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+        totalEl.textContent = `₹${finalTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 
         if (couponBadge) {
             if (this.appliedCoupon) {
                 couponBadge.innerHTML = `
-                    <span class="badge bg-success px-3 py-2 rounded-pill d-flex align-items-center gap-2">
+                    <span class="badge bg-success px-3 py-2 rounded-2 d-flex align-items-center gap-2">
                         <i class="bi bi-tag-fill"></i> Coupon "${this.appliedCoupon.code}" applied (-${this.appliedCoupon.discount_percentage}%)
                         <a href="javascript:void(0)" onclick="CartPage.removeCoupon()" class="text-white ms-2 text-decoration-none">✕</a>
                     </span>
@@ -234,7 +219,7 @@ const CartPage = {
             applyBtn.addEventListener("click", async () => {
                 const code = couponInput.value.trim();
                 if (!code) {
-                    API.showToast("Please enter a valid promo code.", "warning");
+                    API.showToast("Please enter a valid coupon code.", "warning");
                     return;
                 }
 

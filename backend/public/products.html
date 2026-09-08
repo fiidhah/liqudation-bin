@@ -3,40 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquidation Bins Catalog - SmartBin</title>
+    <title>Browse Liquidation Bins & Products - SmartBin</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom Style -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <i class="bi bi-box2-heart-fill text-warning fs-3"></i>
+    <!-- TOP ANNOUNCEMENT TICKER -->
+    <div class="top-announcement-bar">
+        <span>⚡ <strong>SMARTBIN LIQUIDATION:</strong> DAILY PRICE DROP SCHEDULE ACTIVE • RESTOCKED FRIDAY • CLEARANCE THURSDAY</span>
+    </div>
+
+    <!-- CLEAN EDITORIAL NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-editorial-clean sticky-top">
+        <div class="container-fluid px-lg-5">
+            <a class="brand-logo-text" href="/index.html">
+                <div class="logo-icon-wrap">
+                    <i class="bi bi-box-seam-fill"></i>
+                </div>
                 <span>SmartBin</span>
-                <span class="brand-badge">Catalog</span>
             </a>
+
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
-                    <li class="nav-item"><a class="nav-link" href="/index.html"><i class="bi bi-house-door me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/products.html"><i class="bi bi-grid-3x3-gap me-1"></i>Browse Bins</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/offers.html"><i class="bi bi-tag-fill me-1 text-warning"></i>Offers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/lucky-draw.html"><i class="bi bi-gift-fill me-1 text-info"></i>Lucky Draw</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Track Order</a></li>
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link-clean" href="/index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-clean active" href="/products.html">Browse Bins</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-clean" href="/offers.html">Deals & Coupons</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-clean" href="/lucky-draw.html">Lucky Draw</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-clean" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Live Tracker</a>
+                    </li>
                 </ul>
 
-                <div class="d-flex align-items-center gap-3">
-                    <a href="/wishlist.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Wishlist">
+                <!-- Right Actions -->
+                <div class="d-flex align-items-center gap-2">
+                    <a href="/wishlist.html" class="nav-icon-editorial" title="My Wishlist">
                         <i class="bi bi-heart fs-6"></i>
                     </a>
-                    <a href="/cart.html" class="btn btn-outline-light btn-sm rounded-circle p-2 position-relative" title="Shopping Cart">
+                    <a href="/cart.html" class="nav-icon-editorial" title="Shopping Cart">
                         <i class="bi bi-cart3 fs-6"></i>
-                        <span id="cartCountBadge" class="badge-cart">0</span>
+                        <span id="cartCountBadge" class="badge-cart-editorial">0</span>
                     </a>
                     <div id="navAuthSection"></div>
                 </div>
@@ -44,127 +70,168 @@
         </div>
     </nav>
 
+    <!-- CATALOG MAIN LAYOUT -->
     <main class="container my-4 my-md-5">
-        <!-- HEADER -->
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom gap-2">
-            <div>
-                <h2 class="fw-black text-dark mb-1">Liquidation Bin Items</h2>
-                <p class="text-muted mb-0" id="productsCount">Showing all items across store bins</p>
-            </div>
-            <!-- SEARCH BAR -->
-            <div class="d-flex gap-2 w-100 w-md-auto" style="max-width: 380px;">
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0 rounded-start-pill"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" id="searchProductsInput" class="form-control border-start-0 rounded-end-pill" placeholder="Search by name, brand, bin...">
+        <!-- HEADER SEARCH BAR & SORT -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Search by product name, brand, or model...">
+                    </div>
                 </div>
+                <div class="col-md-6 col-lg-3">
+                    <select id="categorySelect" class="form-select bg-light border-0 py-2">
+                        <option value="All">All Categories</option>
+                        <option value="Electronics">Electronics & Tech</option>
+                        <option value="Home & Kitchen">Home & Kitchen</option>
+                        <option value="Fashion & Footwear">Fashion & Footwear</option>
+                        <option value="Gadgets & Office">Gadgets & Office</option>
+                        <option value="Tools & Hardware">Tools & Hardware</option>
+                        <option value="General">General Overstock</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <select id="sortSelect" class="form-select bg-light border-0 py-2">
+                        <option value="latest">Sort: Newest Drops</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEEKLY 7-DAY SCHEDULE STRIP FOR CATALOG -->
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 px-1 gap-2">
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-calendar-week-fill text-primary me-1"></i> Weekly Liquidation Markdown Schedule</h6>
+                    <small class="text-muted">Click any day to preview that day's exact liquidated prices across the entire catalog</small>
+                </div>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill small fw-semibold">
+                    <i class="bi bi-arrow-repeat me-1"></i> Dynamic Daily Pricing
+                </span>
+            </div>
+            <div class="row g-2 row-cols-2 row-cols-sm-3 row-cols-md-7" id="weeklyScheduleContainer">
+                <!-- Populated dynamically by App.renderScheduleTimeline() -->
             </div>
         </div>
 
         <div class="row g-4">
             <!-- SIDEBAR FILTERS -->
             <div class="col-lg-3">
-                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 85px;">
+                <div class="filter-card sticky-top" style="top: 90px;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold mb-0"><i class="bi bi-funnel-fill text-danger me-1"></i> Filters</h5>
-                        <button class="btn btn-link text-decoration-none text-muted small p-0" onclick="App.resetFilters()">Reset All</button>
+                        <h5 class="fw-bold mb-0">Filters</h5>
+                        <button class="btn btn-sm btn-link text-danger text-decoration-none p-0 fw-bold" onclick="App.resetFilters()">Reset All</button>
                     </div>
 
-                    <!-- Bin Filter Pills -->
+                    <!-- Categories -->
                     <div class="mb-4">
-                        <label class="form-label text-uppercase small text-muted fw-bold">Select Bin Tier</label>
-                        <div class="d-flex flex-wrap gap-1">
-                            <button class="btn btn-sm btn-outline-dark rounded-pill active" data-filter-bin="All">All Bins</button>
-                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin A">Bin A ($14)</button>
-                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin B">Bin B ($10)</button>
-                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin C">Bin C ($6)</button>
-                            <button class="btn btn-sm btn-outline-dark rounded-pill" data-filter-bin="Bin D">Bin D ($2)</button>
+                        <div class="filter-title">Categories</div>
+                        <div class="d-flex flex-wrap gap-1" id="categoryChips">
+                            <button class="filter-btn-pill active" data-cat="All">All</button>
+                            <button class="filter-btn-pill" data-cat="Electronics">Electronics</button>
+                            <button class="filter-btn-pill" data-cat="Home & Kitchen">Home</button>
+                            <button class="filter-btn-pill" data-cat="Fashion & Footwear">Fashion</button>
+                            <button class="filter-btn-pill" data-cat="Tools & Hardware">Tools</button>
                         </div>
                     </div>
 
-                    <!-- Category Filter -->
-                    <div class="mb-4">
-                        <label class="form-label text-uppercase small text-muted fw-bold">Category</label>
-                        <select class="form-select rounded-3" id="categoryFilter">
-                            <option value="All">All Categories</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Home & Kitchen">Home & Kitchen</option>
-                            <option value="Fashion & Footwear">Fashion & Footwear</option>
-                            <option value="Gadgets & Office">Gadgets & Office</option>
-                            <option value="Tools & Hardware">Tools & Hardware</option>
-                        </select>
-                    </div>
-
-                    <!-- Condition Filter -->
-                    <div class="mb-4">
-                        <label class="form-label text-uppercase small text-muted fw-bold">Item Condition</label>
-                        <select class="form-select rounded-3" id="conditionFilter">
-                            <option value="All">All Conditions</option>
-                            <option value="Brand New">Brand New (Sealed)</option>
-                            <option value="Like New">Like New (Inspected)</option>
-                            <option value="Open Box">Open Box (Overstock)</option>
-                            <option value="Refurbished">Refurbished</option>
-                            <option value="Clearance">Clearance</option>
-                        </select>
-                    </div>
-
-                    <!-- Sort By -->
+                    <!-- Price Range -->
                     <div class="mb-3">
-                        <label class="form-label text-uppercase small text-muted fw-bold">Sort Deals</label>
-                        <select class="form-select rounded-3" id="sortFilter">
-                            <option value="latest">Newest Restocked</option>
-                            <option value="savings">Highest Savings ($)</option>
-                            <option value="price_asc">Price: Low to High</option>
-                            <option value="price_desc">Price: High to Low</option>
-                        </select>
+                        <div class="filter-title">Price Range</div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="number" id="minPriceInput" class="form-control form-control-sm" placeholder="Min ₹">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" id="maxPriceInput" class="form-control form-control-sm" placeholder="Max ₹">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- PRODUCT CATALOG GRID -->
+            <!-- PRODUCT RESULTS -->
             <div class="col-lg-9">
-                <div class="row g-4" id="productGrid">
-                    <!-- Populated by JS -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0" id="productsCount">Showing Liquidation Items</h5>
+                </div>
+
+                <div class="row g-3 g-md-4" id="productGrid">
+                    <div class="col-12 text-center py-5">
+                        <div class="spinner-border text-danger" role="status"></div>
+                        <p class="mt-3 text-muted">Loading items...</p>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- PRODUCT QUICK VIEW MODAL -->
+    <!-- QUICK VIEW MODAL -->
     <div class="modal fade" id="productQuickViewModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow-lg p-3">
                 <div class="modal-header border-0 pb-0">
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body pt-0" id="quickViewModalBody"></div>
+                <div class="modal-body" id="quickViewModalBody"></div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap & SweetAlert JS -->
+    <!-- LUXURY FOOTER -->
+    <footer class="footer-luxury">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="brand-icon-glow">
+                            <i class="bi bi-box-seam-fill"></i>
+                        </div>
+                        <h4 class="fw-black text-white mb-0">SmartBin</h4>
+                    </div>
+                    <p class="text-muted small">Daily liquidation deals direct to customers.</p>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/index.html">Home Storefront</a></li>
+                        <li><a href="/offers.html">Deals & Coupons</a></li>
+                        <li><a href="/lucky-draw.html">Weekend Lucky Draw</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5>Staff Portals</h5>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/login.html">Sign In</a></li>
+                        <li><a href="/manager/index.html">Manager Portal</a></li>
+                        <li><a href="/admin/index.html">Admin Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Restock Alerts</h6>
+                    <p class="small mb-2 text-muted">Subscribe to get notifications whenever fresh bins restock on Friday.</p>
+                    <form id="newsletterForm" onsubmit="App.handleSubscribe(event)" novalidate>
+                        <div class="input-group">
+                            <input type="email" id="newsletterEmail" class="form-control rounded-start-pill border-0 px-3" placeholder="Enter your email address" style="background: #FFFFFF; color: #111;" autocomplete="email" required>
+                            <button id="btnSubscribe" class="btn btn-warning rounded-end-pill px-4 fw-bold text-dark" type="submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="pt-3 border-top border-secondary border-opacity-25 text-center small text-muted">
+                © 2026 SmartBin Liquidation Store. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- App Scripts -->
     <script src="/js/api.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/app.js"></script>
-    <script>
-        // Check URL params for preselected bin
-        document.addEventListener("DOMContentLoaded", () => {
-            const params = new URLSearchParams(window.location.search);
-            const binParam = params.get("bin");
-            if (binParam) {
-                App.activeFilters.bin_number = binParam;
-                document.querySelectorAll("[data-filter-bin]").forEach(btn => {
-                    if (btn.dataset.filterBin === binParam) {
-                        btn.classList.add("active", "btn-primary");
-                    } else {
-                        btn.classList.remove("active", "btn-primary");
-                    }
-                });
-                App.loadProducts();
-            }
-        });
-    </script>
 </body>
 </html>

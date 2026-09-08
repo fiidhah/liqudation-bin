@@ -1,37 +1,50 @@
 const db = require("../config/db");
+const { getTodayDayName, ensureProductDailyPrices } = require("../utils/dailyPriceCalculator");
 
 // =============================
-// GET ALL PRODUCTS
+// GET ALL PRODUCTS (With Dynamic Daily Pricing)
 // =============================
 const getAllProducts = (req, res) => {
-    const { keyword, category, brand, min_price, max_price, sort } = req.query;
+    const { keyword, category, brand, min_price, max_price, sort, day } = req.query;
 
-    let sql = "SELECT * FROM products WHERE 1=1";
-    const params = [];
+    const activeDay = day || getTodayDayName();
+
+    let sql = `
+        SELECT 
+            p.*,
+            COALESCE(dp.price, p.price) AS price,
+            COALESCE(dp.price, p.price) AS today_price,
+            p.price AS base_price,
+            ? AS active_day
+        FROM products p
+        LEFT JOIN daily_prices dp ON p.product_id = dp.product_id AND dp.day_name = ?
+        WHERE 1=1
+    `;
+    const params = [activeDay, activeDay];
 
     if (keyword) {
-        sql += " AND (product_name LIKE ? OR description LIKE ? OR brand LIKE ? OR category LIKE ?)";
+        sql += " AND (p.product_name LIKE ? OR p.description LIKE ? OR p.brand LIKE ? OR p.category LIKE ?)";
         const searchTerm = `%${keyword}%`;
         params.push(searchTerm, searchTerm, searchTerm, searchTerm);
     }
 
     if (category && category !== "All") {
-        sql += " AND category = ?";
+        sql += " AND p.category = ?";
         params.push(category);
     }
 
     if (brand && brand !== "All") {
-        sql += " AND brand = ?";
+        sql += " AND p.brand = ?";
         params.push(brand);
     }
 
     if (min_price) {
-        sql += " AND price >= ?";
+        sql += " AND COALESCE(dp.price, p.price) >= ?";
         params.push(Number(min_price));
     }
 
     if (max_price) {
-        sql += " AND price <= ?";
+        sql += " AND COALESCE(dp.price, p.price) <= ?";
         params.push(Number(max_price));
     }
 
@@ -40,10 +53,10 @@ const getAllProducts = (req, res) => {
     } else if (sort === "price_desc") {
         sql += " ORDER BY price DESC";
     } else {
-        sql += " ORDER BY product_id DESC";
+        sql += " ORDER BY p.product_id DESC";
     }
 
-    db.query(sql, params, (err, result) => {
+    db.query(sql, params, (err, products) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -51,10 +64,43 @@ const getAllProducts = (req, res) => {
             });
         }
 
-        res.status(200).json({
-            success: true,
-            totalProducts: result.length,
-            data: result
+        if (products.length === 0) {
+            return res.status(200).json({
+                success: true,
+                totalProducts: 0,
+                activeDay: activeDay,
+                data: []
+            });
+        }
+
+        // Fetch all 7-day daily prices for these products to attach to the response
+        const productIds = products.map(p => p.product_id);
+        const dpSql = "SELECT product_id, day_name, price FROM daily_prices WHERE product_id IN (?)";
+
+        db.query(dpSql, [productIds], (dpErr, dpRows) => {
+            const priceMap = {};
+            (dpRows || []).forEach(row => {
+                if (!priceMap[row.product_id]) {
+                    priceMap[row.product_id] = {};
+                }
+                priceMap[row.product_id][row.day_name] = Number(row.price);
+            });
+
+            const enrichedProducts = products.map(p => {
+                return {
+                    ...p,
+                    price: Number(p.price),
+                    base_price: Number(p.base_price),
+                    weekly_prices: priceMap[p.product_id] || {}
+                };
+            });
+
+            res.status(200).json({
+                success: true,
+                totalProducts: enrichedProducts.length,
+                activeDay: activeDay,
+                data: enrichedProducts
+            });
         });
     });
 };
@@ -82,6 +128,7 @@ const addProduct = (req, res) => {
     }
 
     const productImage = image || (req.file ? `/uploads/products/${req.file.filename}` : "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80");
+    const basePrice = Number(price) || 0.00;
 
     const sql = `
         INSERT INTO products
@@ -97,11 +144,11 @@ const addProduct = (req, res) => {
             description || "",
             category || "General",
             brand || "Generic",
-            price || 0.00,
+            basePrice,
             quantity !== undefined ? quantity : 0,
             productImage
         ],
-        (err, result) => {
+        async (err, result) => {
             if (err) {
                 return res.status(500).json({
                     success: false,
@@ -109,10 +156,19 @@ const addProduct = (req, res) => {
                 });
             }
 
+            const newProductId = result.insertId;
+
+            // Automatically generate 7-day daily prices for this new product
+            try {
+                await ensureProductDailyPrices(newProductId, basePrice);
+            } catch (dpErr) {
+                console.error("Warning: Error generating daily prices for product:", dpErr.message);
+            }
+
             res.status(201).json({
                 success: true,
-                message: "Product added successfully.",
-                productId: result.insertId
+                message: "Product added and 7-day daily prices configured successfully.",
+                productId: newProductId
             });
         }
     );
@@ -123,10 +179,21 @@ const addProduct = (req, res) => {
 // =============================
 const getProductById = (req, res) => {
     const { id } = req.params;
+    const { day } = req.query;
+    const activeDay = day || getTodayDayName();
 
-    const sql = "SELECT * FROM products WHERE product_id = ?";
+    const sql = `
+        SELECT 
+            p.*,
+            COALESCE(dp.price, p.price) AS price,
+            p.price AS base_price,
+            ? AS active_day
+        FROM products p
+        LEFT JOIN daily_prices dp ON p.product_id = dp.product_id AND dp.day_name = ?
+        WHERE p.product_id = ?
+    `;
 
-    db.query(sql, [id], (err, result) => {
+    db.query(sql, [activeDay, activeDay, id], (err, result) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -141,10 +208,30 @@ const getProductById = (req, res) => {
             });
         }
 
-        res.status(200).json({
-            success: true,
-            data: result[0]
-        });
+        const product = result[0];
+        product.price = Number(product.price);
+        product.base_price = Number(product.base_price);
+
+        // Fetch full 7-day schedule for this product
+        db.query(
+            "SELECT day_name, price FROM daily_prices WHERE product_id = ? ORDER BY price_id",
+            [id],
+            (dpErr, dpRows) => {
+                const weeklyPrices = {};
+                (dpRows || []).forEach(r => {
+                    weeklyPrices[r.day_name] = Number(r.price);
+                });
+
+                product.weekly_prices = weeklyPrices;
+                product.daily_price_list = dpRows || [];
+
+                res.status(200).json({
+                    success: true,
+                    activeDay: activeDay,
+                    data: product
+                });
+            }
+        );
     });
 };
 
@@ -188,7 +275,7 @@ const updateProduct = (req, res) => {
             image,
             id
         ],
-        (err, result) => {
+        async (err, result) => {
             if (err) {
                 return res.status(500).json({
                     success: false,
@@ -232,6 +319,13 @@ const updateStock = (req, res) => {
             return res.status(500).json({
                 success: false,
                 message: err.message
+            });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found."
             });
         }
 
@@ -314,7 +408,8 @@ const updateProductPrice = (req, res) => {
 // SEARCH PRODUCTS
 // =============================
 const searchProducts = (req, res) => {
-    const { keyword } = req.query;
+    const { keyword, day } = req.query;
+    const activeDay = day || getTodayDayName();
 
     if (!keyword) {
         return res.status(400).json({
@@ -324,20 +419,25 @@ const searchProducts = (req, res) => {
     }
 
     const sql = `
-        SELECT *
-        FROM products
+        SELECT 
+            p.*,
+            COALESCE(dp.price, p.price) AS price,
+            p.price AS base_price,
+            ? AS active_day
+        FROM products p
+        LEFT JOIN daily_prices dp ON p.product_id = dp.product_id AND dp.day_name = ?
         WHERE
-            product_name LIKE ?
-            OR description LIKE ?
-            OR category LIKE ?
-            OR brand LIKE ?
+            p.product_name LIKE ?
+            OR p.description LIKE ?
+            OR p.category LIKE ?
+            OR p.brand LIKE ?
     `;
 
     const searchValue = `%${keyword}%`;
 
     db.query(
         sql,
-        [searchValue, searchValue, searchValue, searchValue],
+        [activeDay, activeDay, searchValue, searchValue, searchValue, searchValue],
         (err, result) => {
             if (err) {
                 return res.status(500).json({
@@ -349,6 +449,7 @@ const searchProducts = (req, res) => {
             res.status(200).json({
                 success: true,
                 totalProducts: result.length,
+                activeDay: activeDay,
                 data: result
             });
         }

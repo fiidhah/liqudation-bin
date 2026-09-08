@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 720" width="1020" height="720" style="background: #ffffff;">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#000000"/>
+        </marker>
+        <marker id="arrow-start" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 8 1.5 L 0 5 L 8 8.5 z" fill="#000000"/>
+        </marker>
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.1"/>
+        </filter>
+    </defs>
+
+    <!-- Top Heading -->
+    <text x="510" y="38" text-anchor="middle" font-size="18" font-weight="bold" font-family="Arial, sans-serif" letter-spacing="0.5" fill="#000">DATA FLOW DIAGRAM (DFD) - LEVEL 0 (CONTEXT DIAGRAM)</text>
+    <line x1="220" y1="48" x2="800" y2="48" stroke="#000000" stroke-width="2"/>
+
+    <!-- ========================================== -->
+    <!-- CENTRAL SYSTEM PROCESS (0.0) -->
+    <!-- ========================================== -->
+    <ellipse cx="510" cy="370" rx="145" ry="90" fill="#FFFFFF" stroke="#000000" stroke-width="2.5" filter="url(#shadow)"/>
+    <text x="510" y="335" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial, sans-serif" fill="#555">0.0</text>
+    <line x1="430" y1="344" x2="590" y2="344" stroke="#000000" stroke-width="1.2"/>
+    <text x="510" y="366" text-anchor="middle" font-size="15" font-weight="bold" font-family="Arial, sans-serif" fill="#000">SMARTBIN LIQUIDATION</text>
+    <text x="510" y="388" text-anchor="middle" font-size="15" font-weight="bold" font-family="Arial, sans-serif" fill="#000">BIN STORE MANAGEMENT</text>
+    <text x="510" y="410" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial, sans-serif" fill="#000">SYSTEM</text>
+
+    <!-- ========================================== -->
+    <!-- ENTITY 1: STORE MANAGER (TOP) -->
+    <!-- ========================================== -->
+    <rect x="420" y="70" width="180" height="55" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="510" y="104" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial, sans-serif" fill="#000">Store Manager</text>
+
+    <!-- Manager to System Flow (Downward Arrow, Left) -->
+    <line x1="460" y1="125" x2="460" y2="280" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="290" y="180" width="162" height="38" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="371" y="196" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Product Intake, Bin Allocation</text>
+    <text x="371" y="210" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">&amp; Order Delivery Status</text>
+
+    <!-- System to Manager Flow (Upward Arrow, Right) -->
+    <line x1="560" y1="280" x2="560" y2="125" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="568" y="180" width="160" height="38" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="648" y="196" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Customer Orders Queue,</text>
+    <text x="648" y="210" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Stock Reports &amp; Price Schedule</text>
+
+    <!-- ========================================== -->
+    <!-- ENTITY 2: SYSTEM ADMIN (BOTTOM) -->
+    <!-- ========================================== -->
+    <rect x="420" y="615" width="180" height="55" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="510" y="649" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial, sans-serif" fill="#000">System Admin</text>
+
+    <!-- Admin to System Flow (Upward Arrow, Left) -->
+    <line x1="460" y1="615" x2="460" y2="460" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="290" y="525" width="162" height="38" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="371" y="541" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Manager Accounts, Pricing Rules,</text>
+    <text x="371" y="555" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Offers &amp; Lucky Draw Config</text>
+
+    <!-- System to Admin Flow (Downward Arrow, Right) -->
+    <line x1="560" y1="460" x2="560" y2="615" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="568" y="525" width="160" height="38" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="648" y="541" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Overall Sales Revenue,</text>
+    <text x="648" y="555" text-anchor="middle" font-size="10.5" font-family="Arial, sans-serif" fill="#000">Audit Logs &amp; User Statistics</text>
+
+    <!-- ========================================== -->
+    <!-- ENTITY 3: CUSTOMER / USER (LEFT) -->
+    <!-- ========================================== -->
+    <rect x="35" y="340" width="150" height="60" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="110" y="367" text-anchor="middle" font-size="15" font-weight="bold" font-family="Arial, sans-serif" fill="#000">Customer /</text>
+    <text x="110" y="386" text-anchor="middle" font-size="15" font-weight="bold" font-family="Arial, sans-serif" fill="#000">User</text>
+
+    <!-- User to System Flow (Right Arrow, Upper) -->
+    <line x1="185" y1="352" x2="365" y2="352" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="195" y="318" width="160" height="30" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="275" y="337" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#000">Registration, Cart &amp; Order Request</text>
+
+    <!-- System to User Flow (Left Arrow, Lower) -->
+    <line x1="365" y1="390" x2="185" y2="390" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="195" y="396" width="160" height="30" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="275" y="415" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#000">Daily Prices, Invoice &amp; Live Tracking</text>
+
+    <!-- ========================================== -->
+    <!-- ENTITY 4: PAYMENT GATEWAY (RIGHT) -->
+    <!-- ========================================== -->
+    <rect x="835" y="340" width="150" height="60" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <text x="910" y="367" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial, sans-serif" fill="#000">Payment Gateway</text>
+    <text x="910" y="386" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#333">(Razorpay / Card)</text>
+
+    <!-- System to Payment Gateway Flow (Right Arrow, Upper) -->
+    <line x1="655" y1="352" x2="835" y2="352" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="665" y="318" width="160" height="30" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="745" y="337" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#000">Order ID &amp; Payment Amount</text>
+
+    <!-- Payment Gateway to System Flow (Left Arrow, Lower) -->
+    <line x1="835" y1="390" x2="655" y2="390" stroke="#000000" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <rect x="665" y="396" width="160" height="30" fill="#FFFFFF" stroke="#666666" stroke-width="0.8" rx="4"/>
+    <text x="745" y="415" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#000">Transaction ID &amp; Payment Status</text>
+</svg>

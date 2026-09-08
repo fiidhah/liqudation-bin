@@ -1,10 +1,19 @@
 const db = require("../config/db");
+const { getTodayDayName } = require("../utils/dailyPriceCalculator");
 
 // =============================
-// PLACE ORDER
+// PLACE ORDER (Supports both Cart Checkout & Direct Buy Now)
 // =============================
 const placeOrder = (req, res) => {
-    const { user_id } = req.body;
+    const {
+        user_id,
+        product_id,
+        quantity,
+        shipping_name,
+        shipping_phone,
+        shipping_address,
+        discount_amount
+    } = req.body;
 
     if (!user_id) {
         return res.status(400).json({
@@ -13,21 +22,77 @@ const placeOrder = (req, res) => {
         });
     }
 
-    // Get cart items with product price
+    // Optional: update user phone / address if provided
+    if (shipping_phone || shipping_address) {
+        db.query(
+            "UPDATE users SET phone = COALESCE(?, phone), address = COALESCE(?, address) WHERE user_id = ?",
+            [shipping_phone || null, shipping_address || null, user_id]
+        );
+    }
+
+    const todayName = getTodayDayName();
+
+    // Case 1: Direct Single Product "Buy Now"
+    if (product_id) {
+        const prodSql = `
+            SELECT p.*, COALESCE(dp.price, p.price) AS price 
+            FROM products p 
+            LEFT JOIN daily_prices dp ON p.product_id = dp.product_id AND dp.day_name = ?
+            WHERE p.product_id = ?
+        `;
+        db.query(prodSql, [todayName, product_id], (err, products) => {
+            if (err) return res.status(500).json({ success: false, message: err.message });
+            if (products.length === 0) return res.status(404).json({ success: false, message: "Product not found." });
+
+            const prod = products[0];
+            const qty = parseInt(quantity) || 1;
+            const itemPrice = Number(prod.price) || 0;
+            const subtotal = itemPrice * qty;
+            const discount = Number(discount_amount) || 0;
+            const finalAmount = Math.max(0, subtotal - discount);
+
+            const orderSql = "INSERT INTO orders (user_id, total_amount, order_status) VALUES (?, ?, 'Pending')";
+            db.query(orderSql, [user_id, finalAmount], (err, orderRes) => {
+                if (err) return res.status(500).json({ success: false, message: err.message });
+                const orderId = orderRes.insertId;
+
+                const itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+                db.query(itemSql, [orderId, product_id, qty, itemPrice], (err) => {
+                    if (err) console.error("Error inserting order item:", err.message);
+
+                    // Deduct stock
+                    db.query("UPDATE products SET quantity = GREATEST(0, quantity - ?) WHERE product_id = ?", [qty, product_id]);
+
+                    return res.status(201).json({
+                        success: true,
+                        message: "Order placed successfully!",
+                        orderId,
+                        totalAmount: subtotal,
+                        finalAmount,
+                        orderStatus: "Pending"
+                    });
+                });
+            });
+        });
+        return;
+    }
+
+    // Case 2: Cart-Based Multi-Item Checkout
     const cartSql = `
         SELECT
             c.cart_id,
             c.product_id,
             c.quantity,
             p.product_name,
-            p.price,
+            COALESCE(dp.price, p.price) AS price,
             p.quantity AS stock_quantity
         FROM cart c
         JOIN products p ON c.product_id = p.product_id
+        LEFT JOIN daily_prices dp ON p.product_id = dp.product_id AND dp.day_name = ?
         WHERE c.user_id = ?
     `;
 
-    db.query(cartSql, [user_id], (err, cartItems) => {
+    db.query(cartSql, [todayName, user_id], (err, cartItems) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -38,7 +103,7 @@ const placeOrder = (req, res) => {
         if (cartItems.length === 0) {
             return res.status(400).json({
                 success: false,
-                message: "Cart is empty. Cannot place order."
+                message: "Cart is empty. Please add items to your cart."
             });
         }
 
@@ -47,13 +112,16 @@ const placeOrder = (req, res) => {
             totalAmount += Number(item.price) * item.quantity;
         });
 
+        const discount = Number(discount_amount) || 0;
+        const finalAmount = Math.max(0, totalAmount - discount);
+
         const orderSql = `
             INSERT INTO orders
             (user_id, total_amount, order_status)
             VALUES (?, ?, 'Pending')
         `;
 
-        db.query(orderSql, [user_id, totalAmount], (err, orderResult) => {
+        db.query(orderSql, [user_id, finalAmount], (err, orderResult) => {
             if (err) {
                 return res.status(500).json({
                     success: false,
@@ -93,10 +161,10 @@ const placeOrder = (req, res) => {
 
                             res.status(201).json({
                                 success: true,
-                                message: "🎉 Order placed successfully!",
+                                message: "Order placed successfully!",
                                 orderId,
                                 totalAmount,
-                                finalAmount: totalAmount,
+                                finalAmount,
                                 orderStatus: "Pending"
                             });
                         }
@@ -384,7 +452,7 @@ const getOrderDetails = (req, res) => {
             final_amount: rows[0].total_amount,
             discount_amount: 0,
             order_status: rows[0].order_status,
-            payment_method: "Verified / Card / COD",
+            payment_method: "Verified UPI / Card / COD",
             order_date: rows[0].order_date,
             items: []
         };

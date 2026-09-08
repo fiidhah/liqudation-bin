@@ -29,7 +29,7 @@ const AdminPortal = {
                 if (document.getElementById("kpiTotalUsers")) document.getElementById("kpiTotalUsers").textContent = d.totalUsers || 0;
                 if (document.getElementById("kpiTotalManagers")) document.getElementById("kpiTotalManagers").textContent = d.totalManagers || 0;
                 if (document.getElementById("kpiTotalProducts")) document.getElementById("kpiTotalProducts").textContent = d.totalProducts || 0;
-                if (document.getElementById("kpiTotalRevenue")) document.getElementById("kpiTotalRevenue").textContent = `$${Number(d.totalRevenue || 0).toFixed(2)}`;
+                if (document.getElementById("kpiTotalRevenue")) document.getElementById("kpiTotalRevenue").textContent = `₹${Number(d.totalRevenue || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
                 if (document.getElementById("kpiTotalOrders")) document.getElementById("kpiTotalOrders").textContent = d.totalOrders || 0;
                 if (document.getElementById("kpiActiveOffers")) document.getElementById("kpiActiveOffers").textContent = d.activeOffers || 0;
             }
@@ -208,13 +208,13 @@ const AdminPortal = {
             data: {
                 labels,
                 datasets: [{
-                    label: "Daily Revenue ($)",
+                    label: "Daily Revenue (₹)",
                     data,
-                    borderColor: "#dc3545",
-                    backgroundColor: "rgba(220, 53, 69, 0.1)",
-                    borderWidth: 3,
+                    borderColor: "#0F172A",
+                    backgroundColor: "rgba(15, 23, 42, 0.06)",
+                    borderWidth: 2.5,
                     fill: true,
-                    tension: 0.4
+                    tension: 0.35
                 }]
             },
             options: {

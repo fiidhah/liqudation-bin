@@ -82,7 +82,8 @@ const initDb = async () => {
                 product_id INT NOT NULL,
                 day_name ENUM('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') NOT NULL,
                 price DECIMAL(10, 2) NOT NULL,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_product_day (product_id, day_name)
             );
         `);
 
@@ -199,6 +200,15 @@ const initDb = async () => {
             );
         `);
 
+        // 16. Newsletter Subscribers Table
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS subscribers (
+                subscriber_id INT AUTO_INCREMENT PRIMARY KEY,
+                email VARCHAR(150) NOT NULL UNIQUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+
         // Seed default records only if missing
         const [adminRows] = await connection.query("SELECT COUNT(*) as count FROM admins");
         if (adminRows[0].count === 0) {
@@ -226,6 +236,36 @@ const initDb = async () => {
                 ["Fidha Rahman", "fidha@gmail.com", userPass, "9876543210", "Malappuram"]
             );
         }
+
+        // Auto-seed missing daily prices for any products
+        const [prods] = await connection.query("SELECT product_id, price FROM products");
+        const daysToInsert = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+        const mults = { Friday: 1.0, Saturday: 0.8, Sunday: 0.65, Monday: 0.5, Tuesday: 0.35, Wednesday: 0.25, Thursday: 0.15 };
+
+        for (const p of prods) {
+            const [existing] = await connection.query("SELECT day_name FROM daily_prices WHERE product_id = ?", [p.product_id]);
+            const existingDays = existing.map(e => e.day_name);
+            const base = Math.max(10, parseFloat(p.price) || 100);
+
+            for (const d of daysToInsert) {
+                if (!existingDays.includes(d)) {
+                    const dPrice = Math.max(1, Math.round(base * (mults[d] || 1.0) * 100) / 100);
+                    await connection.query("INSERT INTO daily_prices (product_id, day_name, price) VALUES (?, ?, ?)", [p.product_id, d, dPrice]);
+                }
+            }
+        }
+
+        // Sync products.price with today's day price
+        const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const todayDayName = daysArr[new Date().getDay()];
+        await connection.query(
+            `UPDATE products p
+             JOIN daily_prices dp ON p.product_id = dp.product_id
+             SET p.price = dp.price
+             WHERE dp.day_name = ?`,
+            [todayDayName]
+        );
+        console.log(`🏷️ Synced all product prices to today's active day: ${todayDayName}`);
 
         console.log(`🎉 Database "${dbName}" tables and structure synchronized successfully!`);
     } catch (err) {

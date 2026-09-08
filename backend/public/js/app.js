@@ -1,19 +1,29 @@
 /**
- * SmartBin Storefront & Product Catalog Interactions
+ * SmartBin Standard Storefront & Catalog Controller (Indian Rupees ₹ & Dynamic Daily Pricing)
  */
 const App = {
     products: [],
     priceSchedule: [],
     todaySchedule: null,
+    activeDay: "Today",
     activeFilters: {
         keyword: "",
         category: "All",
-        bin_number: "All",
-        condition_type: "All",
-        sort: "latest"
+        min_price: "",
+        max_price: "",
+        sort: "latest",
+        day: ""
     },
 
     async init() {
+        const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        this.todayDayName = daysArr[new Date().getDay()];
+        this.activeDay = this.todayDayName;
+
+        const dayDisplay = document.getElementById("heroTodayDayDisplay");
+        if (dayDisplay) dayDisplay.textContent = this.activeDay;
+
+        this.startDealCountdown();
         await this.loadDailyPriceSchedule();
         await this.loadProducts();
         this.setupEventListeners();
@@ -21,75 +31,62 @@ const App = {
 
     async loadDailyPriceSchedule() {
         try {
-            const [scheduleRes, todayRes] = await Promise.all([
-                API.get("/daily-prices/schedule"),
-                API.get("/daily-prices/today")
-            ]);
-
-            if (scheduleRes.success) {
-                this.priceSchedule = scheduleRes.data;
-                this.renderScheduleTimeline();
+            const todayRes = await API.get("/daily-prices/today");
+            if (todayRes.success && todayRes.data && todayRes.data.length > 0) {
+                this.todaySchedule = todayRes.data[0];
+                const heroDisplay = document.getElementById("heroPriceDisplay");
+                if (heroDisplay) {
+                    heroDisplay.textContent = Number(this.todaySchedule.price).toLocaleString("en-IN");
+                }
             }
-
-            if (todayRes.success && todayRes.todaySchedule) {
-                this.todaySchedule = todayRes.todaySchedule;
-                this.renderTodayPriceBanner();
-            }
+            this.renderScheduleTimeline();
         } catch (e) {
             console.error("Could not load price schedule:", e);
         }
     },
 
-    renderTodayPriceBanner() {
-        const bannerContainer = document.getElementById("todayPriceBanner");
-        if (!bannerContainer || !this.todaySchedule) return;
+    selectDay(dayName) {
+        if (this.activeFilters.day === dayName) {
+            this.activeFilters.day = "";
+            this.activeDay = this.todayDayName;
+        } else {
+            this.activeFilters.day = dayName;
+            this.activeDay = dayName;
+        }
+        this.renderScheduleTimeline();
+        this.loadProducts();
 
-        const dayName = this.todaySchedule.day_name || "Today";
-        const price = Number(this.todaySchedule.price).toFixed(2);
-        const desc = this.todaySchedule.description || "Daily Liquidation Drop";
-
-        bannerContainer.innerHTML = `
-            <div class="row align-items-center">
-                <div class="col-lg-7 text-center text-lg-start mb-4 mb-lg-0">
-                    <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-2">
-                        <i class="bi bi-clock-history me-1"></i> Today's Bin Deal: ${dayName}
-                    </span>
-                    <h1 class="display-5 fw-black text-white mb-2">Everything in Today's Bins Is Only</h1>
-                    <p class="lead text-white-50 mb-3">${desc} — Unbox premium brand returns, overstock & clearance electronics, tools, home goods and more!</p>
-                    <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
-                        <a href="/products.html" class="btn btn-light btn-lg px-4 py-2 rounded-pill fw-bold shadow">
-                            <i class="bi bi-bag-check-fill me-2 text-danger"></i> Hunt The Bins Now
-                        </a>
-                        <a href="/lucky-draw.html" class="btn btn-outline-light btn-lg px-4 py-2 rounded-pill fw-bold">
-                            <i class="bi bi-gift-fill me-2 text-warning"></i> Weekend Lucky Draw
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-5 text-center">
-                    <div class="today-price-badge">
-                        <span class="fs-4 text-muted">$</span>${price}
-                        <span class="fs-6 text-dark fw-bold text-uppercase d-block d-md-inline ms-md-2">Flat Rate</span>
-                    </div>
-                    <p class="text-white-50 small mt-2"><i class="bi bi-arrow-down-circle me-1"></i> Price drops daily! Restock every Friday.</p>
-                </div>
-            </div>
-        `;
+        API.showToast(`Viewing liquidation prices for: ${this.activeDay}`, "info");
     },
 
     renderScheduleTimeline() {
         const container = document.getElementById("weeklyScheduleContainer");
-        if (!container || !this.priceSchedule.length) return;
+        if (!container) return;
 
-        const todayDayOfWeek = new Date().getDay();
+        const days = [
+            { day: "Friday", price: 999, desc: "Restock" },
+            { day: "Saturday", price: 799, desc: "Weekend" },
+            { day: "Sunday", price: 599, desc: "Drop" },
+            { day: "Monday", price: 399, desc: "Markdown" },
+            { day: "Tuesday", price: 299, desc: "Value" },
+            { day: "Wednesday", price: 199, desc: "Blowout" },
+            { day: "Thursday", price: 99, desc: "Clearance" }
+        ];
 
-        container.innerHTML = this.priceSchedule.map(item => {
-            const isToday = item.day_of_week === todayDayOfWeek;
+        const activeDayName = this.activeDay || this.todayDayName;
+
+        container.innerHTML = days.map(item => {
+            const isSelected = item.day.toLowerCase() === activeDayName.toLowerCase();
+            const isToday = item.day.toLowerCase() === this.todayDayName.toLowerCase();
+
             return `
-                <div class="col">
-                    <div class="schedule-card ${isToday ? 'today' : ''}">
-                        <div class="small fw-bold text-uppercase">${item.day_name.substring(0, 3)}</div>
-                        <div class="fs-4 fw-black my-1">$${Number(item.price).toFixed(0)}</div>
-                        <div class="small text-truncate" title="${item.description}">${isToday ? '🔥 TODAY' : 'Drop'}</div>
+                <div class="col" style="cursor: pointer;" onclick="App.selectDay('${item.day}')" title="Click to view all products at ${item.day}'s liquidated prices">
+                    <div class="schedule-card ${isSelected ? 'today border border-primary shadow' : ''}" style="transition: transform 0.2s ease;">
+                        <div class="day-title fw-bold">${item.day.substring(0, 3)}</div>
+                        <div class="price-number text-primary">₹${item.price}</div>
+                        <span class="status-pill ${isSelected ? 'bg-primary text-white fw-bold' : (isToday ? 'bg-info text-white' : 'bg-light text-muted')}">
+                            ${isSelected ? (isToday ? 'Today (Active)' : 'Selected') : (isToday ? 'Today' : item.desc)}
+                        </span>
                     </div>
                 </div>
             `;
@@ -102,26 +99,132 @@ const App = {
 
         grid.innerHTML = `
             <div class="col-12 text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading bins...</span>
-                </div>
-                <p class="mt-2 text-muted">Searching liquidation bins...</p>
+                <div class="spinner-border text-dark" role="status"></div>
+                <p class="mt-3 text-muted">Calculating daily liquidation prices for ${this.activeDay}...</p>
             </div>
         `;
 
         try {
             const res = await API.get("/products", this.activeFilters);
             if (res.success) {
-                this.products = res.data;
+                this.products = res.data || [];
+                if (res.activeDay) this.activeDay = res.activeDay;
+
+                const dayDisplay = document.getElementById("heroTodayDayDisplay");
+                if (dayDisplay) dayDisplay.textContent = this.activeDay;
+
+                this.syncEditorialShowcase();
                 this.renderProducts();
             }
         } catch (e) {
             grid.innerHTML = `
                 <div class="col-12 text-center py-5">
-                    <div class="alert alert-danger">Failed to load products: ${e.message}</div>
+                    <div class="alert alert-secondary rounded-3">Failed to load products: ${e.message}</div>
                 </div>
             `;
         }
+    },
+
+    syncEditorialShowcase() {
+        if (!this.products || this.products.length === 0) return;
+
+        const getValidImg = (img) => {
+            if (img && (img.startsWith("http") || img.startsWith("/uploads"))) return img;
+            return "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&q=80";
+        };
+
+        // 1. Hero Main Product Stage
+        const heroProduct = this.products.find(p => p.product_id === 8) || this.products[0];
+        const heroMainImg = document.getElementById("heroMainProductImg");
+        if (heroMainImg && heroProduct) {
+            heroMainImg.src = getValidImg(heroProduct.image);
+            heroMainImg.alt = heroProduct.product_name;
+        }
+
+        // 2. Floating Hero Badges
+        const p1 = this.products.find(p => p.product_id === 8) || this.products[0];
+        const f1Title = document.getElementById("heroFloatTitle1");
+        const f1Price = document.getElementById("heroFloatPrice1");
+        const f1Img = document.getElementById("heroFloatImg1");
+        const f1Card = document.getElementById("heroFloatCard1");
+        if (p1) {
+            if (f1Title) f1Title.textContent = p1.product_name;
+            if (f1Price) f1Price.textContent = `₹${Number(p1.price).toLocaleString("en-IN")}`;
+            if (f1Img) f1Img.src = getValidImg(p1.image);
+            if (f1Card) f1Card.onclick = () => App.openQuickView(p1.product_id);
+        }
+
+        const p2 = this.products.find(p => p.product_id === 7) || this.products[1] || p1;
+        const f2Title = document.getElementById("heroFloatTitle2");
+        const f2Price = document.getElementById("heroFloatPrice2");
+        const f2Img = document.getElementById("heroFloatImg2");
+        const f2Card = document.getElementById("heroFloatCard2");
+        if (p2) {
+            if (f2Title) f2Title.textContent = p2.product_name;
+            if (f2Price) f2Price.textContent = `₹${Number(p2.price).toLocaleString("en-IN")}`;
+            if (f2Img) f2Img.src = getValidImg(p2.image);
+            if (f2Card) f2Card.onclick = () => App.openQuickView(p2.product_id);
+        }
+
+        // 3. Center Featured Best Seller Tall Card
+        const centerProd = this.products.find(p => p.product_id === 8) || this.products[0];
+        const cImg = document.getElementById("centerFeaturedImg");
+        const cTitle = document.getElementById("centerFeaturedTitle");
+        const cPrice = document.getElementById("centerFeaturedPrice");
+        const cCard = document.getElementById("centerFeaturedCard");
+        if (centerProd) {
+            if (cImg) cImg.src = getValidImg(centerProd.image);
+            if (cTitle) cTitle.textContent = centerProd.product_name;
+            if (cPrice) cPrice.textContent = `₹${Number(centerProd.price).toLocaleString("en-IN")}`;
+            if (cCard) cCard.onclick = () => App.openQuickView(centerProd.product_id);
+        }
+
+        // 4. 4 Best Seller Cards (Left 2, Right 2)
+        const candidateIds = [7, 9, 21, 20];
+        for (let i = 0; i < 4; i++) {
+            const p = this.products.find(prod => prod.product_id === candidateIds[i]) || this.products[i % this.products.length];
+            if (!p) continue;
+            const titleEl = document.getElementById(`bestSellerTitle${i + 1}`);
+            const priceEl = document.getElementById(`bestSellerPrice${i + 1}`);
+            const imgEl = document.getElementById(`bestSellerImg${i + 1}`);
+            const cardEl = document.getElementById(`bestSellerCard${i + 1}`);
+            if (titleEl) titleEl.textContent = p.product_name;
+            if (priceEl) priceEl.textContent = `₹${Number(p.price).toLocaleString("en-IN")}`;
+            if (imgEl) imgEl.src = getValidImg(p.image);
+            if (cardEl) cardEl.onclick = () => App.openQuickView(p.product_id);
+        }
+
+        // 5. Deal of the Month Spotlight
+        const dealProd = this.products.find(p => p.product_id === 9) || this.products[1] || this.products[0];
+        const dealImg = document.getElementById("dealMonthImg");
+        const dealTitle = document.getElementById("dealMonthTitle");
+        if (dealProd) {
+            if (dealImg) dealImg.src = getValidImg(dealProd.image);
+            if (dealTitle) dealTitle.textContent = `${dealProd.product_name} - Flat ₹${Number(dealProd.price).toLocaleString("en-IN")}`;
+        }
+    },
+
+    startDealCountdown() {
+        let totalSecs = 4 * 86400 + 18 * 3600 + 42 * 60 + 15;
+        const daysEl = document.getElementById("dealCountdownDays");
+        const hoursEl = document.getElementById("dealCountdownHours");
+        const minsEl = document.getElementById("dealCountdownMins");
+        const secsEl = document.getElementById("dealCountdownSecs");
+
+        if (!secsEl) return;
+
+        setInterval(() => {
+            if (totalSecs > 0) totalSecs--;
+            const d = Math.floor(totalSecs / 86400);
+            const h = Math.floor((totalSecs % 86400) / 3600);
+            const m = Math.floor((totalSecs % 3600) / 60);
+            const s = totalSecs % 60;
+
+            if (daysEl) daysEl.textContent = String(d).padStart(2, '0');
+            if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+            if (minsEl) minsEl.textContent = String(m).padStart(2, '0');
+            if (secsEl) secsEl.textContent = String(s).padStart(2, '0');
+        }, 1000);
     },
 
     renderProducts() {
@@ -130,17 +233,18 @@ const App = {
         if (!grid) return;
 
         if (countSpan) {
-            countSpan.textContent = `Showing ${this.products.length} liquidation bin items`;
+            const dayLabel = this.activeDay ? `(${this.activeDay}'s Liquidation Deals)` : "";
+            countSpan.textContent = `Showing ${this.products.length} Liquidation Items ${dayLabel}`;
         }
 
         if (this.products.length === 0) {
             grid.innerHTML = `
                 <div class="col-12 text-center py-5">
-                    <div class="card p-5 border-0 shadow-sm rounded-4 text-center">
+                    <div class="card p-5 border-0 shadow-sm rounded-3 text-center bg-white">
                         <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
-                        <h4 class="fw-bold">No Products Found in This Bin</h4>
-                        <p class="text-muted">Try changing your search terms or bin filters.</p>
-                        <button class="btn btn-outline-custom mx-auto mt-2" onclick="App.resetFilters()">Reset All Filters</button>
+                        <h5 class="fw-bold">No Products Found</h5>
+                        <p class="text-muted small">Try adjusting your filters or search query.</p>
+                        <button class="btn btn-outline-custom mx-auto mt-2" onclick="App.resetFilters()">Reset Filters</button>
                     </div>
                 </div>
             `;
@@ -148,31 +252,31 @@ const App = {
         }
 
         grid.innerHTML = this.products.map(p => {
-            const origPrice = Number(p.original_price || p.price);
             const currPrice = Number(p.price);
-            const savings = Math.max(0, origPrice - currPrice);
-            const savingsPercent = origPrice > 0 ? Math.round((savings / origPrice) * 100) : 0;
-
-            const conditionClass = "condition-" + (p.condition_type || "open-box").toLowerCase().replace(" ", "-");
+            const basePrice = Number(p.base_price || p.price);
+            const isDiscounted = basePrice > currPrice;
             const isOutOfStock = p.quantity <= 0;
+            const imgSrc = p.image && (p.image.startsWith("http") || p.image.startsWith("/uploads")) ? p.image : `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80`;
+            const activeDayName = p.active_day || this.activeDay;
 
             return `
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="product-card">
-                        <div class="product-img-wrapper">
-                            <span class="bin-tag"><i class="bi bi-archive-fill me-1"></i>${p.bin_number || 'Bin A'}</span>
-                            <span class="condition-badge ${conditionClass}">${p.condition_type || 'Open Box'}</span>
-                            <img src="${p.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'}" 
+                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="product-card h-100 d-flex flex-column border rounded-3 overflow-hidden shadow-sm">
+                        <div class="product-img-wrapper position-relative">
+                            <span class="bin-tag badge bg-dark position-absolute top-0 start-0 m-2" style="z-index: 5;">#PRD-${p.product_id}</span>
+                            <span class="condition-badge badge bg-primary position-absolute top-0 end-0 m-2" style="z-index: 5;">${activeDayName}'s Price</span>
+                            <img src="${imgSrc}" 
                                  alt="${p.product_name}" 
                                  class="product-img" 
+                                 style="max-height: 195px; max-width: 100%; object-fit: contain;"
                                  onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'">
                         </div>
-                        <div class="card-body p-3 d-flex flex-direction-column justify-content-between flex-grow-1">
+                        <div class="p-3 d-flex flex-column justify-content-between flex-grow-1 bg-white">
                             <div>
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="text-muted small text-uppercase fw-bold">${p.category || 'General'}</span>
-                                    <span class="badge ${p.quantity > 5 ? 'bg-success-subtle text-success' : (p.quantity > 0 ? 'bg-warning-subtle text-warning' : 'bg-danger-subtle text-danger')} small">
-                                        ${p.quantity > 0 ? `${p.quantity} In Bin` : 'Sold Out'}
+                                    <span class="text-muted small text-uppercase fw-semibold">${p.brand || 'Generic'} • ${p.category || 'General'}</span>
+                                    <span class="badge ${p.quantity > 5 ? 'bg-light text-dark border' : 'bg-secondary-subtle text-secondary'} small">
+                                        ${p.quantity > 0 ? `${p.quantity} In Stock` : 'Sold Out'}
                                     </span>
                                 </div>
                                 <h6 class="card-title fw-bold text-dark text-truncate-2 mb-2" title="${p.product_name}" style="height: 2.8rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
@@ -180,26 +284,41 @@ const App = {
                                 </h6>
                             </div>
 
-                            <div class="pt-2 border-top">
-                                <div class="d-flex align-items-baseline mb-2">
-                                    <span class="price-current">$${currPrice.toFixed(2)}</span>
-                                    ${origPrice > currPrice ? `
-                                        <span class="price-original">$${origPrice.toFixed(2)}</span>
-                                        <span class="savings-pill ms-auto">Save ${savingsPercent}%</span>
-                                    ` : ''}
+                            <div class="pt-2 border-top mt-auto">
+                                <div class="d-flex align-items-baseline justify-content-between mb-2">
+                                    <div>
+                                        <span class="fs-4 fw-bold text-dark">₹${currPrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                                        ${isDiscounted ? `<small class="text-muted text-decoration-line-through ms-2">₹${basePrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</small>` : ''}
+                                    </div>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle small">${activeDayName} Deal</span>
+                                </div>
+
+                                <!-- 7-Day Prices Quick Link -->
+                                <div class="mb-3">
+                                    <button class="btn btn-sm btn-link text-decoration-none p-0 text-primary small fw-semibold" onclick="App.openQuickView(${p.product_id})">
+                                        <i class="bi bi-calendar3 me-1"></i> View 7-Day Price Drops
+                                    </button>
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-primary-custom btn-sm rounded-pill d-flex align-items-center justify-content-center gap-1"
-                                            onclick="App.addToCart(${p.product_id})"
+                                    <!-- Buy Now Button -->
+                                    <button class="btn btn-dark btn-sm fw-bold"
+                                            onclick="App.buyNow(${p.product_id})"
                                             ${isOutOfStock ? 'disabled' : ''}>
-                                        <i class="bi bi-cart-plus"></i> ${isOutOfStock ? 'Out of Stock' : 'Grab This Deal'}
+                                        <i class="bi bi-lightning-charge-fill text-warning me-1"></i> ${isOutOfStock ? 'Out of Stock' : 'Buy Now'}
                                     </button>
+
+                                    <!-- Add to Cart and Details Buttons -->
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-outline-secondary btn-sm rounded-pill w-100" onclick="App.openQuickView(${p.product_id})">
+                                        <button class="btn btn-outline-dark btn-sm w-100"
+                                                onclick="App.addToCart(${p.product_id})"
+                                                ${isOutOfStock ? 'disabled' : ''}>
+                                            <i class="bi bi-cart-plus me-1"></i> Cart
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-sm" onclick="App.openQuickView(${p.product_id})" title="Details">
                                             <i class="bi bi-eye"></i> Details
                                         </button>
-                                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="App.addToWishlist(${p.product_id})" title="Add to Wishlist">
+                                        <button class="btn btn-outline-secondary btn-sm px-2" onclick="App.addToWishlist(${p.product_id})" title="Wishlist">
                                             <i class="bi bi-heart"></i>
                                         </button>
                                     </div>
@@ -214,64 +333,119 @@ const App = {
 
     async openQuickView(productId) {
         try {
-            const res = await API.get(`/products/${productId}`);
+            const res = await API.get(`/products/${productId}?day=${this.activeDay || ''}`);
             if (!res.success || !res.data) return;
 
             const p = res.data;
-            const modalEl = document.getElementById("productQuickViewModal");
             const modalBody = document.getElementById("quickViewModalBody");
-            if (!modalEl || !modalBody) return;
+            if (!modalBody) return;
 
-            const origPrice = Number(p.original_price || p.price);
             const currPrice = Number(p.price);
-            const savings = Math.max(0, origPrice - currPrice);
-            const savingsPercent = origPrice > 0 ? Math.round((savings / origPrice) * 100) : 0;
+            const basePrice = Number(p.base_price || p.price);
+            const imgSrc = p.image && (p.image.startsWith("http") || p.image.startsWith("/uploads")) ? p.image : `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80`;
+            const activeDayName = p.active_day || this.activeDay || this.todayDayName;
 
-            modalBody.innerHTML = `
-                <div class="row g-4">
-                    <div class="col-md-6 text-center">
-                        <img src="${p.image}" class="img-fluid rounded-4 shadow-sm" style="max-height: 320px; object-fit: contain;">
-                        <div class="d-flex justify-content-center gap-2 mt-3">
-                            <span class="badge bg-dark px-3 py-2 fs-6 rounded-pill"><i class="bi bi-archive me-1"></i>Location: ${p.bin_number || 'Bin A'}</span>
-                            <span class="badge bg-primary px-3 py-2 fs-6 rounded-pill">${p.condition_type || 'Open Box'}</span>
+            const weeklyScheduleDays = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+            const weeklyPrices = p.weekly_prices || {};
+
+            const scheduleHtml = weeklyScheduleDays.map(day => {
+                const dayPrice = weeklyPrices[day] !== undefined ? weeklyPrices[day] : currPrice;
+                const isSelected = day.toLowerCase() === activeDayName.toLowerCase();
+                return `
+                    <div class="col text-center">
+                        <div class="p-2 rounded ${isSelected ? 'bg-primary text-white shadow-sm fw-bold' : 'bg-white border text-dark'}">
+                            <div style="font-size: 11px; text-transform: uppercase;">${day.substring(0, 3)}</div>
+                            <div class="fw-bold mt-1" style="font-size: 13px;">₹${Number(dayPrice).toLocaleString("en-IN")}</div>
+                            ${isSelected ? '<span class="badge bg-white text-primary mt-1" style="font-size: 9px;">Active</span>' : ''}
                         </div>
                     </div>
-                    <div class="col-md-6 d-flex flex-column justify-content-between">
+                `;
+            }).join("");
+
+            modalBody.innerHTML = `
+                <div class="row g-4 p-2">
+                    <div class="col-md-5 text-center">
+                        <div class="p-3 bg-light rounded-3 d-flex align-items-center justify-content-center mb-3" style="min-height: 240px; background: #F8FAFC !important;">
+                            <img src="${imgSrc}" class="img-fluid rounded-2" style="max-height: 220px; max-width: 100%; object-fit: contain;" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'">
+                        </div>
+                        <div class="d-flex justify-content-center gap-2">
+                            <span class="badge bg-dark px-3 py-2">#PRD-${p.product_id}</span>
+                            <span class="badge bg-secondary px-3 py-2">${p.category || 'General'}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-7 d-flex flex-column justify-content-between">
                         <div>
-                            <span class="text-muted text-uppercase fw-bold small">${p.brand || 'Brand'} • ${p.category || 'Category'}</span>
+                            <span class="text-muted text-uppercase fw-semibold small">${p.brand || 'Brand'} • ${p.category || 'Category'}</span>
                             <h4 class="fw-bold mt-1 mb-2">${p.product_name}</h4>
                             
-                            <div class="d-flex align-items-baseline gap-2 mb-3">
-                                <span class="display-6 fw-black text-danger">$${currPrice.toFixed(2)}</span>
-                                <span class="fs-5 text-muted text-decoration-line-through">$${origPrice.toFixed(2)}</span>
-                                <span class="badge bg-success-subtle text-success fs-6 rounded-pill px-3">You Save $${savings.toFixed(2)} (${savingsPercent}%)</span>
+                            <div class="d-flex align-items-baseline gap-2 mb-2">
+                                <span class="fs-2 fw-bold text-dark">₹${currPrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                                <span class="badge bg-primary text-white">${activeDayName}'s Price</span>
+                                ${basePrice > currPrice ? `<span class="text-muted text-decoration-line-through small">Base: ₹${basePrice.toLocaleString("en-IN")}</span>` : ''}
                             </div>
 
-                            <p class="text-secondary">${p.description || 'Verified liquidation overstock inventory item. Inspected and ready for fast delivery.'}</p>
-                            
-                            <ul class="list-unstyled text-muted small my-3">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Stock Available: <strong>${p.quantity} units</strong></li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Quality Inspected: <strong>${p.condition_type}</strong></li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Eligible for Weekend Lucky Draw entry</li>
-                            </ul>
+                            <!-- 7-Day Liquidation Schedule for THIS product -->
+                            <div class="my-3 p-3 bg-light rounded-3 border">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold mb-0 text-dark small"><i class="bi bi-calendar-week me-1 text-primary"></i> 7-Day Liquidation Price Drops</h6>
+                                    <span class="text-muted small" style="font-size: 11px;">Prices drop daily</span>
+                                </div>
+                                <div class="row g-1">
+                                    ${scheduleHtml}
+                                </div>
+                            </div>
+
+                            <p class="text-secondary small mb-3">${p.description || 'Inspected and certified liquidation overstock inventory.'}</p>
                         </div>
 
-                        <div class="d-grid gap-2 mt-3">
-                            <button class="btn btn-primary-custom btn-lg rounded-pill" onclick="App.addToCart(${p.product_id})" ${p.quantity <= 0 ? 'disabled' : ''}>
-                                <i class="bi bi-cart-plus-fill me-2"></i> Add to Cart Now
-                            </button>
-                            <button class="btn btn-outline-danger rounded-pill" onclick="App.addToWishlist(${p.product_id})">
-                                <i class="bi bi-heart me-2"></i> Save to Wishlist
-                            </button>
+                        <div class="pt-3 border-top">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="text-muted small fw-semibold">Quantity Available:</span>
+                                <span class="badge bg-light text-dark border px-2 py-1">${p.quantity} units</span>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-dark btn-lg fw-bold" onclick="App.buyNow(${p.product_id}); bootstrap.Modal.getInstance(document.getElementById('productQuickViewModal')).hide();" ${p.quantity <= 0 ? 'disabled' : ''}>
+                                    <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Buy Now Directly
+                                </button>
+                                <button class="btn btn-outline-dark" onclick="App.addToCart(${p.product_id}); bootstrap.Modal.getInstance(document.getElementById('productQuickViewModal')).hide();" ${p.quantity <= 0 ? 'disabled' : ''}>
+                                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
 
-            const bsModal = new bootstrap.Modal(modalEl);
-            bsModal.show();
+            new bootstrap.Modal(document.getElementById("productQuickViewModal")).show();
         } catch (e) {
-            API.showToast("Could not load product details", "error");
+            API.showToast("Could not load product details.", "error");
+        }
+    },
+
+    // ==========================================
+    // INSTANT BUY NOW HANDLER
+    // ==========================================
+    async buyNow(productId) {
+        if (!Auth.isLoggedIn()) {
+            API.showToast("Please sign in to complete your instant order.", "info");
+            setTimeout(() => {
+                window.location.href = `/login.html?redirect=${encodeURIComponent('/checkout.html?buy_now=' + productId)}`;
+            }, 1000);
+            return;
+        }
+
+        const user = Auth.getUser();
+        try {
+            await API.post("/cart/add", {
+                user_id: user.user_id,
+                product_id: productId,
+                quantity: 1
+            });
+            Auth.updateCartBadge();
+
+            window.location.href = `/checkout.html?buy_now=${productId}`;
+        } catch (e) {
+            API.showToast(e.message || "Failed to proceed to checkout.", "error");
         }
     },
 
@@ -293,7 +467,7 @@ const App = {
             });
 
             if (res.success) {
-                API.showToast("Item added to your liquidation haul cart! 🛒", "success");
+                API.showToast("Item added to cart at today's deal price.", "success");
                 Auth.updateCartBadge();
             }
         } catch (e) {
@@ -315,7 +489,7 @@ const App = {
             });
 
             if (res.success) {
-                API.showToast("Saved to your wishlist! ❤️", "success");
+                API.showToast("Saved to your wishlist.", "success");
             }
         } catch (e) {
             API.showToast(e.message || "Failed to save to wishlist.", "warning");
@@ -323,7 +497,7 @@ const App = {
     },
 
     setupEventListeners() {
-        const searchInput = document.getElementById("searchProductsInput");
+        const searchInput = document.getElementById("searchInput");
         if (searchInput) {
             let timeout;
             searchInput.addEventListener("input", (e) => {
@@ -335,41 +509,133 @@ const App = {
             });
         }
 
-        // Bin filter buttons
-        document.querySelectorAll("[data-filter-bin]").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                document.querySelectorAll("[data-filter-bin]").forEach(b => b.classList.remove("active", "btn-primary"));
-                btn.classList.add("active");
-                this.activeFilters.bin_number = btn.dataset.filterBin;
-                this.loadProducts();
-            });
-        });
-
-        // Category filter
-        const catSelect = document.getElementById("categoryFilter");
-        if (catSelect) {
-            catSelect.addEventListener("change", (e) => {
+        const categorySelect = document.getElementById("categorySelect");
+        if (categorySelect) {
+            categorySelect.addEventListener("change", (e) => {
                 this.activeFilters.category = e.target.value;
                 this.loadProducts();
             });
         }
 
-        // Condition filter
-        const condSelect = document.getElementById("conditionFilter");
-        if (condSelect) {
-            condSelect.addEventListener("change", (e) => {
-                this.activeFilters.condition_type = e.target.value;
+        document.querySelectorAll("#categoryChips button").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll("#categoryChips button").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                this.activeFilters.category = btn.dataset.cat;
+                if (categorySelect) categorySelect.value = btn.dataset.cat;
                 this.loadProducts();
             });
-        }
+        });
 
-        // Sort filter
-        const sortSelect = document.getElementById("sortFilter");
+        const sortSelect = document.getElementById("sortSelect");
         if (sortSelect) {
             sortSelect.addEventListener("change", (e) => {
                 this.activeFilters.sort = e.target.value;
                 this.loadProducts();
             });
+        }
+
+        const minPriceInput = document.getElementById("minPriceInput");
+        if (minPriceInput) {
+            minPriceInput.addEventListener("change", (e) => {
+                this.activeFilters.min_price = e.target.value;
+                this.loadProducts();
+            });
+        }
+
+        const maxPriceInput = document.getElementById("maxPriceInput");
+        if (maxPriceInput) {
+            maxPriceInput.addEventListener("change", (e) => {
+                this.activeFilters.max_price = e.target.value;
+                this.loadProducts();
+            });
+        }
+
+        const newsletterForm = document.getElementById("newsletterForm");
+        if (newsletterForm) {
+            newsletterForm.addEventListener("submit", (e) => this.handleSubscribe(e));
+        }
+        const btnSubscribe = document.getElementById("btnSubscribe");
+        if (btnSubscribe && !newsletterForm) {
+            btnSubscribe.addEventListener("click", (e) => this.handleSubscribe(e));
+        }
+    },
+
+    async handleSubscribe(e) {
+        if (e && typeof e.preventDefault === "function") {
+            e.preventDefault();
+        }
+
+        const input = document.getElementById("newsletterEmail");
+        if (!input) return;
+
+        const email = input.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email || !emailRegex.test(email)) {
+            Swal.fire({
+                icon: "warning",
+                title: "Invalid Email Address",
+                text: "Please enter a valid email address (e.g. name@example.com) to receive restock alerts.",
+                confirmButtonColor: "#0F172A"
+            });
+            input.focus();
+            return;
+        }
+
+        const btn = document.getElementById("btnSubscribe");
+        const originalText = btn ? btn.innerHTML : "Subscribe";
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Subscribing...`;
+        }
+
+        try {
+            // Local client-side storage persistence
+            const subscribers = JSON.parse(localStorage.getItem("smartbin_newsletter_subscribers") || "[]");
+            if (!subscribers.includes(email.toLowerCase())) {
+                subscribers.push(email.toLowerCase());
+                localStorage.setItem("smartbin_newsletter_subscribers", JSON.stringify(subscribers));
+            }
+
+            // Backend API registration
+            try {
+                await API.post("/newsletter/subscribe", { email });
+            } catch (apiErr) {
+                console.warn("Newsletter API notice:", apiErr.message);
+            }
+
+            // Clear input
+            input.value = "";
+
+            // Show confirmation alert
+            Swal.fire({
+                icon: "success",
+                title: "Subscribed Successfully! 🎉",
+                html: `
+                    <p class="mb-2">You're on the VIP list for <b>SmartBin Restock Alerts</b>!</p>
+                    <p class="text-muted small mb-3">You will receive early notifications every Friday as new liquidation inventory drops.</p>
+                    <div class="p-2 rounded bg-light border text-dark fw-bold">${email}</div>
+                `,
+                confirmButtonText: "Great, Got It!",
+                confirmButtonColor: "#0F172A"
+            });
+
+            if (typeof API.showToast === "function") {
+                API.showToast("Subscribed! Friday restock alerts enabled.", "success");
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Subscription Error",
+                text: error.message || "Failed to process subscription. Please try again.",
+                confirmButtonColor: "#0F172A"
+            });
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
         }
     },
 
@@ -377,12 +643,23 @@ const App = {
         this.activeFilters = {
             keyword: "",
             category: "All",
-            bin_number: "All",
-            condition_type: "All",
-            sort: "latest"
+            min_price: "",
+            max_price: "",
+            sort: "latest",
+            day: ""
         };
-        const searchInput = document.getElementById("searchProductsInput");
+        this.activeDay = this.todayDayName;
+        const searchInput = document.getElementById("searchInput");
         if (searchInput) searchInput.value = "";
+        const categorySelect = document.getElementById("categorySelect");
+        if (categorySelect) categorySelect.value = "All";
+        const sortSelect = document.getElementById("sortSelect");
+        if (sortSelect) sortSelect.value = "latest";
+        const minPriceInput = document.getElementById("minPriceInput");
+        if (minPriceInput) minPriceInput.value = "";
+        const maxPriceInput = document.getElementById("maxPriceInput");
+        if (maxPriceInput) maxPriceInput.value = "";
+        this.renderScheduleTimeline();
         this.loadProducts();
     }
 };

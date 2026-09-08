@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBin UML & DFD Diagrams - Project Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #f8fafc; font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; padding-bottom: 5rem; }
+        .dfd-card { background: #ffffff; border-radius: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); padding: 2rem 2.5rem; margin-bottom: 3rem; border: 1px solid #e2e8f0; }
+        .dfd-img-container { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1.5rem; display: flex; justify-content: center; overflow-x: auto; }
+        .dfd-img-container img { max-width: 100%; height: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .jump-nav { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 2rem; }
+        @media print { body { background: #fff; } .no-print { display: none !important; } .dfd-card { box-shadow: none; border: none; padding: 0; page-break-after: always; } }
+    </style>
+</head>
+<body>
+    <div class="bg-dark text-white py-4 mb-4 no-print">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <span class="badge bg-warning text-dark text-uppercase px-3 py-1 rounded-pill fw-bold mb-1">Academic Project Documentation</span>
+                <h3 class="fw-bold mb-0">SmartBin System Diagrams (UML Use Case & DFD Levels 0, 1, 2)</h3>
+                <small class="text-white-50">Complete High-Resolution Diagrams for Microsoft Word & Project Reports</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-light rounded-pill px-3" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i> Print / Save PDF
+                </button>
+                <a href="/index.html" class="btn btn-warning text-dark fw-bold rounded-pill px-3">
+                    <i class="bi bi-house me-1"></i> Back to Store
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1100px;">
+        <!-- Quick Jump Navigation -->
+        <div class="jump-nav no-print d-flex flex-wrap align-items-center justify-content-between gap-2 shadow-sm">
+            <span class="small fw-bold text-muted text-uppercase"><i class="bi bi-list-nested me-1"></i> Jump To Diagram:</span>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="#cardUseCase" class="btn btn-sm btn-dark rounded-pill fw-bold"><i class="bi bi-diagram-2 me-1"></i>Use Case Diagram</a>
+                <a href="#cardLevel0" class="btn btn-sm btn-outline-dark rounded-pill">Level 0 Context</a>
+                <a href="#cardAdminL2" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">Level 2 Admin</a>
+                <a href="#cardManagerL2" class="btn btn-sm btn-outline-success rounded-pill fw-bold">Level 2 Manager</a>
+                <a href="#cardAdminL1" class="btn btn-sm btn-outline-secondary rounded-pill">Level 1 Admin</a>
+                <a href="#cardManagerL1" class="btn btn-sm btn-outline-secondary rounded-pill">Level 1 Manager</a>
+                <a href="#cardUserL1" class="btn btn-sm btn-outline-secondary rounded-pill">Level 1 User</a>
+                <a href="#cardDocReport" class="btn btn-sm btn-outline-info rounded-pill fw-bold"><i class="bi bi-file-earmark-text me-1"></i>6.4 & 6.5 Text</a>
+            </div>
+        </div>
+
+        <div class="alert alert-info border-0 shadow-sm rounded-3 mb-4 no-print d-flex align-items-center gap-3">
+            <i class="bi bi-info-circle-fill fs-2 text-primary"></i>
+            <div>
+                <strong>How to add these diagrams to your Microsoft Word document:</strong>
+                <p class="mb-0 small text-muted">
+                    Click <b>"Download PNG Image"</b> on any diagram below, then insert the downloaded image into Microsoft Word. You can also right-click any image and click <b>"Copy Image"</b>, then press <code>Ctrl + V</code> directly inside your Word document!
+                </p>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 0. UML USE CASE DIAGRAM -->
+        <!-- ========================================== -->
+        <div class="dfd-card" id="cardUseCase">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-dark text-white px-2 py-1 rounded">UML Behavioral Modeling</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-diagram-2-fill text-dark me-2"></i>UML Use Case Diagram (SmartBin Liquidation System)</h5>
+                    <small class="text-muted">Featuring Customer / Buyer, Store Manager, and Admin with System Boundary Box</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/usecase_diagram.png" download="UseCase_Diagram_SmartBin.png" class="btn btn-sm btn-dark rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/usecase_diagram.svg" download="UseCase_Diagram_SmartBin.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img id="imgUseCase" src="/images/usecase_diagram.png" alt="SmartBin Use Case Diagram" style="width: 880px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1. DFD LEVEL 0 (CONTEXT DIAGRAM) -->
+        <!-- ========================================== -->
+        <div class="dfd-card" id="cardLevel0">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-dark text-white px-2 py-1 rounded">System Overview</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-diagram-3-fill text-dark me-2"></i>Data Flow Diagram - Level 0 (Context Diagram)</h5>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/dfd_level0.png" download="DFD_Level0_Context.png" class="btn btn-sm btn-dark rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/dfd_level0.svg" download="DFD_Level0_Context.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img id="imgLvl0" src="/images/dfd_level0.png" alt="DFD Level 0 Context Diagram" style="width: 1000px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. DFD LEVEL 2 ADMIN MODULE -->
+        <!-- ========================================== -->
+        <div class="dfd-card" id="cardAdminL2">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-primary text-white px-2 py-1 rounded">Detailed Subprocesses</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-shield-lock-fill text-primary me-2"></i>Data Flow Diagram - Level 2 (Admin Module)</h5>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/dfd_level2_admin.png" download="DFD_Level2_Admin.png" class="btn btn-sm btn-primary rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/dfd_level2_admin.svg" download="DFD_Level2_Admin.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img id="imgAdminL2" src="/images/dfd_level2_admin.png" alt="DFD Level 2 Admin Module" style="width: 940px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. DFD LEVEL 2 MANAGER MODULE -->
+        <!-- ========================================== -->
+        <div class="dfd-card" id="cardManagerL2">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-success text-white px-2 py-1 rounded">Detailed Subprocesses</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-box-seam-fill text-success me-2"></i>Data Flow Diagram - Level 2 (Manager Module)</h5>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/dfd_level2_manager.png" download="DFD_Level2_Manager.png" class="btn btn-sm btn-success rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/dfd_level2_manager.svg" download="DFD_Level2_Manager.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img id="imgManagerL2" src="/images/dfd_level2_manager.png" alt="DFD Level 2 Manager Module" style="width: 940px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4. DFD LEVEL 1 ADMIN -->
+        <!-- ========================================== -->
+        <div class="dfd-card" id="cardAdminL1">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-secondary text-white px-2 py-1 rounded">Subsystem Decomposition</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-shield-check text-secondary me-2"></i>Data Flow Diagram - Level 1 (Admin)</h5>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/dfd_level1_admin.png" download="DFD_Level1_Admin.png" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/dfd_level1_admin.svg" download="DFD_Level1_Admin.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img src="/images/dfd_level1_admin.png" alt="DFD Level 1 Admin" style="width: 900px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- 5. DFD LEVEL 1 MANAGER -->
+        <div class="dfd-card" id="cardManagerL1">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-secondary text-white px-2 py-1 rounded">Subsystem Decomposition</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-gear-fill text-secondary me-2"></i>Data Flow Diagram - Level 1 (Manager)</h5>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/dfd_level1_manager.png" download="DFD_Level1_Manager.png" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/dfd_level1_manager.svg" download="DFD_Level1_Manager.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img src="/images/dfd_level1_manager.png" alt="DFD Level 1 Manager" style="width: 900px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- 6. DFD LEVEL 1 USER (CUSTOMER) -->
+        <div class="dfd-card" id="cardUserL1">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 no-print gap-2">
+                <div>
+                    <span class="badge bg-secondary text-white px-2 py-1 rounded">Subsystem Decomposition</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-person-fill text-secondary me-2"></i>Data Flow Diagram - Level 1 (User / Customer)</h5>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/images/dfd_level1_user.png" download="DFD_Level1_User.png" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-download me-1"></i> Download PNG Image
+                    </a>
+                    <a href="/images/dfd_level1_user.svg" download="DFD_Level1_User.svg" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-filetype-svg me-1"></i> SVG
+                    </a>
+                </div>
+            </div>
+            <div class="dfd-img-container">
+                <img src="/images/dfd_level1_user.png" alt="DFD Level 1 User" style="width: 900px; max-width: 100%;">
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 7. CHAPTER 6 REPORT DOCUMENTATION (6.4 & 6.5) -->
+        <!-- ========================================== -->
+        <div class="dfd-card" id="cardDocReport">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 no-print gap-2">
+                <div>
+                    <span class="badge bg-primary text-white px-2 py-1 rounded">Academic Report Content</span>
+                    <h5 class="fw-bold text-dark mb-0 mt-1"><i class="bi bi-journal-bookmark-fill text-primary me-2"></i>Chapter 6: User Story (6.4) & Scenario (6.5)</h5>
+                    <small class="text-muted">Formatted text ready to copy-paste directly into your Microsoft Word report</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="copySection('sec64Text', this)">
+                        <i class="bi bi-clipboard me-1"></i> Copy 6.4 User Story
+                    </button>
+                    <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="copySection('sec65Text', this)">
+                        <i class="bi bi-clipboard-check me-1"></i> Copy 6.5 Scenario
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 6.4 USER STORY -->
+            <div class="p-4 mb-4 rounded-3" style="background-color: #f1f5f9; border: 1px solid #cbd5e1;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-quote me-1 text-primary"></i>6.4 User Story</h6>
+                    <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="copySection('sec64Text', this)"><i class="bi bi-clipboard"></i> Copy</button>
+                </div>
+                <div id="sec64Text" style="white-space: pre-wrap; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.7; font-size: 0.95rem;">"As a customer or buyer, I want to register and log in to the SmartBin Liquidation Bin Store, browse liquidation bins with daily descending price schedules, search and filter certified liquidation merchandise by category, condition, and price, and add items to my cart or wishlist so that I can purchase high-value products at steep discounts. I want to apply promotional discount coupons, complete secure online payments via an integrated payment gateway, receive real-time order confirmation, and track my package through picking, packing, shipping, and delivery milestones, while viewing past orders and itemized invoices. As a store manager, I want to log into the store manager portal, intake liquidation stock manifests, inspect item condition, assign physical bin locations (Bin A–Z), configure and override daily markdown pricing, review the pending customer order queue, pick and pack items from physical bins, update shipment and fulfillment statuses, and view warehouse turnover analytics. As a system administrator, I want to oversee system operations, manage store manager and customer accounts, configure the global 7-day markdown pricing engine, schedule weekend lucky draws and pick winners, monitor real-time order volume and sales revenue, and export comprehensive financial and inventory compliance reports."</div>
+            </div>
+
+            <!-- SECTION 6.5 SCENARIO -->
+            <div class="p-4 rounded-3" style="background-color: #f8fafc; border: 1px solid #cbd5e1;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-card-checklist me-1 text-primary"></i>6.5 Scenario</h6>
+                </div>
+                <div id="sec65Text" style="white-space: pre-wrap; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.7; font-size: 0.95rem;">A scenario is a detailed description of a particular situation or sequence of events that helps illustrate how a system or process works. In software engineering, scenarios are often used to show how users interact with a system to achieve specific goals. For example, a scenario might describe how a customer logs into a liquidation store portal, browses daily markdown bins, applies discount coupons, and tracks shipment status. Scenarios make it easier to understand user needs, test different conditions, and visualize the flow of operations within a system. They serve as practical examples that bridge the gap between theoretical requirements and real-world usage.
+
+BUYER / USER
+ Customer can Register and Login.
+ Customer can View and Edit Profile Information.
+ Customer can Browse Liquidation Bins and Daily Prices.
+ Customer can Search and Filter Products by Category and Condition.
+ Customer can View Product Details and Condition Grades.
+ Customer can Add and Manage Items in Cart and Wishlist.
+ Customer can Apply Discount Coupons at Checkout.
+ Customer can Make Secure Online Payments.
+ Customer can Track Live Order and Delivery Status.
+ Customer can View Past Orders, Invoices, and Receipts.
+ Customer can Enter Weekly Lucky Draws.
+ Customer can Subscribe to Friday Restock Alerts.
+ Customer can Logout securely.
+
+STORE MANAGER
+ Store Manager can Login to Manager Portal.
+ Store Manager can View and Update Profile Details.
+ Store Manager can Intake Stock Manifests and Assign Bins.
+ Store Manager can Inspect Item Condition and Quantities.
+ Store Manager can Manage and Update Inventory Stock.
+ Store Manager can Configure Daily Markdown Prices.
+ Store Manager can View and Process Pending Orders.
+ Store Manager can Pick, Pack, and Dispatch Bin Items.
+ Store Manager can Update Shipment and Delivery Milestones.
+ Store Manager can Monitor Stock Levels and Low-Stock Alerts.
+ Store Manager can Export Order Logs and Fulfillment Reports.
+ Store Manager can Logout securely.
+
+ADMIN
+ Admin can Login to Administration Dashboard.
+ Admin can View and Manage Administrative Profile.
+ Admin can Create and Manage Store Manager Accounts.
+ Admin can Monitor and Manage Customer Accounts.
+ Admin can Configure 7-Day Markdown Pricing Engine.
+ Admin can Create and Manage Discount Coupons.
+ Admin can Schedule Lucky Draws and Pick Winners.
+ Admin can Monitor Real-Time Sales and Order Volumes.
+ Admin can View Central Analytics and Performance Reports.
+ Admin can Export Financial Audit and Compliance Reports.
+ Admin can Logout securely.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copySection(id, btn) {
+            const el = document.getElementById(id);
+            const text = el.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check2 me-1"></i> Copied!';
+                btn.classList.remove('btn-outline-primary', 'btn-primary', 'btn-outline-secondary');
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('btn-success');
+                    if (id === 'sec64Text') {
+                        btn.classList.add('btn-outline-primary');
+                    } else {
+                        btn.classList.add('btn-primary');
+                    }
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy', err);
+            });
+        }
+    </script>
+</body>
+</html>

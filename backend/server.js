@@ -66,6 +66,33 @@ app.use("/api/lucky-draws", luckyDrawRoutes);
 app.use("/api/daily-prices", dailyPriceRoutes);
 app.use("/api/payments", paymentRoutes);
 
+// Newsletter Subscription API
+app.post("/api/newsletter/subscribe", async (req, res) => {
+    try {
+        const { email } = req.body;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            return res.status(400).json({ success: false, message: "Please provide a valid email address." });
+        }
+
+        const cleanEmail = email.trim().toLowerCase();
+        try {
+            await db.promise().query("INSERT IGNORE INTO subscribers (email) VALUES (?)", [cleanEmail]);
+        } catch (dbErr) {
+            console.warn("Subscriber DB insertion notice:", dbErr.message);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Successfully subscribed to Friday restock alerts!",
+            email: cleanEmail
+        });
+    } catch (err) {
+        console.error("Newsletter error:", err);
+        return res.status(500).json({ success: false, message: err.message || "Failed to subscribe." });
+    }
+});
+
 // =============================
 // Fallback for HTML Pages
 // =============================

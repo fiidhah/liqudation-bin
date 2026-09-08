@@ -62,10 +62,14 @@ const addToCart = (req, res) => {
 };
 
 // =============================
+const { getTodayDayName } = require("../utils/dailyPriceCalculator");
+
+// =============================
 // VIEW CART
 // =============================
 const viewCart = (req, res) => {
     const { user_id } = req.params;
+    const todayName = getTodayDayName();
 
     const sql = `
         SELECT
@@ -76,16 +80,18 @@ const viewCart = (req, res) => {
             p.description,
             p.category,
             p.brand,
-            p.price,
+            COALESCE(dp.price, p.price) AS price,
+            p.price AS base_price,
             p.quantity AS stock_quantity,
             p.image
         FROM cart c
         JOIN products p ON c.product_id = p.product_id
+        LEFT JOIN daily_prices dp ON p.product_id = dp.product_id AND dp.day_name = ?
         WHERE c.user_id = ?
         ORDER BY c.cart_id DESC
     `;
 
-    db.query(sql, [user_id], (err, result) => {
+    db.query(sql, [todayName, user_id], (err, result) => {
         if (err) {
             return res.status(500).json({
                 success: false,
