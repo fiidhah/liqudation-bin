@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - SmartBin</title>
-    <!-- Google Fonts -->
+    <title>Sign In – SmartBin Certified Liquidation</title>
+    <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -15,100 +15,242 @@
     <!-- Custom Style -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-light">
+<body>
 
-    <!-- TOP ANNOUNCEMENT TICKER -->
-    <div class="top-announcement-bar">
-        <span>⚡ <strong>SMARTBIN LIQUIDATION:</strong> DAILY PRICE DROP SCHEDULE ACTIVE • RESTOCKED FRIDAY • CLEARANCE THURSDAY</span>
-    </div>
+    <!-- VERTICAL LEFT FLOATING SOCIAL BAR (Same as Home Page) -->
+    <aside class="social-vertical-bar d-none d-xl-flex">
+        <a href="https://twitter.com" target="_blank" class="social-vertical-item">
+            <span>Twitter</span>
+            <div class="social-vertical-icon"><i class="bi bi-twitter-x"></i></div>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="social-vertical-item">
+            <span>Instagram</span>
+            <div class="social-vertical-icon"><i class="bi bi-instagram"></i></div>
+        </a>
+        <a href="https://facebook.com" target="_blank" class="social-vertical-item">
+            <span>Facebook</span>
+            <div class="social-vertical-icon"><i class="bi bi-facebook"></i></div>
+        </a>
+    </aside>
 
-    <!-- CLEAN EDITORIAL NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-editorial-clean sticky-top">
+    <!-- SPLIT EDITORIAL NAVBAR (Matching Home Page) -->
+    <nav class="navbar navbar-expand-lg navbar-editorial sticky-top">
         <div class="container-fluid px-lg-5">
-            <a class="brand-logo-text" href="/index.html">
-                <div class="logo-icon-wrap">
-                    <i class="bi bi-box-seam-fill"></i>
-                </div>
-                <span>SmartBin</span>
-            </a>
+            <!-- Left Navigation -->
+            <div class="d-none d-lg-flex align-items-center gap-1" style="width: 32%;">
+                <a class="nav-link-left" href="/index.html">Home</a>
+                <a class="nav-link-left" href="/products.html">Browse Bins</a>
+                <a class="nav-link-left" href="/offers.html">Deals & Coupons</a>
+                <a class="nav-link-left" href="/lucky-draw.html">Lucky Draw</a>
+            </div>
 
-            <div class="ms-auto">
-                <a href="/index.html" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-bold">
-                    <i class="bi bi-arrow-left me-1"></i> Back to Store
+            <!-- Mobile Toggler -->
+            <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEditorial">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Center Brand Logo -->
+            <div class="text-center mx-auto">
+                <a class="brand-logo-text text-decoration-none" href="/index.html">
+                    <div class="logo-icon-wrap">
+                        <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <span>SmartBin</span>
                 </a>
+            </div>
+
+            <!-- Right Navigation & Actions -->
+            <div class="collapse navbar-collapse d-lg-flex justify-content-end align-items-center gap-2" id="navbarEditorial" style="width: 32%;">
+                <div class="d-flex align-items-center gap-1 me-2">
+                    <a class="nav-link-right" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Tracker</a>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 ms-auto ms-lg-0">
+                    <a href="/wishlist.html" class="nav-icon-editorial" title="Wishlist">
+                        <i class="bi bi-heart fs-6"></i>
+                    </a>
+                    <a href="/cart.html" class="nav-icon-editorial" title="Cart">
+                        <i class="bi bi-cart3 fs-6"></i>
+                        <span id="cartCountBadge" class="badge-cart-editorial">0</span>
+                    </a>
+                    <a href="/index.html" class="btn btn-dark btn-sm rounded-pill px-3 fw-bold ms-2 d-none d-sm-inline-flex align-items-center gap-1">
+                        <i class="bi bi-arrow-left"></i> Store
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container my-5 d-flex align-items-center justify-content-center" style="min-height: 70vh;">
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden w-100 bg-white" style="max-width: 480px;">
-            <div class="card-header text-white text-center py-4" style="background: #111111;">
-                <div class="d-inline-flex p-3 rounded-circle bg-white bg-opacity-10 mb-2">
-                    <i class="bi bi-person-lock text-warning fs-2"></i>
-                </div>
-                <h4 class="fw-bold mb-0 text-white">Sign In to SmartBin</h4>
-                <p class="text-white-50 small mb-0">Select your account role and enter credentials</p>
-            </div>
+    <!-- AUTHENTICATION HERO SECTION -->
+    <main class="container my-4 my-md-5">
+        <div class="row align-items-center justify-content-center g-4 g-lg-5">
+            
+            <!-- Left Editorial Intro (Visible on Desktop) -->
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="pe-lg-4">
+                    <span class="badge px-3 py-2 rounded-pill fw-bold text-uppercase mb-3" style="background: var(--color-yellow); color: #111; font-size: 0.75rem; letter-spacing: 0.5px;">
+                        <i class="bi bi-shield-check me-1"></i> Certified Member Portal
+                    </span>
+                    <h1 class="display-5 fw-black text-dark mb-3" style="font-family: 'Playfair Display', serif; line-height: 1.15;">
+                        Access Exclusive <span class="fst-italic" style="color: var(--color-yellow-dark);">Overstock</span> Deals & Portals
+                    </h1>
+                    <p class="text-secondary lead fs-6 mb-4" style="line-height: 1.7;">
+                        Sign in to track your live liquidation bin hauls, unlock personalized promotional discount codes, manage inventory stock, and view weekly Lucky Draw entries.
+                    </p>
 
-            <div class="card-body p-4 p-md-5">
-                <!-- Role Switcher Tabs -->
-                <ul class="nav nav-pills nav-fill mb-4 p-1 bg-light rounded-pill" id="loginRoleTabs">
-                    <li class="nav-item">
-                        <button class="nav-link active rounded-pill btn-sm fw-bold" data-role="User">Customer</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link rounded-pill btn-sm fw-bold" data-role="Manager">Manager</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link rounded-pill btn-sm fw-bold" data-role="Admin">Admin</button>
-                    </li>
-                </ul>
-
-                <form id="loginForm">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Email Address</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0"><i class="bi bi-envelope text-muted"></i></span>
-                            <input type="email" class="form-control rounded-end-3 py-2 bg-light border-0" id="loginEmail" placeholder="name@gmail.com" required>
+                    <!-- Trust Points -->
+                    <div class="d-flex flex-column gap-3 pt-2 border-top">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #FFF9E6; color: #D49F0B;">
+                                <i class="bi bi-currency-rupee fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">Reverse Daily Pricing</h6>
+                                <small class="text-muted">Prices drop automatically every midnight.</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #F0FDF4; color: #16A34A;">
+                                <i class="bi bi-box-seam fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">100% Verified Inventory</h6>
+                                <small class="text-muted">Inspected brands and guaranteed fulfillment.</small>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0"><i class="bi bi-key text-muted"></i></span>
-                            <input type="password" class="form-control rounded-end-3 py-2 bg-light border-0" id="loginPassword" placeholder="••••••••" required>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold mb-3 text-white shadow-sm" id="loginSubmitBtn">
-                        Sign In Now <i class="bi bi-arrow-right ms-1 text-warning"></i>
-                    </button>
-                </form>
-
-                <!-- Quick Test Login Helpers -->
-                <div class="p-3 bg-light rounded-3 text-center mb-3">
-                    <div class="small fw-bold text-muted text-uppercase mb-2">⚡ Quick 1-Click Credentials:</div>
-                    <div class="d-flex flex-wrap gap-1 justify-content-center">
-                        <button class="btn btn-outline-dark btn-sm rounded-pill" onclick="fillCredentials('fidha@gmail.com', '123456', 'User')">
-                            Customer
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="fillCredentials('manager@gmail.com', '123456', 'Manager')">
-                            Manager
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="fillCredentials('admin@gmail.com', 'admin123', 'Admin')">
-                            Admin
-                        </button>
-                    </div>
-                </div>
-
-                <div class="text-center small text-muted">
-                    Don't have an account? <a href="/register.html" class="fw-bold text-dark text-decoration-underline">Register as Customer</a>
                 </div>
             </div>
+
+            <!-- Right Login Card -->
+            <div class="col-12 col-md-8 col-lg-5">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+                    <!-- Top Card Header -->
+                    <div class="text-white text-center py-4 px-3" style="background: #111111;">
+                        <div class="d-inline-flex p-3 rounded-circle mb-2" style="background: rgba(255, 255, 255, 0.08); color: var(--color-yellow);">
+                            <i class="bi bi-person-lock fs-2"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1 text-white" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In to SmartBin</h3>
+                        <p class="small mb-0 text-white-50">Select your account role and enter credentials</p>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5">
+                        <!-- Role Switcher Tabs -->
+                        <div class="p-1 bg-light rounded-pill mb-4 d-flex justify-content-between" id="loginRoleTabs" style="border: 1px solid #E5E5E8;">
+                            <button class="btn btn-sm rounded-pill fw-bold flex-grow-1 py-2 active" data-role="User" style="transition: all 0.2s ease;">
+                                Customer
+                            </button>
+                            <button class="btn btn-sm rounded-pill fw-bold flex-grow-1 py-2 text-muted" data-role="Manager" style="transition: all 0.2s ease;">
+                                Manager
+                            </button>
+                            <button class="btn btn-sm rounded-pill fw-bold flex-grow-1 py-2 text-muted" data-role="Admin" style="transition: all 0.2s ease;">
+                                Admin
+                            </button>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-envelope text-muted"></i></span>
+                                    <input type="email" class="form-control rounded-end-3 py-2 bg-light border-0" id="loginEmail" placeholder="name@gmail.com" required autocomplete="email">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-key text-muted"></i></span>
+                                    <input type="password" class="form-control rounded-end-3 py-2 bg-light border-0" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold mb-3 text-white shadow-sm d-flex align-items-center justify-content-center gap-2" id="loginSubmitBtn">
+                                <span>Sign In Now</span> <i class="bi bi-arrow-right" style="color: var(--color-yellow);"></i>
+                            </button>
+                        </form>
+
+                        <!-- Quick 1-Click Credentials Pill Box -->
+                        <div class="p-3 bg-light rounded-3 text-center mb-3 border">
+                            <div class="small fw-bold text-muted text-uppercase mb-2" style="font-size: 0.72rem; letter-spacing: 0.5px;">⚡ Quick 1-Click Credentials:</div>
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                <button type="button" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-semibold" onclick="fillCredentials('fidha@gmail.com', '123456', 'User')">
+                                    Customer
+                                </button>
+                                <button type="button" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-semibold" onclick="fillCredentials('manager@gmail.com', '123456', 'Manager')">
+                                    Manager
+                                </button>
+                                <button type="button" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-semibold" onclick="fillCredentials('admin@gmail.com', 'admin123', 'Admin')">
+                                    Admin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center small text-muted">
+                            Don't have an account? <a href="/register.html" class="fw-bold text-dark text-decoration-underline">Register as Customer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
+    <!-- EDITORIAL LUXURY FOOTER (Same as Home Page) -->
+    <footer class="footer-luxury pt-5 pb-4 mt-auto" style="background-color: #0F172A; color: #E2E8F0;">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="logo-icon-wrap" style="width: 34px; height: 34px; background: var(--color-yellow); color: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                            <i class="bi bi-box-seam-fill"></i>
+                        </div>
+                        <h4 class="fw-black text-white mb-0" style="font-family: 'Plus Jakarta Sans', sans-serif;">SmartBin</h4>
+                    </div>
+                    <p class="small mb-3" style="color: #CBD5E1; line-height: 1.6;">
+                        Automated liquidation bin store management platform with daily dynamic reverse pricing for retail overstocks and certified brand returns.
+                    </p>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Explore</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/index.html" style="color: #CBD5E1;">Home</a></li>
+                        <li><a href="/products.html" style="color: #CBD5E1;">Browse Bins</a></li>
+                        <li><a href="/offers.html" style="color: #CBD5E1;">Deals & Coupons</a></li>
+                        <li><a href="/lucky-draw.html" style="color: #CBD5E1;">Weekend Lucky Draw</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Portals</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/login.html" style="color: #CBD5E1;">Sign In</a></li>
+                        <li><a href="/register.html" style="color: #CBD5E1;">Register</a></li>
+                        <li><a href="/manager/index.html" style="color: #CBD5E1;">Manager Portal</a></li>
+                        <li><a href="/admin/index.html" style="color: #CBD5E1;">Admin Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Restock Alerts</h6>
+                    <p class="small mb-2" style="color: #CBD5E1;">Subscribe to get notifications whenever fresh bins restock on Friday.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control rounded-start-pill border-0 px-3" placeholder="Enter your email address" style="background: #FFFFFF; color: #111;">
+                        <button class="btn btn-warning rounded-end-pill px-4 fw-bold text-dark" type="button" onclick="API.showToast('Subscribed to restock alerts!', 'success')">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-top border-secondary border-opacity-25 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 small" style="color: #94A3B8;">
+                <div>© 2026 SmartBin Liquidation Store. All Rights Reserved.</div>
+                <div>Certified Liquidation Bins & Daily Markdown Engine</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/api.js"></script>
@@ -116,22 +258,34 @@
     <script>
         let selectedRole = "User";
 
+        function updateRoleTabsUI() {
+            document.querySelectorAll("#loginRoleTabs button").forEach(b => {
+                if (b.dataset.role === selectedRole) {
+                    b.classList.add("btn-dark", "text-white", "shadow-sm");
+                    b.classList.remove("text-muted", "btn-light");
+                } else {
+                    b.classList.remove("btn-dark", "text-white", "shadow-sm");
+                    b.classList.add("text-muted");
+                }
+            });
+        }
+
+        // Initialize role tab click handlers
         document.querySelectorAll("#loginRoleTabs button").forEach(btn => {
             btn.addEventListener("click", () => {
-                document.querySelectorAll("#loginRoleTabs button").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
                 selectedRole = btn.dataset.role;
+                updateRoleTabsUI();
             });
         });
+
+        // Set initial tab styling
+        updateRoleTabsUI();
 
         function fillCredentials(email, pass, role) {
             document.getElementById("loginEmail").value = email;
             document.getElementById("loginPassword").value = pass;
             selectedRole = role;
-            document.querySelectorAll("#loginRoleTabs button").forEach(b => {
-                if (b.dataset.role === role) b.classList.add("active");
-                else b.classList.remove("active");
-            });
+            updateRoleTabsUI();
         }
 
         document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -153,7 +307,9 @@
                     const userObj = res.user || res.manager || res.admin;
                     Auth.setSession(res.token, userObj, selectedRole);
 
-                    const redirectUser = () => {
+                    API.showToast("Welcome back, " + (userObj.full_name || "User") + "! 🎉", "success");
+
+                    setTimeout(() => {
                         if (selectedRole === "Admin") {
                             window.location.href = "/admin/index.html";
                         } else if (selectedRole === "Manager") {
@@ -162,19 +318,12 @@
                             const urlParams = new URLSearchParams(window.location.search);
                             window.location.href = urlParams.get("redirect") || "/index.html";
                         }
-                    };
-
-                    // Standard Login Modal Method (Std Method)
-                    API.showLoginSuccess({
-                        user: userObj,
-                        role: selectedRole,
-                        onContinue: redirectUser
-                    });
+                    }, 1000);
                 }
             } catch (err) {
-                API.showErrorModal("Sign In Failed", err.message || "Invalid email or password. Please verify your credentials.");
+                API.showToast(err.message || "Invalid email or password.", "error");
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `Sign In Now <i class="bi bi-arrow-right ms-1 text-warning"></i>`;
+                submitBtn.innerHTML = `<span>Sign In Now</span> <i class="bi bi-arrow-right" style="color: var(--color-yellow);"></i>`;
             }
         });
     </script>

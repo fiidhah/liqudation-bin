@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensic Data Acquisition using Linux Live USB - Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #131b2e;
+            --bg-card-border: #1e2d4d;
+            --accent-cyan: #0ea5e9;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header-bar {
+            width: 100%;
+            max-width: 1060px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .title-tag {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-cyan);
+            background: rgba(14, 165, 233, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+        }
+
+        .actions-wrap {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--bg-card-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            border-color: var(--accent-cyan);
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1060px;
+            aspect-ratio: 16 / 9;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-header {
+            margin-bottom: 24px;
+        }
+
+        .slide-category {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .slide-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .slide-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-cyan { border-top: 3px solid var(--accent-cyan); }
+        .card-green { border-top: 3px solid var(--accent-green); }
+        .card-amber { border-top: 3px solid var(--accent-amber); }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card li {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .card li::before {
+            content: "•";
+            color: var(--accent-cyan);
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 14px;
+        }
+
+        .speaker-notes-box {
+            background: rgba(14, 165, 233, 0.07);
+            border-left: 3px solid var(--accent-cyan);
+            padding: 12px 18px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .speaker-notes-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .speaker-notes-text {
+            font-size: 13.5px;
+            color: #e2e8f0;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .footer-bar {
+            width: 100%;
+            max-width: 1060px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .code-box {
+            font-family: 'JetBrains Mono', monospace;
+            background: #000;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <div class="title-tag">Digital Forensics Viva Deck &bull; MCA Presentation</div>
+        <div class="actions-wrap">
+            <a href="Digital_Forensics_Live_USB_Simple.pptx" class="btn" download>📥 Download PPTX</a>
+            <button onclick="window.print()" class="btn">🖨️ Print / Save PDF</button>
+        </div>
+    </div>
+
+    <div class="slide-container">
+        
+        <!-- Slide 1 -->
+        <div class="slide active" data-slide="1">
+            <div class="slide-header">
+                <div class="slide-category">DIGITAL FORENSICS & EVIDENCE COLLECTION</div>
+                <div class="slide-title" style="font-size: 42px; margin-top: 10px;">Forensic Data Acquisition Using Linux Live USB</div>
+                <p style="color: var(--text-muted); font-size: 18px; margin-top: 12px;">Safely cloning digital evidence without altering a single bit of data</p>
+            </div>
+            <div class="slide-content">
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 24px; width: 100%;">
+                    <div style="font-size: 15px; color: var(--accent-green); font-weight: 700; text-transform: uppercase;">PRESENTER DETAILS</div>
+                    <div style="font-size: 24px; font-weight: 800; margin-top: 6px; color: #fff;">Anjum &bull; Roll No. 3</div>
+                    <div style="font-size: 16px; color: var(--text-muted); margin-top: 4px;">S3 MCA &bull; Department of Computer Applications</div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"Good morning respected teachers. Today I am presenting on Forensic Data Acquisition using a Linux Live USB. I will explain how investigators safely collect digital evidence without changing anything on the suspect's computer."</div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" data-slide="2">
+            <div class="slide-header">
+                <div class="slide-category">FOUNDATIONAL PRINCIPLES</div>
+                <div class="slide-title">1. What is Forensic Data Acquisition?</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div class="card card-cyan">
+                        <h3>The Golden Rule of Forensics</h3>
+                        <ul>
+                            <li>Digital evidence is fragile and changes easily.</li>
+                            <li>Booting Windows normally overwrites logs and timestamps.</li>
+                            <li><strong>Golden Rule:</strong> Never alter the original evidence!</li>
+                            <li>We must clone an exact duplicate and only examine the copy.</li>
+                        </ul>
+                    </div>
+                    <div class="card card-green">
+                        <h3>Why Use a Linux Live USB?</h3>
+                        <ul>
+                            <li>Runs 100% inside RAM without touching the hard drive.</li>
+                            <li>Bypasses the suspect OS and any hidden malware.</li>
+                            <li>Prevents automatic file updates or auto-wipe triggers.</li>
+                            <li>Allows mounting drives in strict <strong>Read-Only</strong> mode.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"The first rule of digital forensics is: never modify the original evidence. If we turn on the suspect's computer normally, Windows will change timestamps and logs. A Linux Live USB solves this by running entirely in RAM and keeping the hard drive untouched."</div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide" data-slide="3">
+            <div class="slide-header">
+                <div class="slide-category">TOOLKIT & SETUP</div>
+                <div class="slide-title">2. Requirements & Preparation</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-3">
+                    <div class="card card-cyan">
+                        <h3>Hardware Tools</h3>
+                        <ul>
+                            <li><strong>Live USB:</strong> Forensic OS like CAINE or Kali.</li>
+                            <li><strong>Target Drive:</strong> Suspect's PC or hard drive.</li>
+                            <li><strong>Destination Drive:</strong> Empty external drive (larger size).</li>
+                            <li><strong>Write-Blocker:</strong> Physically stops writes.</li>
+                        </ul>
+                    </div>
+                    <div class="card card-green">
+                        <h3>Software Tools</h3>
+                        <ul>
+                            <li><strong>Guymager:</strong> Fast visual GUI tool.</li>
+                            <li><strong>dc3dd / dd:</strong> Command-line disk cloner.</li>
+                            <li><strong>Hashing:</strong> md5sum and sha256sum.</li>
+                        </ul>
+                    </div>
+                    <div class="card card-amber">
+                        <h3>Documentation</h3>
+                        <ul>
+                            <li>Case number & Officer name.</li>
+                            <li>Drive Model & Serial Number.</li>
+                            <li>Date, time, and location logs.</li>
+                            <li><strong>Chain of Custody</strong> form.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"Before starting, we prepare our toolkit. We need the Linux Live USB, an empty destination drive, imaging software like Guymager or dc3dd, and an official Chain of Custody document to record drive serial numbers and case details."</div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide" data-slide="4">
+            <div class="slide-header">
+                <div class="slide-category">STEP-BY-STEP WORKFLOW</div>
+                <div class="slide-title">3. Booting From the Live USB</div>
+            </div>
+            <div class="slide-content">
+                <div style="display: flex; flex-direction: column; gap: 14px; width: 100%;">
+                    <div class="card card-cyan" style="padding: 16px 20px;">
+                        <strong>Step 1: Plug In &bull;</strong> Insert the prepared Linux Live USB into the suspect machine while it is powered OFF.
+                    </div>
+                    <div class="card card-cyan" style="padding: 16px 20px;">
+                        <strong>Step 2: Access Boot Menu &bull;</strong> Power on and immediately press F12 (or F2 / Del) to open BIOS/UEFI Boot Menu.
+                    </div>
+                    <div class="card card-cyan" style="padding: 16px 20px;">
+                        <strong>Step 3: Select USB &bull;</strong> Choose the USB drive so the computer boots from USB and ignores the internal Windows drive.
+                    </div>
+                    <div class="card card-green" style="padding: 16px 20px;">
+                        <strong>Step 4: Forensic Mode &bull;</strong> Start Linux in Forensic Mode. This ensures connected drives are NOT auto-mounted.
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"To boot safely, we plug in the USB while the PC is off, press the boot key like F12, and boot directly into Linux Forensic Mode. This ensures the internal hard drive remains sleeping and unmounted."</div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide" data-slide="5">
+            <div class="slide-header">
+                <div class="slide-category">CRITICAL IDENTIFICATION</div>
+                <div class="slide-title">4. Identifying the Evidence Drive</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div class="card card-cyan">
+                        <h3>Identifying Drives in Linux</h3>
+                        <ul>
+                            <li>In Linux, drives are called <code>/dev/sda</code>, <code>/dev/sdb</code>, etc.</li>
+                            <li>Always check device <strong>SIZE</strong> and <strong>MODEL</strong>:
+                                <br>&bull; Source (Suspect): 500GB SSD
+                                <br>&bull; Destination (Backup): 1TB External Drive
+                            </li>
+                            <li style="color: var(--accent-amber);"><strong>Danger:</strong> Never confuse source and destination, or you could overwrite evidence!</li>
+                        </ul>
+                    </div>
+                    <div class="card card-green">
+                        <h3>Commands to Run</h3>
+                        <div class="code-box">lsblk</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Lists all disks, sizes, and partition names</div>
+                        <div class="code-box">sudo fdisk -l</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Displays detailed sector counts and partition tables</div>
+                        <div class="code-box">hdparm -r1 /dev/sda</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Enforces software write-protection (read-only)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"Next, we identify which drive is the suspect's drive using the lsblk command. We match the storage capacity and brand name. We double-check so we never accidentally write over the original evidence."</div>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide" data-slide="6">
+            <div class="slide-header">
+                <div class="slide-category">IMAGE CREATION</div>
+                <div class="slide-title">5. Creating the Forensic Image</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-3">
+                    <div class="card card-cyan">
+                        <h3>1. Software Used</h3>
+                        <ul>
+                            <li><strong>Guymager:</strong> Clean graphical interface; easy to use.</li>
+                            <li><strong>dc3dd:</strong> Forensic version of dd with progress monitoring.</li>
+                            <li>Makes a <strong>bit-by-bit</strong> exact copy of every sector.</li>
+                        </ul>
+                    </div>
+                    <div class="card card-green">
+                        <h3>2. Image Formats</h3>
+                        <ul>
+                            <li><strong>E01 (Expert Witness):</strong> Gold standard in forensics. Compresses empty sectors and embeds case metadata.</li>
+                            <li><strong>RAW / DD:</strong> Simple raw byte clone.</li>
+                        </ul>
+                    </div>
+                    <div class="card card-amber">
+                        <h3>3. Safe Execution</h3>
+                        <ul>
+                            <li>Select Source: Evidence Drive.</li>
+                            <li>Select Destination: External Storage.</li>
+                            <li>Start imaging and <strong>never interrupt</strong> power or cables.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"Now we create the forensic image using Guymager. We choose the E01 format because it stores case info and compresses unused space. The software reads every single 0 and 1 from the suspect drive and saves it onto our external drive."</div>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide" data-slide="7">
+            <div class="slide-header">
+                <div class="slide-category">COURTROOM INTEGRITY</div>
+                <div class="slide-title">6. Verification & Documentation</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div class="card card-green">
+                        <h3>Cryptographic Hashing</h3>
+                        <ul>
+                            <li>A <strong>Hash</strong> is a unique digital fingerprint (SHA-256 / MD5).</li>
+                            <li>Even a 1-bit change creates a completely different hash.</li>
+                            <li>Calculate Hash of <strong>Source Drive</strong>.</li>
+                            <li>Calculate Hash of <strong>Acquired Image</strong>.</li>
+                            <li><strong style="color: var(--accent-green);">If Hash A == Hash B:</strong> 100% legal proof the copy is identical!</li>
+                        </ul>
+                    </div>
+                    <div class="card card-cyan">
+                        <h3>Chain of Custody</h3>
+                        <ul>
+                            <li>Document tool name, exact version, date, and timestamps.</li>
+                            <li>Record both hash values in the official case report.</li>
+                            <li>Original drive is locked in an evidence locker.</li>
+                            <li>Investigators only analyze the forensic copy.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"Finally, we verify integrity using cryptographic hashes like SHA-256. If the hash of the original drive matches the hash of our image file, it mathematically proves in court that the copy is authentic and uncorrupted."</div>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide" data-slide="8">
+            <div class="slide-header">
+                <div class="slide-category">SUMMARY & CONCLUSION</div>
+                <div class="slide-title">Summary of 5 Simple Steps</div>
+            </div>
+            <div class="slide-content">
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 28px; width: 100%;">
+                    <div style="display: flex; flex-direction: column; gap: 14px; font-size: 16px;">
+                        <div><strong style="color: var(--accent-cyan);">1. Prepare:</strong> Live USB + external storage + documentation.</div>
+                        <div><strong style="color: var(--accent-cyan);">2. Boot:</strong> Boot from USB directly into RAM (Windows stays asleep).</div>
+                        <div><strong style="color: var(--accent-cyan);">3. Identify:</strong> Use <code>lsblk</code> to verify source drive.</div>
+                        <div><strong style="color: var(--accent-cyan);">4. Image:</strong> Clone to E01 format using Guymager.</div>
+                        <div><strong style="color: var(--accent-green);">5. Verify:</strong> Match SHA-256 hash values to prove 100% integrity.</div>
+                    </div>
+                    <div style="margin-top: 30px; font-size: 26px; font-weight: 800; color: var(--accent-green); text-align: center;">
+                        Thank You! Questions & Answers
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes-box">
+                <div class="speaker-notes-label">🗣️ What to say:</div>
+                <div class="speaker-notes-text">"In summary: We prepare, boot safely from USB, identify the drive, make an E01 clone, and verify the hash. This guarantees the evidence is court-admissible. Thank you, I am now ready for questions."</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bar">
+        <button id="prevBtn" class="nav-btn" onclick="prevSlide()" disabled>&larr; Previous Slide</button>
+        <div id="slideCounter" class="slide-counter">Slide 1 of 8</div>
+        <button id="nextBtn" class="nav-btn" onclick="nextSlide()">Next Slide &rarr;</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(n) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            const target = document.querySelector(`.slide[data-slide="${n}"]`);
+            if (target) {
+                target.classList.add('active');
+                currentSlide = n;
+                document.getElementById('slideCounter').textContent = `Slide ${currentSlide} of ${totalSlides}`;
+                document.getElementById('prevBtn').disabled = (currentSlide === 1);
+                document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) showSlide(currentSlide - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>

@@ -2,14 +2,14 @@ const db = require("./config/db");
 
 const DAYS = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
 
-const MULTIPLIERS = {
-    Friday: 1.00,    // Restock Day (100%)
-    Saturday: 0.80,  // 80%
-    Sunday: 0.65,    // 65%
-    Monday: 0.50,    // 50%
-    Tuesday: 0.35,   // 35%
-    Wednesday: 0.25, // 25%
-    Thursday: 0.15   // 15% Clearance
+const LIQUIDATION_SCHEDULE = {
+    Friday: 999.00,
+    Saturday: 799.00,
+    Sunday: 599.00,
+    Monday: 399.00,
+    Tuesday: 299.00,
+    Wednesday: 199.00,
+    Thursday: 99.00
 };
 
 const getTodayDayName = () => {
@@ -26,47 +26,33 @@ const syncDailyPrices = () => {
             let insertedCount = 0;
 
             for (const prod of products) {
-                const basePrice = Math.max(10, parseFloat(prod.price) || 100);
-
-                // Fetch existing daily prices for this product
-                const existing = await new Promise((res) => {
-                    db.query("SELECT day_name FROM daily_prices WHERE product_id = ?", [prod.product_id], (e, rows) => {
-                        res((rows || []).map(r => r.day_name));
-                    });
-                });
-
                 for (const day of DAYS) {
-                    if (!existing.includes(day)) {
-                        let dayPrice = Math.round(basePrice * (MULTIPLIERS[day] || 1.0));
-                        if (dayPrice < 1) dayPrice = 1;
-
-                        await new Promise((res) => {
-                            db.query(
-                                "INSERT INTO daily_prices (product_id, day_name, price) VALUES (?, ?, ?)",
-                                [prod.product_id, day, dayPrice],
-                                (insertErr) => {
-                                    if (!insertErr) insertedCount++;
-                                    res();
-                                }
-                            );
-                        });
-                    }
+                    const dayPrice = LIQUIDATION_SCHEDULE[day];
+                    await new Promise((res) => {
+                        db.query(
+                            `INSERT INTO daily_prices (product_id, day_name, price)
+                             VALUES (?, ?, ?)
+                             ON DUPLICATE KEY UPDATE price = VALUES(price)`,
+                            [prod.product_id, day, dayPrice],
+                            (insertErr) => {
+                                if (!insertErr) insertedCount++;
+                                res();
+                            }
+                        );
+                    });
                 }
             }
 
             // Also update current price in products table to match TODAY's day price
             const todayName = getTodayDayName();
+            const todayPrice = LIQUIDATION_SCHEDULE[todayName] || 299.00;
             db.query(
-                `UPDATE products p 
-                 JOIN daily_prices dp ON p.product_id = dp.product_id 
-                 SET p.price = dp.price 
-                 WHERE dp.day_name = ?`,
-                [todayName],
-                (upErr, upRes) => {
-                    if (upErr) console.error("Error updating products with today's price:", upErr.message);
-                    else console.log(`Updated ${upRes.affectedRows} products to today's (${todayName}) liquidated price!`);
-                    
-                    resolve({ insertedCount, todayName });
+                "UPDATE products SET price = ?",
+                [todayPrice],
+                (uErr, uRes) => {
+                    if (uErr) console.error("Update error:", uErr.message);
+                    console.log(`✅ Synced products table to ${todayName}'s liquidation price: ₹${todayPrice}`);
+                    resolve({ total: products.length, today: todayName, price: todayPrice });
                 }
             );
         });
@@ -75,10 +61,10 @@ const syncDailyPrices = () => {
 
 syncDailyPrices()
     .then((res) => {
-        console.log(`Successfully populated ${res.insertedCount} daily price records!`);
+        console.log(`Successfully populated daily price records for ${res.total} products!`);
         process.exit(0);
     })
     .catch((err) => {
-        console.error("Failed to sync daily prices:", err);
+        console.error("Error seeding daily prices:", err);
         process.exit(1);
     });

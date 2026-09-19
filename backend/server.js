@@ -10,13 +10,32 @@ dotenv.config();
 // =============================
 const initDb = require("./config/initDb");
 const db = require("./config/db");
+const { syncAllDailyPrices, getTodayDayName } = require("./utils/dailyPriceCalculator");
 
-// Run Auto-Init
-initDb().then(() => {
+// Run Auto-Init and initial price sync
+initDb().then(async () => {
     console.log("🚀 Database tables and default records verified.");
+    await syncAllDailyPrices();
 }).catch((err) => {
     console.error("⚠️ Database initialization warning:", err.message);
 });
+
+// =============================
+// Automated Daily Price Rollover (Midnight Auto-Sync)
+// =============================
+let lastTrackedDay = getTodayDayName();
+setInterval(async () => {
+    const currentDay = getTodayDayName();
+    if (currentDay !== lastTrackedDay) {
+        console.log(`🌙 [MIDNIGHT ROLLOVER] Day transitioned from ${lastTrackedDay} to ${currentDay}! Automatically updating all product prices...`);
+        lastTrackedDay = currentDay;
+        try {
+            await syncAllDailyPrices();
+        } catch (err) {
+            console.error("❌ Error during daily price rollover:", err.message);
+        }
+    }
+}, 60 * 1000); // Automatically checks every 60 seconds
 
 // =============================
 // Routes Imports

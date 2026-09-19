@@ -237,35 +237,72 @@ const initDb = async () => {
             );
         }
 
-        // Auto-seed missing daily prices for any products
-        const [prods] = await connection.query("SELECT product_id, price FROM products");
+        // Configure and sync official liquidation markdown schedule for all products
+        const [prods] = await connection.query("SELECT product_id FROM products");
+        const liquidationSchedule = {
+            Friday: 999.00,
+            Saturday: 799.00,
+            Sunday: 599.00,
+            Monday: 399.00,
+            Tuesday: 299.00,
+            Wednesday: 199.00,
+            Thursday: 99.00
+        };
         const daysToInsert = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
-        const mults = { Friday: 1.0, Saturday: 0.8, Sunday: 0.65, Monday: 0.5, Tuesday: 0.35, Wednesday: 0.25, Thursday: 0.15 };
 
         for (const p of prods) {
-            const [existing] = await connection.query("SELECT day_name FROM daily_prices WHERE product_id = ?", [p.product_id]);
-            const existingDays = existing.map(e => e.day_name);
-            const base = Math.max(10, parseFloat(p.price) || 100);
-
             for (const d of daysToInsert) {
-                if (!existingDays.includes(d)) {
-                    const dPrice = Math.max(1, Math.round(base * (mults[d] || 1.0) * 100) / 100);
-                    await connection.query("INSERT INTO daily_prices (product_id, day_name, price) VALUES (?, ?, ?)", [p.product_id, d, dPrice]);
-                }
+                const dPrice = liquidationSchedule[d];
+                await connection.query(
+                    `INSERT INTO daily_prices (product_id, day_name, price)
+                     VALUES (?, ?, ?)
+                     ON DUPLICATE KEY UPDATE price = VALUES(price)`,
+                    [p.product_id, d, dPrice]
+                );
             }
         }
 
         // Sync products.price with today's day price
         const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const todayDayName = daysArr[new Date().getDay()];
-        await connection.query(
-            `UPDATE products p
-             JOIN daily_prices dp ON p.product_id = dp.product_id
-             SET p.price = dp.price
-             WHERE dp.day_name = ?`,
-            [todayDayName]
-        );
-        console.log(`🏷️ Synced all product prices to today's active day: ${todayDayName}`);
+        const todayScheduledPrice = liquidationSchedule[todayDayName] || 299.00;
+
+        await connection.query("UPDATE products SET price = ?", [todayScheduledPrice]);
+        console.log(`🏷️ Synced all product prices to today's liquidation price (${todayDayName}: ₹${todayScheduledPrice})`);
+
+        // Ensure cascading foreign keys on all child tables referencing products
+        try {
+            const [fks] = await connection.query(`
+                SELECT 
+                    k.TABLE_NAME, 
+                    k.CONSTRAINT_NAME, 
+                    rc.DELETE_RULE
+                FROM 
+                    INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
+                JOIN 
+                    INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc 
+                    ON k.CONSTRAINT_NAME = rc.CONSTRAINT_NAME 
+                    AND k.CONSTRAINT_SCHEMA = rc.CONSTRAINT_SCHEMA
+                WHERE 
+                    k.TABLE_SCHEMA = ?
+                    AND k.REFERENCED_TABLE_NAME = 'products'
+            `, [dbName]);
+
+            for (const fk of fks) {
+                if (fk.DELETE_RULE !== 'CASCADE') {
+                    console.log(`🔧 Updating foreign key constraint "${fk.CONSTRAINT_NAME}" on table "${fk.TABLE_NAME}" to ON DELETE CASCADE...`);
+                    await connection.query(`ALTER TABLE \`${fk.TABLE_NAME}\` DROP FOREIGN KEY \`${fk.CONSTRAINT_NAME}\``);
+                    await connection.query(`
+                        ALTER TABLE \`${fk.TABLE_NAME}\` 
+                        ADD CONSTRAINT \`${fk.CONSTRAINT_NAME}\` 
+                        FOREIGN KEY (product_id) REFERENCES products(product_id) 
+                        ON DELETE CASCADE ON UPDATE CASCADE
+                    `);
+                }
+            }
+        } catch (fkErr) {
+            console.warn("⚠️ Foreign key CASCADE verification warning:", fkErr.message);
+        }
 
         console.log(`🎉 Database "${dbName}" tables and structure synchronized successfully!`);
     } catch (err) {

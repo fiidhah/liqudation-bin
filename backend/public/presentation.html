@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartBin - Simple & Clear Project Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      color: #0f172a;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Fixed Navigation Bar */
+    .top-toolbar {
+      position: fixed;
+      top: 14px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-action {
+      background: #f59e0b;
+      color: #0f172a;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(245, 158, 11, 0.5);
+      background: #fbbf24;
+      color: #0f172a;
+    }
+    .btn-blue {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+    .btn-blue:hover {
+      background: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 12px 25px rgba(37, 99, 235, 0.5);
+    }
+    .btn-dark {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    .btn-dark:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+
+    /* 16:9 Slide Canvas */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      margin: 25px auto;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      page-break-inside: avoid;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 55px 30px 55px;
+    }
+
+    @media print {
+      body { background: transparent; }
+      .top-toolbar, .speaker-notes { display: none !important; }
+      .slide {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+      }
+    }
+
+    /* Header Component */
+    .tag-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #d97706;
+      background: #fef3c7;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .slide-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+    .slide-subtitle {
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+    .slide-footer {
+      margin-top: auto;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* Cards & Containers */
+    .card-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card-highlight {
+      background: #fffbeb;
+      border: 1.5px solid #fcd34d;
+    }
+
+    /* Grid Helpers */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+
+    /* Speaker Notes Box */
+    .speaker-notes {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin: -15px auto 40px auto;
+      max-width: 1280px;
+      font-size: 13px;
+      line-height: 1.6;
+      border-left: 4px solid #f59e0b;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .speaker-notes strong { color: #f59e0b; }
+
+    /* Custom Table */
+    .simple-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    .simple-table th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+    }
+    .simple-table th:last-child {
+      background: #f59e0b;
+      color: #0f172a;
+    }
+    .simple-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+    .simple-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .simple-table tr td:first-child {
+      font-weight: 700;
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Navigation Toolbar -->
+  <div class="top-toolbar">
+    <a href="/SmartBin_Simple_Presentation.pptx" download="SmartBin_Simple_Presentation.pptx" class="btn-action">
+      <i class="bi bi-file-earmark-ppt-fill"></i> Download PowerPoint (.pptx)
+    </a>
+    <button onclick="window.print()" class="btn-action btn-blue">
+      <i class="bi bi-printer-fill"></i> Print / Save as PDF
+    </button>
+    <a href="/index.html" class="btn-action btn-dark">
+      <i class="bi bi-shop"></i> Back to Store
+    </a>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 1: Title Slide -->
+  <!-- ======================================================== -->
+  <div class="slide" style="justify-content: center; background: radial-gradient(circle at 85% 20%, #fef3c7 0%, #ffffff 40%);">
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+      <div style="max-width: 65%;">
+        <span class="tag-badge"><i class="bi bi-award-fill"></i> Academic Capstone Web Project</span>
+        <h1 style="font-size: 56px; font-weight: 800; color: #0f172a; line-height: 1.1; margin-top: 10px;">
+          SMARTBIN
+        </h1>
+        <h2 style="font-size: 24px; font-weight: 700; color: #2563eb; margin-top: 8px; margin-bottom: 18px;">
+          Smart Liquidation Bin Store System
+        </h2>
+        <p style="font-size: 17px; color: #475569; line-height: 1.6; max-width: 700px; margin-bottom: 30px;">
+          An easy-to-use online shopping platform where <b>prices drop automatically every single day</b> — from ₹999 on Friday down to ₹99 on Thursday!
+        </p>
+
+        <div style="display: flex; gap: 16px;">
+          <div class="card-box" style="padding: 14px 20px; min-width: 220px;">
+            <div style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase;">Technology Stack</div>
+            <div style="font-size: 13px; font-weight: 600; color: #0f172a; margin-top: 4px;">Node.js • Express • MySQL • Razorpay</div>
+          </div>
+          <div class="card-box" style="padding: 14px 20px; min-width: 220px;">
+            <div style="font-size: 11px; font-weight: 800; color: #2563eb; text-transform: uppercase;">Three User Portals</div>
+            <div style="font-size: 13px; font-weight: 600; color: #0f172a; margin-top: 4px;">Customer • Store Manager • Admin</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly Schedule Strip Highlight -->
+      <div class="card-box card-highlight" style="width: 320px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);">
+        <div style="font-size: 12px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 1px;">Weekly Liquidation Schedule</div>
+        <div style="font-size: 13px; color: #78350f; margin-bottom: 14px;">Every product drops in price daily:</div>
+        
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #0f172a;">
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #ffffff; border-radius: 6px;">
+            <span>🔄 Friday (Restock)</span> <span style="color: #2563eb;">₹999</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #ffffff; border-radius: 6px;">
+            <span>🛍️ Saturday (Weekend)</span> <span style="color: #2563eb;">₹799</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #ffffff; border-radius: 6px;">
+            <span>⚡ Sunday (Drop)</span> <span style="color: #2563eb;">₹599</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #ffffff; border-radius: 6px;">
+            <span>📉 Monday (Markdown)</span> <span style="color: #2563eb;">₹399</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #fef08a; border: 1.5px solid #eab308; border-radius: 6px;">
+            <span>🏷️ Tuesday (Value)</span> <span style="color: #b45309; font-weight: 800;">₹299</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #ffffff; border-radius: 6px;">
+            <span>💥 Wednesday (Blowout)</span> <span style="color: #2563eb;">₹199</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 12px; background: #ffffff; border-radius: 6px;">
+            <span>🧹 Thursday (Clearance)</span> <span style="color: #16a34a; font-weight: 800;">₹99</span>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: #92400e; font-weight: 600;">
+          <i class="bi bi-clock-history"></i> Automatically rolls over at midnight!
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 1 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 1 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 1):</strong> "Good morning teachers and evaluators. Today I am presenting SmartBin. SmartBin is an online liquidation bin store where all product prices drop automatically every day — from ₹999 on Friday down to ₹99 on Thursday. We built it with Node.js, Express, MySQL, and Razorpay."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 2: What is a Liquidation Store? -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Project Background</span>
+    <h2 class="slide-title">What is a Liquidation Bin Store?</h2>
+    <div class="slide-subtitle">Understanding the business model in very simple words</div>
+
+    <div class="grid-3" style="margin-top: 10px;">
+      <div class="card-box">
+        <div style="font-size: 32px; margin-bottom: 10px;">📦</div>
+        <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">1. What is Liquidation?</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Big online retailers like Amazon and Walmart receive millions of returned items and overstocked boxes every single week.
+        </p>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6; margin-top: 8px;">
+          Liquidation bin stores purchase these huge pallets at wholesale prices and resell them directly to shoppers at steep discounts.
+        </p>
+      </div>
+
+      <div class="card-box card-highlight">
+        <div style="font-size: 32px; margin-bottom: 10px;">📉</div>
+        <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">2. The Daily Price Drop Rule</h3>
+        <p style="font-size: 13.5px; color: #78350f; line-height: 1.6;">
+          Instead of different prices for each product, <b>EVERY item in the store costs the exact same flat price on that day</b>:
+        </p>
+        <ul style="font-size: 12.5px; color: #78350f; margin-left: 18px; margin-top: 6px; line-height: 1.5;">
+          <li>Friday: ₹999 (New stock arrives)</li>
+          <li>Sat: ₹799 • Sun: ₹599 • Mon: ₹399</li>
+          <li>Tue: ₹299 • Wed: ₹199</li>
+          <li>Thursday: ₹99 (Clearance day)</li>
+        </ul>
+        <p style="font-size: 12.5px; color: #b45309; font-weight: 600; margin-top: 8px;">
+          The longer you wait, the cheaper it gets — but someone else might buy it first!
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 32px; margin-bottom: 10px;">🌐</div>
+        <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">3. Why We Built SmartBin</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Physical bin stores have big drawbacks: customers must wait in long lines, dig through messy bins, and staff must manually change signs.
+        </p>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6; margin-top: 8px;">
+          <b>SmartBin brings this concept online 24/7</b> so shoppers can search clean categories, view real condition grades, and buy from home.
+        </p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 2 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 2 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 2):</strong> "Big companies like Amazon have huge amounts of returned goods. Liquidation stores buy these truckloads and sell them using a daily price drop rule. On Friday everything is ₹999, and by Thursday everything drops to ₹99. Physical stores are chaotic, so SmartBin brings this experience online with automatic price updates."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 3: Comparison Table -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Comparison</span>
+    <h2 class="slide-title">Traditional Store vs. SmartBin Platform</h2>
+    <div class="slide-subtitle">Why an online liquidation website is much better for shoppers and managers</div>
+
+    <table class="simple-table" style="margin-top: 10px;">
+      <thead>
+        <tr>
+          <th style="width: 20%;">Feature</th>
+          <th style="width: 40%;">Traditional Physical Bin Store</th>
+          <th style="width: 40%;">SmartBin Online Platform</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Shopping Hours</td>
+          <td>Only open during store hours; customers must travel physically.</td>
+          <td><b>Available 24/7:</b> Shop from anywhere on your phone or laptop.</td>
+        </tr>
+        <tr>
+          <td>Finding Products</td>
+          <td>Manually digging through messy physical bins with no search.</td>
+          <td><b>Instant Search & Filters:</b> Filter by category, brand, and condition.</td>
+        </tr>
+        <tr>
+          <td>Daily Price Updates</td>
+          <td>Store staff change chalkboards and paper signs by hand.</td>
+          <td><b>100% Automated:</b> MySQL updates prices automatically at midnight.</td>
+        </tr>
+        <tr>
+          <td>Checkout & Payment</td>
+          <td>Long waiting lines at cash registers, cash handling, paper receipts.</td>
+          <td><b>Fast Online Checkout:</b> Secure Razorpay payment & instant digital invoice.</td>
+        </tr>
+        <tr>
+          <td>Customer Rewards</td>
+          <td>Zero customer rewards or incentives after leaving the store.</td>
+          <td><b>Rewarding Experience:</b> Discount coupons and weekly Lucky Draws.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 3 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 3 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 3):</strong> "Compared to a physical bin store, SmartBin is open 24/7, allows instant searching instead of digging through piles, updates prices automatically at midnight, and offers seamless digital payment with Razorpay."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 4: Core Features -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">System Capabilities</span>
+    <h2 class="slide-title">Core Features of SmartBin</h2>
+    <div class="slide-subtitle">Six simple features that power the platform</div>
+
+    <div class="grid-3" style="gap: 16px; margin-top: 10px;">
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 6px;"><i class="bi bi-calendar-check-fill"></i></div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">1. Automatic Daily Prices</h4>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Prices drop automatically every day: Friday ₹999 down to Thursday ₹99. No manual price tagging needed.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 6px;"><i class="bi bi-geo-alt-fill"></i></div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">2. Bin Mapping & Condition</h4>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Every item displays its warehouse bin ID (Bin A–Z) and verified condition (Brand New, Open Box, Refurbished).
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 6px;"><i class="bi bi-search"></i></div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">3. Smart Search & Filters</h4>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Quickly filter by Electronics, Home & Kitchen, Fashion, or Tools, or search by keywords and price range.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 6px;"><i class="bi bi-credit-card-2-front-fill"></i></div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">4. Cart, Wishlist & Razorpay</h4>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Save favorites to wishlist, add products to cart, and pay safely using Cards, UPI, or NetBanking.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 6px;"><i class="bi bi-ticket-perforated-fill"></i></div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">5. Promotional Coupons</h4>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Apply promo discount codes during checkout to receive additional percentage savings on orders.
+        </p>
+      </div>
+
+      <div class="card-box card-highlight">
+        <div style="font-size: 24px; color: #b45309; margin-bottom: 6px;"><i class="bi bi-trophy-fill"></i></div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">6. Weekly Lucky Draw</h4>
+        <p style="font-size: 12.5px; color: #78350f; line-height: 1.5;">
+          Every completed order automatically gets entered into a weekend raffle to win mystery gift hampers!
+        </p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 4 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 4 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 4):</strong> "Our core features are: automatic daily pricing, physical bin and condition tags, easy category searching, cart and Razorpay payments, promotional coupons, and an automated Lucky Draw to reward customers."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 5: Step-by-Step Flow -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Workflow</span>
+    <h2 class="slide-title">How SmartBin Works (Step-by-Step)</h2>
+    <div class="slide-subtitle">The simple 5-step journey from inventory arrival to customer doorstep</div>
+
+    <div class="grid-5" style="margin-top: 20px;">
+      <div class="card-box" style="text-align: center;">
+        <div style="width: 42px; height: 42px; background: #0f172a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-weight: 800; font-size: 18px;">1</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Upload Stock</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Store Manager intakes pallet stock, uploads product photos, and assigns a Bin ID (Bin A-Z).
+        </p>
+      </div>
+
+      <div class="card-box card-highlight" style="text-align: center;">
+        <div style="width: 42px; height: 42px; background: #f59e0b; color: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-weight: 800; font-size: 18px;">2</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Auto Pricing</h4>
+        <p style="font-size: 12px; color: #78350f; line-height: 1.5;">
+          System generates 7-day prices (₹999 down to ₹99) and syncs today's active price in MySQL.
+        </p>
+      </div>
+
+      <div class="card-box" style="text-align: center;">
+        <div style="width: 42px; height: 42px; background: #0f172a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-weight: 800; font-size: 18px;">3</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Browse & Pick</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Customer searches products, views condition ratings, and adds items at today's deal price.
+        </p>
+      </div>
+
+      <div class="card-box" style="text-align: center;">
+        <div style="width: 42px; height: 42px; background: #0f172a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-weight: 800; font-size: 18px;">4</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Easy Payment</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Customer checks out securely via Razorpay. Stock count automatically decrements by 1.
+        </p>
+      </div>
+
+      <div class="card-box" style="text-align: center;">
+        <div style="width: 42px; height: 42px; background: #16a34a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-weight: 800; font-size: 18px;">5</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Pack & Ship</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Manager picks item from bin, ships package, and customer tracks live delivery progress.
+        </p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 5 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 5 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 5):</strong> "The system works in 5 simple steps: First, the manager uploads stock. Second, the system sets the 7-day price schedule. Third, the customer finds deals and adds to cart. Fourth, payment is processed securely via Razorpay. Fifth, the manager picks the item from the physical bin and ships it."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 6: Three User Portals -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Architecture</span>
+    <h2 class="slide-title">Three User Portals</h2>
+    <div class="slide-subtitle">Clear division of duties for Shoppers, Store Managers, and System Admins</div>
+
+    <div class="grid-3" style="margin-top: 10px;">
+      <div class="card-box">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+          <span style="font-size: 20px; color: #2563eb;"><i class="bi bi-person-fill"></i></span>
+          <h3 style="font-size: 17px; font-weight: 800; color: #0f172a;">Customer Portal</h3>
+        </div>
+        <ul style="font-size: 12.5px; color: #475569; line-height: 1.8; margin-left: 16px;">
+          <li>Register & login securely</li>
+          <li>Browse liquidation bins (Bin A to Z)</li>
+          <li>Search items & view 7-day price drop</li>
+          <li>Add to Cart and Wishlist</li>
+          <li>Apply promotional coupon discounts</li>
+          <li>Pay online via Razorpay (UPI/Card)</li>
+          <li>Track live order delivery status</li>
+          <li>Enter automated weekend Lucky Draw</li>
+        </ul>
+      </div>
+
+      <div class="card-box card-highlight">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+          <span style="font-size: 20px; color: #b45309;"><i class="bi bi-shop-window"></i></span>
+          <h3 style="font-size: 17px; font-weight: 800; color: #0f172a;">Store Manager Portal</h3>
+        </div>
+        <ul style="font-size: 12.5px; color: #78350f; line-height: 1.8; margin-left: 16px;">
+          <li>Staff login to dedicated manager panel</li>
+          <li>Intake liquidation stock & upload photos</li>
+          <li>Assign products to physical bins</li>
+          <li>Inspect & record condition ratings</li>
+          <li>Review real-time incoming orders</li>
+          <li>Pick items directly from warehouse bins</li>
+          <li>Update delivery status (Shipped → Delivered)</li>
+          <li>Export daily fulfillment reports</li>
+        </ul>
+      </div>
+
+      <div class="card-box">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+          <span style="font-size: 20px; color: #2563eb;"><i class="bi bi-shield-lock-fill"></i></span>
+          <h3 style="font-size: 17px; font-weight: 800; color: #0f172a;">Super Admin Dashboard</h3>
+        </div>
+        <ul style="font-size: 12.5px; color: #475569; line-height: 1.8; margin-left: 16px;">
+          <li>Master admin authentication</li>
+          <li>Create & manage store manager staff</li>
+          <li>Monitor registered customer accounts</li>
+          <li>Configure 7-day liquidation markdown rule</li>
+          <li>Create, edit & schedule promo coupons</li>
+          <li>Run Lucky Draws & select winners</li>
+          <li>View live platform revenue & analytics</li>
+          <li>Export global financial audit logs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 6 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 6 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 6):</strong> "We built three dedicated portals: The Customer Portal allows shoppers to buy and track orders. The Store Manager Portal helps warehouse staff manage bins and fulfill orders. The Super Admin Dashboard oversees sales, staff, and promotions."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 7: Database Design -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Database Design</span>
+    <h2 class="slide-title">Database Design (Simple & Organized)</h2>
+    <div class="slide-subtitle">How data is stored cleanly and protected in MySQL</div>
+
+    <div class="grid-2" style="margin-top: 10px;">
+      <div class="card-box">
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">Key Tables in MySQL</h3>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
+          <div style="padding: 8px 12px; background: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <b style="color: #2563eb;">users & admins:</b> Stores login credentials, encrypted passwords, and delivery addresses.
+          </div>
+          <div style="padding: 8px 12px; background: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <b style="color: #2563eb;">products:</b> Stores product title, category, bin ID, condition grade, and photos.
+          </div>
+          <div style="padding: 8px 12px; background: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <b style="color: #2563eb;">daily_prices:</b> Stores the exact prices for all 7 days (Friday ₹999 to Thursday ₹99).
+          </div>
+          <div style="padding: 8px 12px; background: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <b style="color: #2563eb;">cart & wishlist:</b> Remembers items added by users for checkout.
+          </div>
+          <div style="padding: 8px 12px; background: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <b style="color: #2563eb;">orders & order_items:</b> Stores order details, totals, and shipment status.
+          </div>
+        </div>
+      </div>
+
+      <div class="card-box card-highlight">
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">Safety & Automation Features</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12.5px; color: #78350f;">
+          <div>
+            <b>• Automatic Cascade Delete (ON DELETE CASCADE):</b><br>
+            If a manager deletes a product, MySQL automatically cleans up its daily prices and cart entries. This prevents foreign key errors.
+          </div>
+          <div>
+            <b>• Midnight Price Auto-Sync:</b><br>
+            A background timer runs every minute. When midnight arrives, it automatically updates all product prices to the new day's scheduled price.
+          </div>
+          <div>
+            <b>• Encrypted Passwords:</b><br>
+            All passwords are encrypted using salted bcrypt hashing so user data is always safe.
+          </div>
+          <div>
+            <b>• Connection Pooling:</b><br>
+            Uses MySQL connection pool to handle multiple simultaneous customer checkouts fast and smoothly.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 7 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 7 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 7):</strong> "Our database is organized in MySQL with tables for products, daily prices, orders, and users. We use ON DELETE CASCADE so deleting a product automatically cleans up related prices and cart entries, and an automated midnight scheduler keeps daily prices updated."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 8: Technology Stack -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Technology</span>
+    <h2 class="slide-title">Technology Stack (Tools Used)</h2>
+    <div class="slide-subtitle">Industry-standard, fast, and reliable tools used to build SmartBin</div>
+
+    <div class="grid-4" style="margin-top: 15px;">
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 8px;"><i class="bi bi-window"></i></div>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">Frontend</h3>
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">What Users See</p>
+        <ul style="font-size: 12px; color: #334155; line-height: 1.7; margin-left: 14px;">
+          <li><b>HTML5:</b> Page structure</li>
+          <li><b>CSS3:</b> Styling & layouts</li>
+          <li><b>JavaScript:</b> Interactive UI</li>
+          <li><b>Bootstrap 5:</b> Mobile responsive</li>
+        </ul>
+      </div>
+
+      <div class="card-box card-highlight">
+        <div style="font-size: 24px; color: #b45309; margin-bottom: 8px;"><i class="bi bi-cpu-fill"></i></div>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">Backend</h3>
+        <p style="font-size: 12px; color: #92400e; margin-bottom: 12px;">System Brain</p>
+        <ul style="font-size: 12px; color: #78350f; line-height: 1.7; margin-left: 14px;">
+          <li><b>Node.js:</b> Server engine</li>
+          <li><b>Express.js:</b> REST APIs</li>
+          <li><b>Price Calculator:</b> Auto pricing</li>
+          <li><b>Multer:</b> Image uploads</li>
+        </ul>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 8px;"><i class="bi bi-database-fill"></i></div>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">Database</h3>
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Data Storage</p>
+        <ul style="font-size: 12px; color: #334155; line-height: 1.7; margin-left: 14px;">
+          <li><b>MySQL:</b> Relational database</li>
+          <li><b>mysql2 Pool:</b> Fast queries</li>
+          <li><b>bcrypt:</b> Password security</li>
+          <li><b>Cascade:</b> Data integrity</li>
+        </ul>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 24px; color: #2563eb; margin-bottom: 8px;"><i class="bi bi-tools"></i></div>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">Payments & Tools</h3>
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Integrations</p>
+        <ul style="font-size: 12px; color: #334155; line-height: 1.7; margin-left: 14px;">
+          <li><b>Razorpay:</b> UPI / Card payments</li>
+          <li><b>Postman:</b> API testing</li>
+          <li><b>Git & GitHub:</b> Source control</li>
+          <li><b>VS Code:</b> Code editor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 8 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 8 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 8):</strong> "Our technology stack consists of HTML, CSS, JavaScript, and Bootstrap for the frontend, Node.js and Express for the backend APIs, MySQL for database storage, and Razorpay for secure payments."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 9: Future Roadmap -->
+  <!-- ======================================================== -->
+  <div class="slide">
+    <span class="tag-badge">Future Scope</span>
+    <h2 class="slide-title">Future Enhancements (What We Can Add Next)</h2>
+    <div class="slide-subtitle">Exciting features planned for the future evolution of SmartBin</div>
+
+    <div class="grid-5" style="margin-top: 20px;">
+      <div class="card-box">
+        <div style="font-size: 11px; font-weight: 800; color: #d97706; margin-bottom: 6px;">PHASE 1</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Mobile App</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          A native Android & iOS mobile app with daily push alerts when prices drop at midnight.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 11px; font-weight: 800; color: #d97706; margin-bottom: 6px;">PHASE 2</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">In-Store QR Codes</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Shoppers in physical stores can scan QR codes on physical bins to see online specs and ratings.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 11px; font-weight: 800; color: #d97706; margin-bottom: 6px;">PHASE 3</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">AI Defect Scan</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Use camera AI to automatically detect scratches or defects and grade product condition.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 11px; font-weight: 800; color: #d97706; margin-bottom: 6px;">PHASE 4</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Pallet Bidding</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          An online auction section where wholesale buyers can bid on unopened liquidation pallets.
+        </p>
+      </div>
+
+      <div class="card-box">
+        <div style="font-size: 11px; font-weight: 800; color: #d97706; margin-bottom: 6px;">PHASE 5</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Multi-Store Sync</h4>
+        <p style="font-size: 12px; color: #475569; line-height: 1.5;">
+          Connect multiple store locations in different cities to one central database.
+        </p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 9 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 9 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 9):</strong> "For future work, we plan to develop a mobile application, introduce in-store QR codes for omnichannel shopping, use AI computer vision for quality checks, enable bulk pallet bidding, and connect multiple store branches."
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SLIDE 10: Conclusion & Summary -->
+  <!-- ======================================================== -->
+  <div class="slide" style="background: radial-gradient(circle at 90% 10%, #fef3c7 0%, #ffffff 50%);">
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+      <div style="max-width: 60%;">
+        <span class="tag-badge">Project Defense</span>
+        <h2 style="font-size: 34px; font-weight: 800; color: #0f172a; margin-top: 6px; margin-bottom: 20px;">
+          Conclusion & Key Takeaways
+        </h2>
+
+        <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px; color: #334155;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <span style="color: #16a34a; font-size: 18px;"><i class="bi bi-check-circle-fill"></i></span>
+            <div>
+              <b>Brought Bin Shopping Online:</b> Successfully turned offline liquidation bin retail into a clean, 24/7 web platform.
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <span style="color: #16a34a; font-size: 18px;"><i class="bi bi-check-circle-fill"></i></span>
+            <div>
+              <b>100% Automated Pricing:</b> System automatically drops prices across the entire catalog at midnight from ₹999 down to ₹99.
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <span style="color: #16a34a; font-size: 18px;"><i class="bi bi-check-circle-fill"></i></span>
+            <div>
+              <b>Complete E-Commerce Pipeline:</b> Covers everything from pallet intake and bin picking to Razorpay payments, live tracking, and lucky draws.
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <span style="color: #16a34a; font-size: 18px;"><i class="bi bi-check-circle-fill"></i></span>
+            <div>
+              <b>Clean Multi-Role Governance:</b> Three secure portals built for Shoppers, Store Managers, and Super Admins.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thank You Box -->
+      <div class="card-box" style="background: #f59e0b; border: none; width: 340px; padding: 40px 30px; text-align: center; border-radius: 20px; box-shadow: 0 15px 35px rgba(245, 158, 11, 0.35);">
+        <h3 style="font-size: 42px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Thank You!</h3>
+        <p style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 20px;">
+          SmartBin Capstone Project Presentation
+        </p>
+        <div style="background: #0f172a; color: #ffffff; padding: 10px 18px; border-radius: 30px; font-size: 13px; font-weight: 600; display: inline-block;">
+          Open for Questions & Discussion
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SmartBin Project Presentation</span>
+      <span>Slide 10 of 10</span>
+    </div>
+  </div>
+
+  <!-- Speaker Notes 10 -->
+  <div class="speaker-notes">
+    <strong>🎤 What to say (Slide 10):</strong> "In conclusion, SmartBin brings the exciting experience of liquidation bin stores online with automated daily pricing and full order tracking. Thank you very much for your time and attention. I am now happy to answer any questions."
+  </div>
+
+</body>
+</html>

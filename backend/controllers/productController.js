@@ -339,31 +339,45 @@ const updateStock = (req, res) => {
 // =============================
 // DELETE PRODUCT
 // =============================
-const deleteProduct = (req, res) => {
+const deleteProduct = async (req, res) => {
     const { id } = req.params;
 
-    const sql = "DELETE FROM products WHERE product_id = ?";
+    try {
+        // Pre-emptively clean up any child records across all dependent tables
+        await new Promise((resolve) => db.query("DELETE FROM daily_prices WHERE product_id = ?", [id], () => resolve()));
+        await new Promise((resolve) => db.query("DELETE FROM cart_items WHERE product_id = ?", [id], () => resolve()));
+        await new Promise((resolve) => db.query("DELETE FROM cart WHERE product_id = ?", [id], () => resolve()));
+        await new Promise((resolve) => db.query("DELETE FROM wishlist WHERE product_id = ?", [id], () => resolve()));
+        await new Promise((resolve) => db.query("DELETE FROM order_items WHERE product_id = ?", [id], () => resolve()));
 
-    db.query(sql, [id], (err, result) => {
-        if (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
+        const sql = "DELETE FROM products WHERE product_id = ?";
+
+        db.query(sql, [id], (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found."
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: "Product deleted successfully."
             });
-        }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Product not found."
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Product deleted successfully."
         });
-    });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 // =============================
