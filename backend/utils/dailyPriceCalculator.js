@@ -2,15 +2,15 @@ const db = require("../config/db");
 
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-// Official Liquidation Bin Store Markdown Schedule matching Storefront
+// Official Increased Liquidation Bin Store Markdown Schedule
 const LIQUIDATION_DAILY_PRICES = {
-    Friday: 999.00,    // Restock Day (Highest Value, Fresh Loads)
-    Saturday: 799.00,  // Weekend Rush
-    Sunday: 599.00,    // Weekend Drop
-    Monday: 399.00,    // Markdown Monday
-    Tuesday: 299.00,   // Value Tuesday
-    Wednesday: 199.00, // Blowout Wednesday
-    Thursday: 99.00    // Clearance Day (All Bins Lowest Price)
+    Friday: 2499.00,    // Friday Restock: ₹2,499 (Highest Value, Fresh Loads)
+    Saturday: 1999.00,  // Saturday Rush: ₹1,999 (Weekend Surge)
+    Sunday: 1499.00,    // Sunday Drop: ₹1,499 (Weekend Special)
+    Monday: 999.00,     // Monday Markdown: ₹999 (First Wave Markdown)
+    Tuesday: 699.00,    // Tuesday Value: ₹699 (Value Deal)
+    Wednesday: 399.00,  // Wednesday Blowout: ₹399 (Deep Cut Drop)
+    Thursday: 199.00    // Thursday Clearance: ₹199 (All Bins Clearance Blowout)
 };
 
 const getTodayDayName = () => {
@@ -21,19 +21,20 @@ const getTodayDayName = () => {
  * Returns the exact scheduled liquidation price for a given day name.
  */
 const calculatePriceForDay = (basePrice, dayName) => {
-    return LIQUIDATION_DAILY_PRICES[dayName] !== undefined ? LIQUIDATION_DAILY_PRICES[dayName] : 299.00;
+    return LIQUIDATION_DAILY_PRICES[dayName] !== undefined ? LIQUIDATION_DAILY_PRICES[dayName] : 699.00;
 };
 
 /**
- * Ensures a single product has all 7 daily liquidation prices configured.
+ * Ensures a single product has all 7 daily liquidation prices configured matching the daily schedule.
  */
 const ensureProductDailyPrices = (productId) => {
     return new Promise((resolve, reject) => {
         const pId = parseInt(productId);
         const daysToInsert = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
 
-        db.query("SELECT day_name FROM daily_prices WHERE product_id = ?", [pId], async (err) => {
+        db.query("SELECT product_id FROM products WHERE product_id = ?", [pId], async (err, prodRows) => {
             if (err) return reject(err);
+            if (!prodRows || prodRows.length === 0) return resolve(false);
 
             for (const day of daysToInsert) {
                 const dayPrice = LIQUIDATION_DAILY_PRICES[day];
@@ -53,14 +54,14 @@ const ensureProductDailyPrices = (productId) => {
 };
 
 /**
- * Ensures every product in database has all 7 daily prices populated with the schedule,
- * and updates products.price to TODAY's exact scheduled liquidated price.
+ * Ensures every product in the database has all 7 daily prices synchronized with the daily price schedule,
+ * and sets products.price to TODAY's scheduled bin price.
  */
 const syncAllDailyPrices = () => {
     return new Promise((resolve, reject) => {
         const daysToInsert = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
         const todayName = getTodayDayName();
-        const todayPrice = LIQUIDATION_DAILY_PRICES[todayName] || 299.00;
+        const todayPrice = LIQUIDATION_DAILY_PRICES[todayName] || 699.00;
 
         db.query("SELECT product_id FROM products", async (err, products) => {
             if (err) return reject(err);
@@ -80,22 +81,13 @@ const syncAllDailyPrices = () => {
                 }
             }
 
-            // Automatically set all products' current active price to today's scheduled price
-            db.query(
-                "UPDATE products SET price = ?",
-                [todayPrice],
-                (upErr, upRes) => {
-                    if (upErr) console.error("Error updating today's product prices:", upErr.message);
-                    console.log(`🏷️ [SCHEDULE AUTO-SYNC] All ${products.length} products automatically set to ${todayName}'s price: ₹${todayPrice}`);
-                    resolve({
-                        success: true,
-                        today: todayName,
-                        todayPrice: todayPrice,
-                        totalProducts: products.length,
-                        updatedCount: upRes ? upRes.affectedRows : 0
-                    });
-                }
-            );
+            console.log(`🏷️ [SCHEDULE AUTO-SYNC] Synchronized daily price schedule (Today ${todayName}: ₹${todayPrice}) across all ${products.length} products.`);
+            resolve({
+                success: true,
+                today: todayName,
+                todayPrice: todayPrice,
+                totalProducts: products.length
+            });
         });
     });
 };

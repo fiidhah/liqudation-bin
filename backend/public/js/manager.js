@@ -113,7 +113,18 @@ const ManagerPortal = {
         document.getElementById("productFormTitle").textContent = "Stock New Product into Liquidation Bin";
         document.getElementById("productForm").reset();
         document.getElementById("productEditId").value = "";
-        document.getElementById("imagePreview").src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80";
+        const defaultImg = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80";
+        const previewEl = document.getElementById("imagePreview");
+        if (previewEl) previewEl.src = defaultImg;
+        const hiddenImg = document.getElementById("prodGeneratedImage");
+        if (hiddenImg) hiddenImg.value = defaultImg;
+        const badge = document.getElementById("imageSourceBadge");
+        if (badge) {
+            badge.textContent = "Ready to Generate";
+            badge.className = "badge bg-danger-subtle text-danger px-2.5 py-1 rounded-pill";
+        }
+        const fileInput = document.getElementById("prodImageFile");
+        if (fileInput) fileInput.value = "";
         new bootstrap.Modal(document.getElementById("productModal")).show();
     },
 
@@ -129,9 +140,257 @@ const ManagerPortal = {
         document.getElementById("prodPrice").value = p.price;
         document.getElementById("prodQuantity").value = p.quantity;
         document.getElementById("prodDescription").value = p.description || "";
-        document.getElementById("imagePreview").src = p.image || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80";
+        const currentImg = p.image || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80";
+        const previewEl = document.getElementById("imagePreview");
+        if (previewEl) previewEl.src = currentImg;
+        const hiddenImg = document.getElementById("prodGeneratedImage");
+        if (hiddenImg) hiddenImg.value = currentImg;
+        const badge = document.getElementById("imageSourceBadge");
+        if (badge) {
+            badge.textContent = "Current Image";
+            badge.className = "badge bg-secondary-subtle text-secondary px-2.5 py-1 rounded-pill";
+        }
+        const fileInput = document.getElementById("prodImageFile");
+        if (fileInput) fileInput.value = "";
 
         new bootstrap.Modal(document.getElementById("productModal")).show();
+    },
+
+    handleImageFileUpload(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            API.showToast("Please choose a valid image file (JPG, PNG, WEBP).", "warning");
+            event.target.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const previewEl = document.getElementById("imagePreview");
+            if (previewEl) previewEl.src = e.target.result;
+
+            const badge = document.getElementById("imageSourceBadge");
+            if (badge) {
+                badge.textContent = "✅ Image Selected";
+                badge.className = "badge bg-success-subtle text-success px-2.5 py-1 rounded-pill";
+            }
+
+            API.showToast("Image selected successfully: " + file.name, "success");
+        };
+        reader.readAsDataURL(file);
+    },
+
+    generateImageForProduct() {
+        const nameInput = document.getElementById("prodName");
+        const name = nameInput ? nameInput.value.trim() : "";
+        const catInput = document.getElementById("prodCategory");
+        const category = catInput ? catInput.value : "General";
+
+        if (!name || name.length < 2) {
+            API.showToast("Please enter a Product Title first so we can generate the right image.", "warning");
+            if (nameInput) nameInput.focus();
+            return;
+        }
+
+        const spinner = document.getElementById("imageGeneratingSpinner");
+        if (spinner) spinner.classList.remove("d-none");
+
+        const previewEl = document.getElementById("imagePreview");
+        const hiddenInput = document.getElementById("prodGeneratedImage");
+        const fileInput = document.getElementById("prodImageFile");
+        const badge = document.getElementById("imageSourceBadge");
+
+        // Clear local file input so generated image takes active role
+        if (fileInput) fileInput.value = "";
+
+        setTimeout(() => {
+            const picked = this.pickImageForTitle(name, category);
+            if (previewEl) previewEl.src = picked;
+            if (hiddenInput) hiddenInput.value = picked;
+
+            if (spinner) spinner.classList.add("d-none");
+
+            if (badge) {
+                badge.textContent = "✨ AI Generated";
+                badge.className = "badge bg-primary-subtle text-primary px-2.5 py-1 rounded-pill";
+            }
+
+            API.showToast("✨ Generated product image for: " + name, "success");
+        }, 250);
+    },
+
+    pickImageForTitle(title, category) {
+        const t = (title || "").toLowerCase();
+        const c = (category || "").toLowerCase();
+
+        const pools = {
+            headphone: [
+                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+                "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&q=80",
+                "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80"
+            ],
+            earbud: [
+                "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80",
+                "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&q=80"
+            ],
+            watch: [
+                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
+                "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&q=80",
+                "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80"
+            ],
+            phone: [
+                "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80",
+                "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80",
+                "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&q=80"
+            ],
+            ipad: [
+                "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&q=80",
+                "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=600&q=80"
+            ],
+            tablet: [
+                "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&q=80",
+                "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=600&q=80"
+            ],
+            laptop: [
+                "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80",
+                "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80"
+            ],
+            camera: [
+                "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80",
+                "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80"
+            ],
+            drone: [
+                "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=600&q=80",
+                "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600&q=80"
+            ],
+            vacuum: [
+                "https://images.unsplash.com/photo-1558317374-067fb5f30001?w=600&q=80",
+                "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&q=80"
+            ],
+            robot: [
+                "https://images.unsplash.com/photo-1558317374-067fb5f30001?w=600&q=80"
+            ],
+            speaker: [
+                "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&q=80"
+            ],
+            saree: [
+                "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&q=80",
+                "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=600&q=80"
+            ],
+            choker: [
+                "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80",
+                "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80"
+            ],
+            gold: [
+                "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80",
+                "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80"
+            ],
+            necklace: [
+                "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80"
+            ],
+            chain: [
+                "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80"
+            ],
+            dinner: [
+                "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80",
+                "https://images.unsplash.com/photo-1584990347449-399066668798?w=600&q=80"
+            ],
+            plate: [
+                "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80"
+            ],
+            kitchen: [
+                "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&q=80",
+                "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80"
+            ],
+            cookware: [
+                "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=600&q=80"
+            ],
+            coffee: [
+                "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&q=80"
+            ],
+            shoe: [
+                "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
+                "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80"
+            ],
+            sneaker: [
+                "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
+                "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80"
+            ],
+            boot: [
+                "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80"
+            ],
+            drill: [
+                "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80"
+            ],
+            tool: [
+                "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=600&q=80",
+                "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=600&q=80"
+            ],
+            car: [
+                "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80"
+            ],
+            toy: [
+                "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80",
+                "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&q=80"
+            ],
+            buggy: [
+                "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600&q=80"
+            ],
+            keyboard: [
+                "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80"
+            ],
+            mouse: [
+                "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&q=80"
+            ],
+            chair: [
+                "https://images.unsplash.com/photo-1580481077197-2a67a840e698?w=600&q=80"
+            ],
+            bag: [
+                "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80"
+            ]
+        };
+
+        const categoryPools = {
+            "electronics": [
+                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+                "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80",
+                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80"
+            ],
+            "home & kitchen": [
+                "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80",
+                "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&q=80",
+                "https://images.unsplash.com/photo-1584990347449-399066668798?w=600&q=80"
+            ],
+            "fashion & footwear": [
+                "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
+                "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&q=80",
+                "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80"
+            ],
+            "gadgets & office": [
+                "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80",
+                "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&q=80"
+            ],
+            "tools & hardware": [
+                "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80",
+                "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=600&q=80"
+            ]
+        };
+
+        for (const [kw, list] of Object.entries(pools)) {
+            if (t.includes(kw)) {
+                return list[Math.floor(Math.random() * list.length)];
+            }
+        }
+
+        for (const [catKey, list] of Object.entries(categoryPools)) {
+            if (c.includes(catKey)) {
+                return list[Math.floor(Math.random() * list.length)];
+            }
+        }
+
+        return "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80";
     },
 
     async saveProduct() {
@@ -142,26 +401,45 @@ const ManagerPortal = {
         const price = document.getElementById("prodPrice").value;
         const quantity = document.getElementById("prodQuantity").value;
         const desc = document.getElementById("prodDescription").value.trim();
-        const imageFile = document.getElementById("prodImageFile").files[0];
-        const imageUrlInput = document.getElementById("prodImageUrl").value.trim();
 
-        if (!name || !price || quantity === "") {
-            API.showToast("Product name, price and quantity are required.", "warning");
+        if (!name || name.length < 2) {
+            API.showToast("Please enter a valid product title (minimum 2 characters).", "warning");
+            document.getElementById("prodName").focus();
+            return;
+        }
+
+        const numPrice = Number(price);
+        if (isNaN(numPrice) || numPrice <= 0) {
+            API.showToast("Please enter a valid positive price amount (e.g. 999.00).", "warning");
+            document.getElementById("prodPrice").focus();
+            return;
+        }
+
+        const numQty = parseInt(quantity);
+        if (isNaN(numQty) || numQty < 0) {
+            API.showToast("Please enter a valid non-negative stock quantity.", "warning");
+            document.getElementById("prodQuantity").focus();
             return;
         }
 
         const user = Auth.getUser();
 
         try {
-            let finalImage = imageUrlInput;
+            const fileInput = document.getElementById("prodImageFile");
+            const hasLocalFile = fileInput && fileInput.files && fileInput.files.length > 0;
+            const hiddenGeneratedInput = document.getElementById("prodGeneratedImage");
+            let finalImage = hiddenGeneratedInput ? hiddenGeneratedInput.value : "";
 
-            if (imageFile) {
+            // If a local image file is selected, upload it to server
+            if (hasLocalFile) {
                 const formData = new FormData();
-                formData.append("image", imageFile);
+                formData.append("image", fileInput.files[0]);
                 const uploadRes = await API.post("/products/upload-image", formData);
-                if (uploadRes.success) {
+                if (uploadRes && uploadRes.success && uploadRes.imageUrl) {
                     finalImage = uploadRes.imageUrl;
                 }
+            } else if (!finalImage) {
+                finalImage = this.pickImageForTitle(name, category);
             }
 
             const payload = {
@@ -172,19 +450,21 @@ const ManagerPortal = {
                 price: price,
                 quantity: quantity,
                 description: desc,
-                image: finalImage || undefined
+                image: finalImage || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80"
             };
 
             if (id) {
                 await API.put(`/products/update/${id}`, payload);
-                API.showToast("Product updated successfully!", "success");
+                API.showToast("Product updated successfully in inventory!", "success");
             } else {
                 await API.post("/products/add", payload);
                 API.showToast("Product stocked successfully in database!", "success");
             }
 
-            bootstrap.Modal.getInstance(document.getElementById("productModal")).hide();
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById("productModal"));
+            if (modalInstance) modalInstance.hide();
             await this.loadProducts();
+            await this.loadKPIs();
         } catch (e) {
             API.showToast(e.message || "Failed to save product.", "error");
         }
@@ -613,14 +893,7 @@ const ManagerPortal = {
         const fileInput = document.getElementById("prodImageFile");
         if (fileInput) {
             fileInput.addEventListener("change", (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        document.getElementById("imagePreview").src = ev.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
+                ManagerPortal.handleImageFileUpload(e);
             });
         }
     }

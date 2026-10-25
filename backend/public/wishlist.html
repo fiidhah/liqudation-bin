@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wishlist - SmartBin</title>
-    <!-- Google Fonts -->
+    <title>My Wishlist – SmartBin Certified Liquidation</title>
+    <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -17,83 +17,152 @@
 </head>
 <body>
 
-    <!-- TOP ANNOUNCEMENT TICKER -->
-    <div class="top-announcement-bar">
-        <span>⚡ <strong>SMARTBIN LIQUIDATION:</strong> DAILY PRICE DROP SCHEDULE ACTIVE • RESTOCKED FRIDAY • CLEARANCE THURSDAY</span>
-    </div>
+    <!-- VERTICAL LEFT FLOATING SOCIAL BAR (Same as Home Page) -->
+    <aside class="social-vertical-bar d-none d-xl-flex">
+        <a href="https://twitter.com" target="_blank" class="social-vertical-item">
+            <span>Twitter</span>
+            <div class="social-vertical-icon"><i class="bi bi-twitter-x"></i></div>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="social-vertical-item">
+            <span>Instagram</span>
+            <div class="social-vertical-icon"><i class="bi bi-instagram"></i></div>
+        </a>
+        <a href="https://facebook.com" target="_blank" class="social-vertical-item">
+            <span>Facebook</span>
+            <div class="social-vertical-icon"><i class="bi bi-facebook"></i></div>
+        </a>
+    </aside>
 
-    <!-- CLEAN EDITORIAL NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-editorial-clean sticky-top">
+    <!-- SPLIT EDITORIAL NAVBAR (Matching Home Page) -->
+    <nav class="navbar navbar-expand-lg navbar-editorial sticky-top">
         <div class="container-fluid px-lg-5">
-            <a class="brand-logo-text" href="/index.html">
-                <div class="logo-icon-wrap">
-                    <i class="bi bi-box-seam-fill"></i>
-                </div>
-                <span>SmartBin</span>
-            </a>
+            <!-- Left Navigation -->
+            <div class="d-none d-lg-flex align-items-center gap-1" style="width: 32%;">
+                <a class="nav-link-left" href="/index.html">Home</a>
+                <a class="nav-link-left" href="/products.html">Browse Bins</a>
+                <a class="nav-link-left" href="/offers.html">Deals & Coupons</a>
+                <a class="nav-link-left" href="/lucky-draw.html">Lucky Draw</a>
+            </div>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <!-- Mobile Toggler -->
+            <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEditorial">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
-                    <li class="nav-item">
-                        <a class="nav-link-clean" href="/index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-clean" href="/products.html">Browse Bins</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-clean" href="/offers.html">Deals & Coupons</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-clean" href="/lucky-draw.html">Lucky Draw</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-clean" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Live Tracker</a>
-                    </li>
-                </ul>
+            <!-- Center Brand Logo -->
+            <div class="text-center mx-auto">
+                <a class="brand-logo-text text-decoration-none" href="/index.html">
+                    <div class="logo-icon-wrap">
+                        <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <span>SmartBin</span>
+                </a>
+            </div>
 
-                <!-- Right Actions -->
-                <div class="d-flex align-items-center gap-2">
-                    <a href="/wishlist.html" class="nav-icon-editorial" title="Wishlist">
-                        <i class="bi bi-heart fs-6 text-danger"></i>
+            <!-- Right Navigation & Actions -->
+            <div class="collapse navbar-collapse d-lg-flex justify-content-end align-items-center gap-2" id="navbarEditorial" style="width: 32%;">
+                <div class="d-flex align-items-center gap-1 me-2">
+                    <a class="nav-link-right" href="/order-tracking.html"><i class="bi bi-truck me-1"></i>Tracker</a>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 ms-auto ms-lg-0">
+                    <a href="/wishlist.html" class="nav-icon-editorial" title="Wishlist" style="background: #111; color: #FFF;">
+                        <i class="bi bi-heart-fill fs-6 text-danger"></i>
                     </a>
                     <a href="/cart.html" class="nav-icon-editorial" title="Cart">
                         <i class="bi bi-cart3 fs-6"></i>
                         <span id="cartCountBadge" class="badge-cart-editorial">0</span>
                     </a>
-                    <div id="navAuthSection"></div>
+                    <a href="/products.html" class="btn btn-dark btn-sm rounded-pill px-3 fw-bold ms-2 d-none d-sm-inline-flex align-items-center gap-1">
+                        <i class="bi bi-grid me-1"></i> Catalog
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- MAIN WISHLIST VIEW -->
     <main class="container my-4 my-md-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4 pb-3 border-bottom">
             <div>
-                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold text-uppercase small">Saved Items</span>
-                <h2 class="editorial-heading text-dark mt-2 mb-0"><i class="bi bi-heart-fill text-danger me-2"></i>My Saved Liquidation Finds</h2>
+                <span class="badge px-3 py-1 rounded-pill fw-bold text-uppercase small mb-2" style="background: var(--color-yellow); color: #111;">
+                    <i class="bi bi-bookmark-heart-fill me-1"></i> Saved Hauls
+                </span>
+                <h2 class="display-6 fw-black text-dark mb-0" style="font-family: 'Playfair Display', serif;">
+                    My Saved <span class="fst-italic" style="color: var(--color-yellow-dark);">Liquidation</span> Finds
+                </h2>
+                <p class="text-secondary small mb-0 mt-1">Instant 1-click checkout or move items to cart before daily reverse prices adjust.</p>
             </div>
-            <a href="/products.html" class="btn btn-outline-dark rounded-pill px-4 btn-sm fw-bold">Browse More</a>
+            <div class="d-flex align-items-center gap-2">
+                <span id="wishlistCountBadge" class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-bold">0 Saved Items</span>
+                <a href="/products.html" class="btn btn-outline-dark rounded-pill px-4 btn-sm fw-bold">
+                    <i class="bi bi-plus-circle me-1"></i> Explore More
+                </a>
+            </div>
         </div>
 
         <div class="row g-4" id="wishlistGrid">
             <div class="col-12 text-center py-5">
-                <div class="spinner-border text-danger" role="status"></div>
-                <p class="mt-2 text-muted">Loading your wishlist...</p>
+                <div class="spinner-border text-dark" role="status"></div>
+                <p class="mt-2 text-muted">Retrieving your saved liquidation finds...</p>
             </div>
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer-luxury mt-auto">
-        <div class="container text-center small text-muted">
-            © 2026 SmartBin Liquidation Store. All Rights Reserved.
+    <!-- EDITORIAL LUXURY FOOTER (Same as Home Page) -->
+    <footer class="footer-luxury pt-5 pb-4 mt-auto" style="background-color: #0F172A; color: #E2E8F0;">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="logo-icon-wrap" style="width: 34px; height: 34px; background: var(--color-yellow); color: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                            <i class="bi bi-box-seam-fill"></i>
+                        </div>
+                        <h4 class="fw-black text-white mb-0" style="font-family: 'Plus Jakarta Sans', sans-serif;">SmartBin</h4>
+                    </div>
+                    <p class="small mb-3" style="color: #CBD5E1; line-height: 1.6;">
+                        Automated liquidation bin store management platform with daily dynamic reverse pricing for retail overstocks and certified brand returns.
+                    </p>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Explore</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/index.html" style="color: #CBD5E1;">Home</a></li>
+                        <li><a href="/products.html" style="color: #CBD5E1;">Browse Bins</a></li>
+                        <li><a href="/offers.html" style="color: #CBD5E1;">Deals & Coupons</a></li>
+                        <li><a href="/lucky-draw.html" style="color: #CBD5E1;">Weekend Lucky Draw</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Portals</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="/login.html" style="color: #CBD5E1;">Sign In</a></li>
+                        <li><a href="/register.html" style="color: #CBD5E1;">Register</a></li>
+                        <li><a href="/manager/index.html" style="color: #CBD5E1;">Manager Portal</a></li>
+                        <li><a href="/admin/index.html" style="color: #CBD5E1;">Admin Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Restock Alerts</h6>
+                    <p class="small mb-2" style="color: #CBD5E1;">Subscribe to get notifications whenever fresh bins restock on Friday.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control rounded-start-pill border-0 px-3" placeholder="Enter your email address" style="background: #FFFFFF; color: #111;">
+                        <button class="btn btn-warning rounded-end-pill px-4 fw-bold text-dark" type="button" onclick="API.showToast('Subscribed to restock alerts!', 'success')">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-top border-secondary border-opacity-25 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 small" style="color: #94A3B8;">
+                <div>© 2026 SmartBin Liquidation Store. All Rights Reserved.</div>
+                <div>Certified Liquidation Bins & Daily Markdown Engine</div>
+            </div>
         </div>
     </footer>
 
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/api.js"></script>
@@ -103,26 +172,34 @@
             async init() {
                 if (!Auth.requireAuth(["User", "Manager", "Admin"])) return;
                 await this.loadWishlist();
+                Auth.updateCartBadge();
             },
 
             async loadWishlist() {
                 const user = Auth.getUser();
                 const grid = document.getElementById("wishlistGrid");
+                const countBadge = document.getElementById("wishlistCountBadge");
                 if (!grid) return;
 
                 try {
                     const res = await API.get(`/wishlist/${user.user_id}`);
                     const items = res.data || [];
 
+                    if (countBadge) {
+                        countBadge.textContent = `${items.length} Saved Item${items.length === 1 ? '' : 's'}`;
+                    }
+
                     if (items.length === 0) {
                         grid.innerHTML = `
                             <div class="col-12 text-center py-5">
-                                <div class="card p-5 border-0 shadow-sm rounded-4 text-center bg-white">
-                                    <i class="bi bi-heartbreak fs-1 text-muted mb-3"></i>
-                                    <h4 class="fw-bold">Your Wishlist is Empty</h4>
-                                    <p class="text-muted">Save overstock items to grab them when prices drop!</p>
-                                    <a href="/products.html" class="btn btn-primary-custom px-4 py-2 rounded-pill mx-auto mt-2">
-                                        Explore Liquidation Catalog
+                                <div class="card p-5 border-0 shadow-sm rounded-4 text-center bg-white mx-auto" style="max-width: 500px;">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #FFF9E6; color: #D49F0B;">
+                                        <i class="bi bi-heart fs-1"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-2">Your Wishlist is Empty</h4>
+                                    <p class="text-muted small mb-4">Save retail overstocks and returns to track reverse daily price drops and buy immediately.</p>
+                                    <a href="/products.html" class="btn btn-dark px-4 py-2 rounded-pill fw-bold">
+                                        <i class="bi bi-box-seam me-1" style="color: var(--color-yellow);"></i> Explore Liquidation Bins
                                     </a>
                                 </div>
                             </div>
@@ -136,27 +213,35 @@
 
                         return `
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                <div class="product-card">
-                                    <div class="product-img-wrapper">
-                                        <span class="bin-tag" style="z-index: 5;">#PRD-${item.product_id}</span>
-                                        <span class="condition-badge condition-brand-new" style="z-index: 5;">${item.category || 'General'}</span>
-                                        <img src="${imgSrc}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'">
+                                <div class="product-card card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white d-flex flex-column">
+                                    <div class="position-relative bg-light text-center p-3" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                        <span class="badge position-absolute top-0 start-0 m-3 px-2 py-1 rounded-pill bg-dark text-white fw-semibold small" style="font-size: 0.7rem;">#PRD-${item.product_id}</span>
+                                        <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-3 shadow-sm text-danger" title="Remove from wishlist" onclick="WishlistPage.removeWishlist(${item.wishlist_id})" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #E2E8F0;">
+                                            <i class="bi bi-trash fs-6"></i>
+                                        </button>
+                                        <img src="${imgSrc}" class="img-fluid rounded-3" style="max-height: 160px; object-fit: contain;" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'">
                                     </div>
-                                    <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1 bg-white">
+                                    <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
                                         <div>
-                                            <small class="text-muted text-uppercase fw-bold">${item.brand || 'Generic'}</small>
-                                            <h6 class="fw-bold text-dark text-truncate-2 mt-1 mb-2">${item.product_name}</h6>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.72rem; letter-spacing: 0.5px;">${item.brand || 'Generic'}</small>
+                                                <span class="badge bg-light text-secondary border small">${item.category || 'General'}</span>
+                                            </div>
+                                            <h6 class="fw-bold text-dark mb-2 text-truncate-2" title="${item.product_name}">${item.product_name}</h6>
                                         </div>
-                                        <div class="pt-2 border-top">
-                                            <div class="d-flex align-items-baseline mb-3">
-                                                <span class="price-current">₹${currPrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                                        <div class="pt-2 border-top mt-auto">
+                                            <div class="d-flex align-items-baseline justify-content-between mb-3">
+                                                <span class="text-muted small">Today's Price:</span>
+                                                <span class="fw-black text-dark fs-5" style="font-family: 'Plus Jakarta Sans', sans-serif;">₹${currPrice.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
                                             </div>
                                             <div class="d-grid gap-2">
-                                                <button class="btn btn-primary-custom btn-sm rounded-pill" onclick="WishlistPage.moveToCart(${item.wishlist_id}, ${item.product_id})">
-                                                    <i class="bi bi-cart-plus me-1"></i> Move to Cart
+                                                <!-- Direct 1-Click Buy Now Button -->
+                                                <button class="btn btn-dark btn-sm rounded-pill fw-bold text-white d-flex align-items-center justify-content-center gap-1 shadow-sm" onclick="WishlistPage.buyNow(${item.product_id})">
+                                                    <span>⚡ Buy Now</span> <i class="bi bi-arrow-right" style="color: var(--color-yellow);"></i>
                                                 </button>
-                                                <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="WishlistPage.removeWishlist(${item.wishlist_id})">
-                                                    <i class="bi bi-trash me-1"></i> Remove
+                                                <!-- Move to Cart Button -->
+                                                <button class="btn btn-outline-dark btn-sm rounded-pill fw-bold d-flex align-items-center justify-content-center gap-1" onclick="WishlistPage.moveToCart(${item.wishlist_id}, ${item.product_id})">
+                                                    <i class="bi bi-cart-plus"></i> Move to Cart
                                                 </button>
                                             </div>
                                         </div>
@@ -166,8 +251,21 @@
                         `;
                     }).join("");
                 } catch (e) {
-                    grid.innerHTML = `<div class="col-12 text-center text-danger">Error: ${e.message}</div>`;
+                    grid.innerHTML = `<div class="col-12 text-center text-danger">Error loading wishlist: ${e.message}</div>`;
                 }
+            },
+
+            // Direct 1-Click Buy Now from Wishlist
+            buyNow(productId) {
+                if (!Auth.isLoggedIn()) {
+                    API.showToast("Please sign in to complete your purchase.", "warning");
+                    setTimeout(() => {
+                        window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
+                    }, 1000);
+                    return;
+                }
+                // Redirect directly to checkout with buy_now product ID
+                window.location.href = `/checkout.html?buy_now=${productId}`;
             },
 
             async moveToCart(wishlistId, productId) {
@@ -175,18 +273,18 @@
                 try {
                     await API.post("/cart/add", { user_id: user.user_id, product_id: productId, quantity: 1 });
                     await API.delete(`/wishlist/delete/${wishlistId}`);
-                    API.showToast("Moved to your shopping cart! 🛒", "success");
+                    API.showToast("Item moved to your shopping cart! 🛒", "success");
                     Auth.updateCartBadge();
                     await this.loadWishlist();
                 } catch (e) {
-                    API.showToast(e.message || "Failed to move item.", "error");
+                    API.showToast(e.message || "Failed to move item to cart.", "error");
                 }
             },
 
             async removeWishlist(wishlistId) {
                 try {
                     await API.delete(`/wishlist/delete/${wishlistId}`);
-                    API.showToast("Removed from wishlist.", "info");
+                    API.showToast("Item removed from wishlist.", "info");
                     await this.loadWishlist();
                 } catch (e) {
                     API.showToast(e.message || "Failed to remove item.", "error");

@@ -36,13 +36,20 @@ router.get("/dashboard", getDashboard);
 // DELETE MANAGER
 // =============================
 router.delete("/delete/:id", deleteManager);
+router.delete("/managers/delete/:id", deleteManager);
+
 // =============================
 // UPDATE MANAGER
 // =============================
 router.put("/update/:id", updateManager);
+router.put("/managers/update/:id", updateManager);
+
 // =============================
-// SALES REPORT
+// SALES REPORT & ANALYTICS
 // =============================
 router.get("/sales-report", getSalesReport);
+router.get("/sales/report", getSalesReport);
+router.get("/analytics", getSalesReport);
+router.get("/sales", getSalesReport);
 
 module.exports = router;

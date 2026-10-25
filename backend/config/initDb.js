@@ -237,16 +237,16 @@ const initDb = async () => {
             );
         }
 
-        // Configure and sync official liquidation markdown schedule for all products
+        // Configure and sync increased liquidation markdown schedule for all products
         const [prods] = await connection.query("SELECT product_id FROM products");
         const liquidationSchedule = {
-            Friday: 999.00,
-            Saturday: 799.00,
-            Sunday: 599.00,
-            Monday: 399.00,
-            Tuesday: 299.00,
-            Wednesday: 199.00,
-            Thursday: 99.00
+            Friday: 2499.00,
+            Saturday: 1999.00,
+            Sunday: 1499.00,
+            Monday: 999.00,
+            Tuesday: 699.00,
+            Wednesday: 399.00,
+            Thursday: 199.00
         };
         const daysToInsert = ['Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
 
@@ -262,13 +262,11 @@ const initDb = async () => {
             }
         }
 
-        // Sync products.price with today's day price
         const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const todayDayName = daysArr[new Date().getDay()];
-        const todayScheduledPrice = liquidationSchedule[todayDayName] || 299.00;
+        const todayScheduledPrice = liquidationSchedule[todayDayName] || 699.00;
 
-        await connection.query("UPDATE products SET price = ?", [todayScheduledPrice]);
-        console.log(`🏷️ Synced all product prices to today's liquidation price (${todayDayName}: ₹${todayScheduledPrice})`);
+        console.log(`🏷️ Synced daily pricing schedule (Today ${todayDayName}: ₹${todayScheduledPrice}) across all ${prods.length} products.`);
 
         // Ensure cascading foreign keys on all child tables referencing products
         try {

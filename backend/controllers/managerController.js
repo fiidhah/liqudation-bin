@@ -1,12 +1,13 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
+const { isValidEmail, isValidPhone, isValidPassword, isValidText } = require("../utils/validator");
 
 // =============================
 // GET ALL MANAGERS
 // =============================
 const getAllManagers = (req, res) => {
-    const sql = "SELECT * FROM managers";
+    const sql = "SELECT manager_id, full_name, email, phone, address, created_at FROM managers";
 
     db.query(sql, (err, result) => {
         if (err) {
@@ -25,21 +26,43 @@ const getAllManagers = (req, res) => {
 };
 
 // =============================
-// REGISTER MANAGER
+// REGISTER / ADD MANAGER (With Validation)
 // =============================
 const registerManager = async (req, res) => {
     const { full_name, email, password, phone, address } = req.body;
 
-    if (!full_name || !email || !password) {
+    if (!isValidText(full_name, 2)) {
         return res.status(400).json({
             success: false,
-            message: "Full name, email and password are required."
+            message: "Manager name must be at least 2 characters long."
         });
     }
 
-    const checkEmail = "SELECT * FROM managers WHERE email = ?";
+    if (!isValidEmail(email)) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide a valid manager email address."
+        });
+    }
 
-    db.query(checkEmail, [email], async (err, result) => {
+    if (!isValidPassword(password)) {
+        return res.status(400).json({
+            success: false,
+            message: "Password must be at least 6 characters long."
+        });
+    }
+
+    if (phone && !isValidPhone(phone)) {
+        return res.status(400).json({
+            success: false,
+            message: "Please enter a valid 10-digit phone number."
+        });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const checkEmail = "SELECT * FROM managers WHERE LOWER(email) = ?";
+
+    db.query(checkEmail, [cleanEmail], async (err, result) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -50,7 +73,7 @@ const registerManager = async (req, res) => {
         if (result.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: "Email already exists."
+                message: "A manager with this email already exists."
             });
         }
 
@@ -58,7 +81,7 @@ const registerManager = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             const sql = "INSERT INTO managers (full_name, email, password, phone, address) VALUES (?, ?, ?, ?, ?)";
 
-            db.query(sql, [full_name, email, hashedPassword, phone || null, address || null], (err, insertRes) => {
+            db.query(sql, [full_name.trim(), cleanEmail, hashedPassword, phone ? String(phone).trim() : null, address ? address.trim() : null], (err, insertRes) => {
                 if (err) {
                     return res.status(500).json({
                         success: false,
@@ -87,16 +110,24 @@ const registerManager = async (req, res) => {
 const loginManager = (req, res) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (!isValidEmail(email)) {
         return res.status(400).json({
             success: false,
-            message: "Email and password are required."
+            message: "Please provide a valid email address."
         });
     }
 
-    const sql = "SELECT * FROM managers WHERE email = ?";
+    if (!password) {
+        return res.status(400).json({
+            success: false,
+            message: "Password is required."
+        });
+    }
 
-    db.query(sql, [email], async (err, result) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const sql = "SELECT * FROM managers WHERE LOWER(email) = ?";
+
+    db.query(sql, [cleanEmail], async (err, result) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -105,33 +136,29 @@ const loginManager = (req, res) => {
         }
 
         if (result.length === 0) {
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
-                message: "Invalid email or password."
+                message: "No manager found with this email."
             });
         }
 
         const manager = result[0];
         let isMatch = false;
 
-        try {
+        if (manager.password && manager.password.startsWith("$2")) {
             isMatch = await bcrypt.compare(password, manager.password);
-        } catch (e) {
-            isMatch = false;
-        }
-
-        if (!isMatch && manager.password === password) {
-            isMatch = true;
+        } else {
+            isMatch = (password === manager.password);
         }
 
         if (!isMatch) {
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
-                message: "Invalid email or password."
+                message: "Incorrect password."
             });
         }
 
-        const token = generateToken(manager, "Manager");
+        const token = generateToken(manager.manager_id, "Manager");
 
         res.status(200).json({
             success: true,
@@ -141,6 +168,8 @@ const loginManager = (req, res) => {
                 manager_id: manager.manager_id,
                 full_name: manager.full_name,
                 email: manager.email,
+                phone: manager.phone,
+                address: manager.address,
                 role: "Manager"
             }
         });
@@ -148,13 +177,23 @@ const loginManager = (req, res) => {
 };
 
 // =============================
-// MANAGER PROFILE
+// GET MANAGER PROFILE
 // =============================
 const getManagerProfile = (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Protected Manager Route Access Granted",
-        loggedInManager: req.user
+    const managerId = req.user ? req.user.id : (req.query.id || 1);
+
+    const sql = "SELECT manager_id, full_name, email, phone, address, created_at FROM managers WHERE manager_id = ?";
+
+    db.query(sql, [managerId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ success: false, message: "Manager not found." });
+        }
+
+        res.status(200).json({ success: true, data: result[0] });
     });
 };
 
@@ -164,59 +203,82 @@ const getManagerProfile = (req, res) => {
 const getManagerById = (req, res) => {
     const { id } = req.params;
 
-    const sql = "SELECT * FROM managers WHERE manager_id = ?";
+    const sql = "SELECT manager_id, full_name, email, phone, address, created_at FROM managers WHERE manager_id = ?";
 
     db.query(sql, [id], (err, result) => {
         if (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
+            return res.status(500).json({ success: false, message: err.message });
         }
 
         if (result.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Manager not found."
-            });
+            return res.status(404).json({ success: false, message: "Manager not found." });
         }
 
-        res.status(200).json({
-            success: true,
-            data: result[0]
-        });
+        res.status(200).json({ success: true, data: result[0] });
     });
 };
 
 // =============================
 // UPDATE MANAGER
 // =============================
-const updateManager = (req, res) => {
+const updateManager = async (req, res) => {
     const { id } = req.params;
-    const { full_name, email, phone, address } = req.body;
+    const { full_name, email, password, phone, address } = req.body;
 
-    const sql = "UPDATE managers SET full_name = ?, email = ?, phone = ?, address = ? WHERE manager_id = ?";
+    if (full_name && !isValidText(full_name, 2)) {
+        return res.status(400).json({ success: false, message: "Full name must be at least 2 characters." });
+    }
 
-    db.query(sql, [full_name, email, phone, address, id], (err, result) => {
-        if (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
+    if (email && !isValidEmail(email)) {
+        return res.status(400).json({ success: false, message: "Invalid email format." });
+    }
+
+    if (phone && !isValidPhone(phone)) {
+        return res.status(400).json({ success: false, message: "Invalid 10-digit phone number." });
+    }
+
+    let hashedPassword = null;
+    if (password && password.trim().length > 0) {
+        if (!isValidPassword(password)) {
+            return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+        }
+        hashedPassword = await bcrypt.hash(password, 10);
+    }
+
+    const sql = `
+        UPDATE managers
+        SET full_name = COALESCE(?, full_name),
+            email = COALESCE(?, email),
+            password = COALESCE(?, password),
+            phone = COALESCE(?, phone),
+            address = COALESCE(?, address)
+        WHERE manager_id = ?
+    `;
+
+    db.query(
+        sql,
+        [full_name ? full_name.trim() : null, email ? email.trim().toLowerCase() : null, hashedPassword, phone ? String(phone).trim() : null, address ? address.trim() : null, id],
+        (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Manager record not found."
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: "Manager record updated successfully."
             });
         }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Manager not found."
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Manager updated successfully."
-        });
-    });
+    );
 };
 
 // =============================
@@ -238,7 +300,7 @@ const deleteManager = (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Manager not found."
+                message: "Manager record not found."
             });
         }
 

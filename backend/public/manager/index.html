@@ -284,18 +284,37 @@
                             <textarea class="form-control bg-light border-0" id="prodDescription" rows="2" placeholder="Product features, description, specifications"></textarea>
                         </div>
 
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted text-uppercase">Upload Image File</label>
-                                <input type="file" class="form-control bg-light border-0" id="prodImageFile" accept="image/*">
+                        <!-- PRODUCT IMAGE GENERATOR & UPLOAD -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted text-uppercase d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="bi bi-image text-danger me-1"></i>Product Image</span>
+                                <span class="badge bg-danger-subtle text-danger px-2.5 py-1 rounded-pill" id="imageSourceBadge">Ready to Generate</span>
+                            </label>
+
+                            <div class="card border-0 bg-light rounded-4 p-3">
+                                <div class="row align-items-center g-3">
+                                    <div class="col-sm-4 text-center">
+                                        <div class="position-relative d-inline-block">
+                                            <img id="imagePreview" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80" class="rounded-3 shadow-sm border bg-white p-1" style="width: 110px; height: 110px; object-fit: contain;" alt="Product Preview">
+                                            <div id="imageGeneratingSpinner" class="position-absolute top-50 start-50 translate-middle d-none">
+                                                <div class="spinner-border spinner-border-sm text-danger" role="status"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="d-flex flex-column gap-2">
+                                            <button type="button" class="btn btn-dark btn-sm rounded-pill px-3 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm" onclick="ManagerPortal.generateImageForProduct()">
+                                                <i class="bi bi-magic text-warning"></i> Generate Product Image
+                                            </button>
+                                            <div class="text-muted text-center" style="font-size: 11px;">— OR UPLOAD LOCAL FILE —</div>
+                                            <div>
+                                                <input type="file" class="form-control form-control-sm bg-white border" id="prodImageFile" accept="image/*" onchange="ManagerPortal.handleImageFileUpload(event)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted text-uppercase">Or Direct Image URL</label>
-                                <input type="url" class="form-control bg-light border-0" id="prodImageUrl" placeholder="https://images.unsplash.com/...">
-                            </div>
-                            <div class="col-12 text-center">
-                                <img id="imagePreview" class="rounded-3 shadow-sm" style="max-height: 120px; object-fit: contain;">
-                            </div>
+                            <input type="hidden" id="prodGeneratedImage" value="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80">
                         </div>
 
                         <button type="submit" class="btn btn-primary-custom w-100 rounded-pill fw-bold">Save Product in Database</button>

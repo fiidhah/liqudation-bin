@@ -117,12 +117,37 @@ const AdminPortal = {
         const id = document.getElementById("managerEditId").value;
         const name = document.getElementById("managerFullName").value.trim();
         const email = document.getElementById("managerEmail").value.trim();
-        const phone = document.getElementById("managerPhone").value.trim();
-        const address = document.getElementById("managerAddress").value.trim();
-        const password = document.getElementById("managerPassword").value;
+        const passwordInput = document.getElementById("managerPassword");
+        const password = passwordInput ? passwordInput.value : "";
+        const phoneInput = document.getElementById("managerPhone");
+        const phone = phoneInput ? phoneInput.value.trim() : "";
+        const addressInput = document.getElementById("managerAddress");
+        const address = addressInput ? addressInput.value.trim() : "";
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const PHONE_REGEX = /^[6-9]\d{9}$/;
 
-        if (!name || !email) {
-            API.showToast("Name and email are required.", "warning");
+        if (!name || name.length < 2) {
+            API.showToast("Please enter a valid manager full name (minimum 2 characters).", "warning");
+            document.getElementById("managerFullName").focus();
+            return;
+        }
+
+        if (!email || !EMAIL_REGEX.test(email)) {
+            API.showToast("Please enter a valid email address.", "warning");
+            document.getElementById("managerEmail").focus();
+            return;
+        }
+
+        if (!id && (!password || password.length < 6)) {
+            API.showToast("Password must be at least 6 characters.", "warning");
+            if (passwordInput) passwordInput.focus();
+            return;
+        }
+
+        const cleanPhone = phone ? phone.replace(/\D/g, '') : "";
+        if (cleanPhone && !PHONE_REGEX.test(cleanPhone)) {
+            API.showToast("Please enter a valid 10-digit mobile number.", "warning");
+            if (phoneInput) phoneInput.focus();
             return;
         }
 
@@ -131,7 +156,7 @@ const AdminPortal = {
                 await API.put(`/admin/managers/update/${id}`, {
                     full_name: name,
                     email,
-                    phone,
+                    phone: cleanPhone || phone,
                     address
                 });
                 API.showToast("Manager updated in database!", "success");
@@ -144,7 +169,7 @@ const AdminPortal = {
                     full_name: name,
                     email,
                     password,
-                    phone,
+                    phone: cleanPhone || phone,
                     address
                 });
                 API.showToast("Manager added to database successfully!", "success");
@@ -174,18 +199,38 @@ const AdminPortal = {
     // ==========================================
     // SALES REPORT & ANALYTICS
     // ==========================================
+    salesReportData: null,
+    allSalesOrders: [],
+    salesFilter: "All",
+    analyticsTrendChart: null,
+    fulfillmentChart: null,
+
     async loadSalesReport() {
         try {
-            const res = await API.get("/admin/sales/report");
+            const res = await API.get("/admin/sales-report");
             if (res.success && res.salesReport) {
                 const report = res.salesReport;
+                this.salesReportData = report;
+                this.allSalesOrders = report.allOrders || [];
 
-                if (document.getElementById("reportDeliveredOrders")) document.getElementById("reportDeliveredOrders").textContent = report.summary.deliveredOrders || 0;
-                if (document.getElementById("reportPendingOrders")) document.getElementById("reportPendingOrders").textContent = report.summary.pendingOrders || 0;
-                if (document.getElementById("reportShippedOrders")) document.getElementById("reportShippedOrders").textContent = report.summary.shippedOrders || 0;
-                if (document.getElementById("reportCancelledOrders")) document.getElementById("reportCancelledOrders").textContent = report.summary.cancelledOrders || 0;
+                const s = report.summary || {};
+                const delivered = Number(s.deliveredOrders || 0);
+                const pending = Number(s.pendingOrders || 0) + Number(s.confirmedOrders || 0);
+                const shipped = Number(s.shippedOrders || 0);
+                const cancelled = Number(s.cancelledOrders || 0);
 
+                if (document.getElementById("reportDeliveredOrders")) document.getElementById("reportDeliveredOrders").textContent = delivered;
+                if (document.getElementById("reportPendingOrders")) document.getElementById("reportPendingOrders").textContent = pending;
+                if (document.getElementById("reportShippedOrders")) document.getElementById("reportShippedOrders").textContent = shipped;
+                if (document.getElementById("reportCancelledOrders")) document.getElementById("reportCancelledOrders").textContent = cancelled;
+
+                // Render Overview Dashboard Chart
                 this.renderSalesChart(report.dailyTrends);
+
+                // Render Analytics Tab Charts & Tables
+                this.renderAnalyticsCharts(report.dailyTrends, s);
+                this.renderCategoryPerformance(report.categoryPerformance);
+                this.renderSalesOrdersTable();
             }
         } catch (e) {
             console.error("Sales report error:", e);
@@ -196,8 +241,8 @@ const AdminPortal = {
         const ctx = document.getElementById("salesTrendChart");
         if (!ctx) return;
 
-        const labels = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => t.day || t.date).reverse() : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-        const data = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => Number(t.revenue)).reverse() : [0, 0, 0, 0, 0, 0, 0];
+        const labels = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => t.day || t.date) : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const data = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => Number(t.revenue)) : [0, 0, 0, 0, 0, 0, 0];
 
         if (this.salesChart) {
             this.salesChart.destroy();
@@ -210,23 +255,237 @@ const AdminPortal = {
                 datasets: [{
                     label: "Daily Revenue (₹)",
                     data,
-                    borderColor: "#0F172A",
-                    backgroundColor: "rgba(15, 23, 42, 0.06)",
-                    borderWidth: 2.5,
+                    borderColor: "#ef4444",
+                    backgroundColor: "rgba(239, 68, 68, 0.08)",
+                    borderWidth: 3,
                     fill: true,
-                    tension: 0.35
+                    tension: 0.35,
+                    pointBackgroundColor: "#ef4444",
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => ` Revenue: ₹${Number(ctx.raw).toLocaleString('en-IN')}`
+                        }
+                    }
+                },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: "#eee" } },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: "#f1f5f9" },
+                        ticks: {
+                            callback: (val) => `₹${val}`
+                        }
+                    },
                     x: { grid: { display: false } }
                 }
             }
         });
+    },
+
+    renderAnalyticsCharts(dailyTrends, summary) {
+        // 1. Daily Revenue & Volume Trend Chart
+        const trendCtx = document.getElementById("analyticsTrendChart");
+        if (trendCtx) {
+            const labels = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => `${t.day} (${t.date ? t.date.slice(5) : ''})`) : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+            const revenues = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => Number(t.revenue)) : [0, 0, 0, 0, 0, 0, 0];
+            const orders = (dailyTrends && dailyTrends.length) ? dailyTrends.map(t => Number(t.orders)) : [0, 0, 0, 0, 0, 0, 0];
+
+            if (this.analyticsTrendChart) {
+                this.analyticsTrendChart.destroy();
+            }
+
+            this.analyticsTrendChart = new Chart(trendCtx, {
+                type: "bar",
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            type: "line",
+                            label: "Revenue (₹)",
+                            data: revenues,
+                            borderColor: "#3b82f6",
+                            backgroundColor: "rgba(59, 130, 246, 0.12)",
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: "y"
+                        },
+                        {
+                            type: "bar",
+                            label: "Order Volume",
+                            data: orders,
+                            backgroundColor: "rgba(239, 68, 68, 0.75)",
+                            borderRadius: 6,
+                            yAxisID: "y1"
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: "index", intersect: false },
+                    plugins: {
+                        legend: { position: "top" }
+                    },
+                    scales: {
+                        y: {
+                            type: "linear",
+                            display: true,
+                            position: "left",
+                            beginAtZero: true,
+                            grid: { color: "#f1f5f9" },
+                            ticks: { callback: (v) => `₹${v}` }
+                        },
+                        y1: {
+                            type: "linear",
+                            display: true,
+                            position: "right",
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                            ticks: { precision: 0, callback: (v) => `${v} orders` }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // 2. Fulfillment Status Distribution Doughnut Chart
+        const fulfillCtx = document.getElementById("fulfillmentStatusChart");
+        if (fulfillCtx) {
+            const delivered = Number(summary.deliveredOrders || 0);
+            const shipped = Number(summary.shippedOrders || 0);
+            const pending = Number(summary.pendingOrders || 0) + Number(summary.confirmedOrders || 0);
+            const cancelled = Number(summary.cancelledOrders || 0);
+            const total = delivered + shipped + pending + cancelled || 1;
+
+            if (this.fulfillmentChart) {
+                this.fulfillmentChart.destroy();
+            }
+
+            this.fulfillmentChart = new Chart(fulfillCtx, {
+                type: "doughnut",
+                data: {
+                    labels: ["Delivered", "In-Transit", "Pending/Processing", "Cancelled"],
+                    datasets: [{
+                        data: [delivered, shipped, pending, cancelled],
+                        backgroundColor: ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"],
+                        borderWidth: 2,
+                        borderColor: "#ffffff"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: "bottom", labels: { boxWidth: 12, padding: 10 } }
+                    },
+                    cutout: "68%"
+                }
+            });
+
+            const pillsEl = document.getElementById("fulfillmentSummaryPills");
+            if (pillsEl) {
+                pillsEl.innerHTML = `
+                    <div class="col-3"><strong class="text-success">${delivered}</strong><br><span class="text-muted" style="font-size:11px">Fulfilled</span></div>
+                    <div class="col-3"><strong class="text-primary">${shipped}</strong><br><span class="text-muted" style="font-size:11px">In-Transit</span></div>
+                    <div class="col-3"><strong class="text-warning">${pending}</strong><br><span class="text-muted" style="font-size:11px">Pending</span></div>
+                    <div class="col-3"><strong class="text-danger">${cancelled}</strong><br><span class="text-muted" style="font-size:11px">Cancelled</span></div>
+                `;
+            }
+        }
+    },
+
+    renderCategoryPerformance(categories) {
+        const container = document.getElementById("categoryPerformanceList");
+        if (!container) return;
+
+        if (!categories || categories.length === 0) {
+            container.innerHTML = `<div class="text-muted text-center py-3">No category transaction history yet.</div>`;
+            return;
+        }
+
+        const maxRev = Math.max(...categories.map(c => Number(c.revenue) || 0), 1);
+
+        container.innerHTML = categories.map(c => {
+            const rev = Number(c.revenue || 0);
+            const pct = Math.round((rev / maxRev) * 100);
+            return `
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-1 small">
+                        <span class="fw-bold text-dark">${c.category || 'General'}</span>
+                        <span class="text-muted">${c.items_sold || 0} sold • <strong class="text-dark">₹${rev.toLocaleString("en-IN")}</strong></span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: ${pct}%"></div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    },
+
+    renderSalesOrdersTable() {
+        const tbody = document.getElementById("salesOrdersTableBody");
+        if (!tbody) return;
+
+        let filtered = this.allSalesOrders;
+        if (this.salesFilter !== "All") {
+            if (this.salesFilter === "Pending") {
+                filtered = filtered.filter(o => o.order_status === "Pending" || o.order_status === "Confirmed");
+            } else {
+                filtered = filtered.filter(o => (o.order_status || "").toLowerCase() === this.salesFilter.toLowerCase());
+            }
+        }
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-muted text-center py-4">No orders matching status "${this.salesFilter}".</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(o => {
+            let statusBadge = "bg-secondary";
+            const st = (o.order_status || "Pending").toLowerCase();
+            if (st === "delivered") statusBadge = "bg-success";
+            else if (st === "shipped") statusBadge = "bg-primary";
+            else if (st === "confirmed") statusBadge = "bg-info text-dark";
+            else if (st === "pending") statusBadge = "bg-warning text-dark";
+            else if (st === "cancelled") statusBadge = "bg-danger";
+
+            const orderDateStr = o.order_date ? new Date(o.order_date).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "N/A";
+
+            return `
+                <tr>
+                    <td class="fw-bold text-dark font-monospace">#ORD-${o.order_id}</td>
+                    <td>
+                        <div class="fw-bold text-dark">${o.full_name || 'Customer #' + o.user_id}</div>
+                        <small class="text-muted">${o.email || 'N/A'}</small>
+                    </td>
+                    <td class="small text-muted">${orderDateStr}</td>
+                    <td class="fw-bold text-dark">₹${Number(o.total_amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                    <td>
+                        <span class="badge ${statusBadge} px-2.5 py-1 rounded-pill">${o.order_status || 'Pending'}</span>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    },
+
+    filterSalesOrders(status, btn) {
+        this.salesFilter = status;
+        const group = document.getElementById("salesOrderFilterGroup");
+        if (group) {
+            group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        }
+        if (btn) btn.classList.add("active");
+        this.renderSalesOrdersTable();
     },
 
     // ==========================================
@@ -292,8 +551,26 @@ const AdminPortal = {
         const endDate = document.getElementById("offerEndDate").value;
         const status = document.getElementById("offerStatus").value;
 
-        if (!title || !discount || !startDate || !endDate) {
-            API.showToast("Please fill all required offer fields.", "warning");
+        if (!title || title.length < 2) {
+            API.showToast("Please enter an offer title (minimum 2 characters).", "warning");
+            document.getElementById("offerTitle").focus();
+            return;
+        }
+
+        const discNum = Number(discount);
+        if (isNaN(discNum) || discNum <= 0 || discNum > 100) {
+            API.showToast("Discount percentage must be between 1% and 100%.", "warning");
+            document.getElementById("offerDiscount").focus();
+            return;
+        }
+
+        if (!startDate || !endDate) {
+            API.showToast("Please select both start and expiry dates.", "warning");
+            return;
+        }
+
+        if (new Date(startDate) > new Date(endDate)) {
+            API.showToast("Offer start date cannot be after the expiry date.", "warning");
             return;
         }
 
@@ -301,7 +578,7 @@ const AdminPortal = {
             await API.post("/offers/add", {
                 title,
                 description: desc,
-                discount_percentage: discount,
+                discount_percentage: discNum,
                 start_date: startDate,
                 end_date: endDate,
                 status
@@ -398,8 +675,15 @@ const AdminPortal = {
         const date = document.getElementById("drawDate").value;
         const desc = document.getElementById("drawDesc").value.trim();
 
-        if (!name || !date) {
-            API.showToast("Please provide draw title and event date.", "warning");
+        if (!name || name.length < 2) {
+            API.showToast("Please enter a valid draw event name (minimum 2 characters).", "warning");
+            document.getElementById("drawName").focus();
+            return;
+        }
+
+        if (!date) {
+            API.showToast("Please select a draw schedule date.", "warning");
+            document.getElementById("drawDate").focus();
             return;
         }
 
@@ -520,7 +804,16 @@ const AdminPortal = {
                 const target = btn.dataset.adminTab;
                 document.querySelectorAll(".admin-tab-content").forEach(sec => sec.style.display = "none");
                 const targetSec = document.getElementById(`tab-${target}`);
-                if (targetSec) targetSec.style.display = "block";
+                if (targetSec) {
+                    targetSec.style.display = "block";
+                    // Dynamically refresh and resize charts when switching tabs
+                    if (target === "sales") {
+                        AdminPortal.loadSalesReport();
+                    } else if (target === "dashboard") {
+                        AdminPortal.loadDashboardStats();
+                        AdminPortal.loadSalesReport();
+                    }
+                }
             });
         });
     }

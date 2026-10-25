@@ -157,14 +157,49 @@ const CheckoutPage = {
 
     async placeOrderAndOpenPayment() {
         const user = Auth.getUser();
-        const name = document.getElementById("shippingName").value.trim();
-        const phone = document.getElementById("shippingPhone").value.trim();
-        const address = document.getElementById("shippingAddress").value.trim();
-        const selectedPaymentRadio = document.querySelector("input[name='paymentMethod']:checked");
-        const paymentMethod = selectedPaymentRadio ? selectedPaymentRadio.value : "Card / Online";
+        if (!user) {
+            API.showToast("Please log in to complete your order.", "warning");
+            setTimeout(() => window.location.href = "/login.html", 1500);
+            return;
+        }
 
-        if (!name || !phone || !address) {
-            API.showToast("Please provide shipping name, phone and delivery address.", "warning");
+        const nameInput = document.getElementById("shippingName");
+        const emailInput = document.getElementById("shippingEmail");
+        const phoneInput = document.getElementById("shippingPhone");
+        const addressInput = document.getElementById("shippingAddress");
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        const email = emailInput ? emailInput.value.trim() : "";
+        const phone = phoneInput ? phoneInput.value.trim() : "";
+        const address = addressInput ? addressInput.value.trim() : "";
+
+        const selectedPaymentRadio = document.querySelector("input[name='paymentMethod']:checked");
+        const paymentMethod = selectedPaymentRadio ? selectedPaymentRadio.value : "Cash on Delivery";
+
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!name || name.length < 2) {
+            API.showToast("Please enter a valid recipient name (minimum 2 characters).", "warning");
+            if (nameInput) nameInput.focus();
+            return;
+        }
+
+        if (email && !EMAIL_REGEX.test(email)) {
+            API.showToast("Please enter a valid email address.", "warning");
+            if (emailInput) emailInput.focus();
+            return;
+        }
+
+        const cleanPhone = phone ? phone.replace(/\D/g, '') : "";
+        if (!cleanPhone || cleanPhone.length < 10) {
+            API.showToast("Please enter a valid 10-digit mobile number.", "warning");
+            if (phoneInput) phoneInput.focus();
+            return;
+        }
+
+        if (!address || address.length < 5) {
+            API.showToast("Please enter your complete delivery street address and city.", "warning");
+            if (addressInput) addressInput.focus();
             return;
         }
 
@@ -178,7 +213,7 @@ const CheckoutPage = {
             const payload = {
                 user_id: user.user_id,
                 shipping_name: name,
-                shipping_phone: phone,
+                shipping_phone: cleanPhone || phone,
                 shipping_address: address,
                 payment_method: paymentMethod,
                 discount_amount: this.discountAmount
@@ -196,13 +231,18 @@ const CheckoutPage = {
 
             this.createdOrderId = orderRes.orderId;
 
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="bi bi-lock-fill me-2 text-warning"></i>Authorize & Place Order`;
+            }
+
             // Open simulated payment modal
             this.openPaymentGatewayModal(paymentMethod);
         } catch (e) {
             API.showToast(e.message || "Failed to place order.", "error");
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="bi bi-lock-fill me-2"></i>Authorize & Place Order (₹${this.finalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })})`;
+                submitBtn.innerHTML = `<i class="bi bi-lock-fill me-2 text-warning"></i>Authorize & Place Order (₹${this.finalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })})`;
             }
         }
     },
@@ -211,9 +251,18 @@ const CheckoutPage = {
         const modalEl = document.getElementById("paymentModal");
         const modalAmount = document.getElementById("payModalAmount");
         const modalOrderId = document.getElementById("payModalOrderId");
+        const payBtn = document.getElementById("confirmPaymentBtn");
 
         if (modalAmount) modalAmount.textContent = `₹${this.finalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
         if (modalOrderId) modalOrderId.textContent = `#SB-ORD-${this.createdOrderId}`;
+
+        if (payBtn) {
+            if (method === "Cash on Delivery") {
+                payBtn.innerHTML = `Confirm Cash on Delivery Order <i class="bi bi-check-circle-fill ms-1 text-success"></i>`;
+            } else {
+                payBtn.innerHTML = `Confirm & Pay Now <i class="bi bi-shield-check ms-1 text-warning"></i>`;
+            }
+        }
 
         const bsModal = new bootstrap.Modal(modalEl, { backdrop: "static" });
         bsModal.show();

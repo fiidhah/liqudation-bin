@@ -379,6 +379,36 @@
             </a>
         </div>
 
+        <!-- SEARCH & QUICK FILTER BAR -->
+        <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 bg-white mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Search products by name, brand, category (e.g. iPad, Saree, Camera)...">
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <select id="categorySelect" class="form-select bg-light border-0 py-2">
+                        <option value="All">All Categories</option>
+                        <option value="Electronics">Electronics & Tech</option>
+                        <option value="Home & Kitchen">Home & Kitchen</option>
+                        <option value="Fashion & Footwear">Fashion & Footwear</option>
+                        <option value="Gadgets & Office">Gadgets & Office</option>
+                        <option value="Tools & Hardware">Tools & Hardware</option>
+                        <option value="General">General Overstock</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <select id="sortSelect" class="form-select bg-light border-0 py-2">
+                        <option value="latest">Sort: Newest Drops</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <!-- PRODUCT GRID -->
         <div class="row g-3 g-md-4" id="productGrid">
             <div class="col-12 text-center py-5">

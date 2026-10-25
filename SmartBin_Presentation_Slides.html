@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartBin – Academic Project Presentation (10 Slides)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      color: #0f172a;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Floating Print / Save PDF Button */
+    .print-bar {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-pdf {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-pdf:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.5);
+    }
+
+    /* Base Slide Geometry (16:9 ratio) */
+    .slide {
+      width: 1333px;
+      height: 750px;
+      margin: 25px auto;
+      background: #f8fafc;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      page-break-inside: avoid;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Print Setup */
+    @page {
+      size: 1333px 750px;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+      }
+      .print-bar {
+        display: none !important;
+      }
+      .slide {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+      }
+    }
+
+    /* Header Bar */
+    .slide-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 18px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .header-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #2563eb;
+      margin-bottom: 4px;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .slide-badge {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    .slide-body {
+      padding: 28px 48px;
+      flex: 1;
+      display: flex;
+      gap: 24px;
+    }
+
+    /* Card Utilities */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .card h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card li {
+      font-size: 13.5px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .card li strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    /* Cover & Closing Slides (Dark Theme) */
+    .slide-dark {
+      background: #0f172a !important;
+      color: #ffffff !important;
+      justify-content: center;
+      padding: 48px 64px;
+    }
+
+    .dark-tag {
+      color: #38bdf8;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .dark-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .dark-subtitle {
+      font-size: 22px;
+      font-weight: 600;
+      color: #93c5fd;
+      margin-bottom: 20px;
+    }
+
+    .dark-desc {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 900px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .dark-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .dark-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .dark-card-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .dark-card-body {
+      font-size: 13.5px;
+      color: #f1f5f9;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Action Bar -->
+  <div class="print-bar">
+    <button class="btn-pdf" onclick="window.print()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"></path>
+      </svg>
+      Print / Save as PDF (All 10 Slides)
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       SLIDE 1: Title Slide (Dark Theme)
+       ========================================================================= -->
+  <section class="slide slide-dark">
+    <div class="dark-tag">Academic Capstone Project • Full-Stack E-Commerce</div>
+    <h1 class="dark-title">SMARTBIN – Smart Liquidation Bin Store</h1>
+    <h2 class="dark-subtitle">Automated Reverse Logistics & Dynamic Daily Price Drop System</h2>
+    <p class="dark-desc">
+      A specialized web application engineered to digitize physical liquidation retail, automating descending daily price drops, condition grading classification, in-store bin mapping, and gamified promotions.
+    </p>
+
+    <div class="dark-grid">
+      <div class="dark-card">
+        <div class="dark-card-title" style="color: #38bdf8;">Key Domain Innovation</div>
+        <div class="dark-card-body">
+          • Descending Daily Price Drops<br>
+          • Physical Bin (A, B, C) Mapping<br>
+          • Item Condition Grading Grades<br>
+          • 24/7 Digital Reserve & Purchase
+        </div>
+      </div>
+      <div class="dark-card">
+        <div class="dark-card-title" style="color: #34d399;">Technology Foundation</div>
+        <div class="dark-card-body">
+          • Node.js & Express.js REST API<br>
+          • MySQL Relational Engine (13 Tables)<br>
+          • Bootstrap 5 Responsive Interface<br>
+          • Razorpay Payment Gateway API
+        </div>
+      </div>
+      <div class="dark-card">
+        <div class="dark-card-title" style="color: #fbbf24;">Multi-Tier Architecture</div>
+        <div class="dark-card-body">
+          • Customer Portal (Shopping & Tracking)<br>
+          • Store Manager Portal (Inventory & Bins)<br>
+          • Super Admin Dashboard (Governance)<br>
+          • Secured via JWT & Bcrypt Hashing
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 2: Project Overview & Objectives
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">Project Background & Purpose</div>
+        <div class="header-title">Project Overview & Key Objectives</div>
+      </div>
+      <div class="slide-badge">Slide 02 / 10</div>
+    </div>
+    <div class="slide-body">
+      <div class="card" style="flex: 1;">
+        <h3 style="color: #2563eb;">📌 Project Overview & Domain Context</h3>
+        <ul>
+          <li><strong>The Liquidation Retail Model:</strong> Retailers sell customer returns, overstocks, and clearance pallets with progressive daily price cuts.</li>
+          <li><strong>The Reverse Logistics Bottleneck:</strong> Billions of returned items sit idle in warehouses due to lack of structured, digitized cataloging.</li>
+          <li><strong>Physical Bin Store Limitations:</strong> Merchandise is traditionally dumped into wooden bins where shoppers rummage blindly without knowing inventory or locations.</li>
+          <li><strong>SmartBin's Digital Solution:</strong> A centralized platform indexing stock by bin location (Bin A, B, C), displaying condition grading, and enabling 24/7 web commerce.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="flex: 1;">
+        <h3 style="color: #2563eb;">🎯 Core Project Objectives</h3>
+        <ul>
+          <li><strong>Automate Daily Price Curves:</strong> Eliminate manual re-labeling via database-driven daily price drop schedules (e.g., Friday $14 ➔ Thursday $1).</li>
+          <li><strong>Inventory & Bin Transparency:</strong> Display verified condition grades (Brand New, Open Box, Refurbished, Clearance) and exact shelf coordinates.</li>
+          <li><strong>Role-Based Access Governance:</strong> Provide isolated, secure portals for Customers, Store Managers, and Super Administrators using JWT & bcrypt.</li>
+          <li><strong>Frictionless Transaction Pipeline:</strong> Full commerce flow including dynamic cart calculation, promo vouchers, and Razorpay checkout.</li>
+          <li><strong>Gamify Customer Retention:</strong> Drive repeat customer traffic through automated weekly Lucky Draw raffles and coupon validation.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 3: Existing System vs. Proposed System
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">System Comparison & Motivation</div>
+        <div class="header-title">Existing System vs. Proposed System</div>
+      </div>
+      <div class="slide-badge">Slide 03 / 10</div>
+    </div>
+    <div class="slide-body">
+      <div class="card" style="flex: 1; background: #fff1f2; border-color: #fecdd3;">
+        <h3 style="color: #e11d48;">❌ Existing System (Traditional Brick & Mortar)</h3>
+        <ul style="color: #9f1239;">
+          <li><strong>No Remote Visibility:</strong> Shoppers must travel in person with zero prior insight into which products are in stock.</li>
+          <li><strong>Manual Labor Overhead:</strong> Store staff spend hours every evening manually replacing price tags or announcing daily fixed prices.</li>
+          <li><strong>Chaotic & Disorganized:</strong> Customers dig through unorganized wooden bins without brand, category, or condition data.</li>
+          <li><strong>Cashier Queues & Errors:</strong> Physical bottlenecks during morning rushes, paper invoices, and manual billing discrepancies.</li>
+          <li><strong>Zero Customer Engagement:</strong> No automated promo coupon redemption, no digital order history, and no verifiable raffle prize system.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="flex: 1; background: #f0fdf4; border-color: #bbf7d0;">
+        <h3 style="color: #16a34a;">✅ Proposed System (SmartBin Web Platform)</h3>
+        <ul style="color: #166534;">
+          <li><strong>24/7 Digital Access:</strong> Customers browse, filter, reserve, and purchase liquidation items anytime from any smartphone or browser.</li>
+          <li><strong>Automated Price Engine:</strong> Midnight cron / schedule query automatically recalculates selling prices based on the day of the week.</li>
+          <li><strong>Structured Bin Mapping:</strong> Each item indicates its physical bin location (Bin A, B), condition rating, original retail price, and savings.</li>
+          <li><strong>Online Checkout & Tracking:</strong> Secure Razorpay payment gateway, automated digital receipts, and real-time shipment status updates.</li>
+          <li><strong>Promotions & Gamification:</strong> Built-in promotional coupon engine and automated Lucky Draw raffle boards announcing transparent winners.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 4: Core Features of SmartBin
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">Product Highlights & Innovations</div>
+        <div class="header-title">Core Features of SmartBin</div>
+      </div>
+      <div class="slide-badge">Slide 04 / 10</div>
+    </div>
+    <div class="slide-body" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <div class="card" style="border-top: 4px solid #2563eb;">
+        <h3>📅 Dynamic Daily Price Drop</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          System dynamically determines today's price according to the weekly schedule (e.g. Fri $14 ➔ Wed $2 ➔ Thu $1). Today's deal calculates in real time at checkout.
+        </p>
+      </div>
+      <div class="card" style="border-top: 4px solid #10b981;">
+        <h3>📍 Bin & Condition Tagging</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Items cataloged with exact physical store bin numbers (Bin A, B, C) and transparent condition grading (Brand New, Open Box, Refurbished, Clearance).
+        </p>
+      </div>
+      <div class="card" style="border-top: 4px solid #0ea5e9;">
+        <h3>🛡️ Multi-Role Security</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Decoupled, authenticated portals for Customer, Store Manager, and Administrator with JWT token validation and salted bcrypt password hashing.
+        </p>
+      </div>
+      <div class="card" style="border-top: 4px solid #f59e0b;">
+        <h3>🛒 Smart Cart & Wishlist</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Real-time stock validation, persistent wishlist storage, instant quantity adjustments, and dynamic subtotal / discount calculation.
+        </p>
+      </div>
+      <div class="card" style="border-top: 4px solid #8b5cf6;">
+        <h3>🎁 Promotional Coupon Engine</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Admin-managed discount vouchers with code validation, percentage discounts, minimum order requirements, and expiration date checks.
+        </p>
+      </div>
+      <div class="card" style="border-top: 4px solid #e11d48;">
+        <h3>🎲 Automated Lucky Draws</h3>
+        <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+          Gamified customer retention system where eligible buyers enter draws and winners are announced automatically on a public transparency leaderboard.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 5: System Architecture & Workflow
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">End-to-End Execution Flow</div>
+        <div class="header-title">System Architecture & Workflow</div>
+      </div>
+      <div class="slide-badge">Slide 05 / 10</div>
+    </div>
+    <div class="slide-body" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+      <div class="card" style="border-top: 4px solid #2563eb;">
+        <div style="font-size: 11px; font-weight: 800; color: #2563eb; margin-bottom: 6px;">PHASE 01</div>
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Inventory Ingestion</h3>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Store Managers catalog liquidation pallets, assign Bin Numbers (A, B), condition grades, and upload photos via Multer.
+        </p>
+        <div style="margin-top: 14px; font-size: 11px; font-weight: 700; color: #10b981;">🏷️ Manager Portal</div>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #0ea5e9;">
+        <div style="font-size: 11px; font-weight: 800; color: #0ea5e9; margin-bottom: 6px;">PHASE 02</div>
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Price Automation</h3>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Express API checks current day of week against MySQL daily price schedule to calculate live liquidation deal price.
+        </p>
+        <div style="margin-top: 14px; font-size: 11px; font-weight: 700; color: #10b981;">🏷️ Dynamic Pricing</div>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #2563eb;">
+        <div style="font-size: 11px; font-weight: 800; color: #2563eb; margin-bottom: 6px;">PHASE 03</div>
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Product Discovery</h3>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Customers search catalog, filter by condition or bin, add products to cart, and apply active promotional discount vouchers.
+        </p>
+        <div style="margin-top: 14px; font-size: 11px; font-weight: 700; color: #10b981;">🏷️ Storefront</div>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #f59e0b;">
+        <div style="font-size: 11px; font-weight: 800; color: #f59e0b; margin-bottom: 6px;">PHASE 04</div>
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Payment & DB Sync</h3>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Razorpay verifies transaction; orders and order_items records are created and stock is decremented atomically.
+        </p>
+        <div style="margin-top: 14px; font-size: 11px; font-weight: 700; color: #10b981;">🏷️ Gateway & DB</div>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #8b5cf6;">
+        <div style="font-size: 11px; font-weight: 800; color: #8b5cf6; margin-bottom: 6px;">PHASE 05</div>
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Fulfillment & Draw</h3>
+        <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+          Managers dispatch orders (Pending ➔ Confirmed ➔ Shipped ➔ Delivered); buyer enters weekly Lucky Draw.
+        </p>
+        <div style="margin-top: 14px; font-size: 11px; font-weight: 700; color: #10b981;">🏷️ Gamification</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 6: Module Description
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">Modular Decomposition</div>
+        <div class="header-title">Module Description & Role Breakdown</div>
+      </div>
+      <div class="slide-badge">Slide 06 / 10</div>
+    </div>
+    <div class="slide-body">
+      <div class="card" style="flex: 1; border-top: 4px solid #2563eb;">
+        <h3 style="color: #2563eb;">👤 Customer Portal (Storefront)</h3>
+        <ul>
+          <li><strong>Authentication & Profile:</strong> Secure registration, login, and address management via JWT.</li>
+          <li><strong>Dynamic Catalog:</strong> Real-time filtering by Category, Brand, Bin Number, and Condition Grade.</li>
+          <li><strong>Shopping Cart & Wishlist:</strong> Subtotal calculation, stock checks, and saved favorites.</li>
+          <li><strong>Coupon Engine:</strong> Validation of promotional codes with instant percentage deductions.</li>
+          <li><strong>Order Tracking:</strong> Live status tracking (Pending ➔ Confirmed ➔ Shipped ➔ Delivered).</li>
+          <li><strong>Lucky Draw Portal:</strong> Live view of ongoing draws and announced winners.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="flex: 1; border-top: 4px solid #10b981;">
+        <h3 style="color: #10b981;">🏢 Store Manager Portal</h3>
+        <ul>
+          <li><strong>Product CRUD Engine:</strong> Create, view, modify, and delete inventory items in real time.</li>
+          <li><strong>Physical Bin Allotment:</strong> Assign products to store locations (Bin A, Bin B, Bin C).</li>
+          <li><strong>Stock Auditing:</strong> Monitor available unit quantities and manage low-stock thresholds.</li>
+          <li><strong>Order Fulfillment:</strong> Review customer delivery details and update dispatch stages.</li>
+          <li><strong>Condition Verification:</strong> Tag items as Brand New, Open Box, Refurbished, or Clearance.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="flex: 1; border-top: 4px solid #8b5cf6;">
+        <h3 style="color: #8b5cf6;">👑 Super Admin Dashboard</h3>
+        <ul>
+          <li><strong>Executive Analytics:</strong> Overview of revenue, total users, active managers, and order metrics.</li>
+          <li><strong>Manager Oversight:</strong> Onboard, edit credentials, or deactivate store manager accounts.</li>
+          <li><strong>Price Schedule Configurator:</strong> Adjust daily price curves across Monday–Sunday.</li>
+          <li><strong>Promotional Campaigns:</strong> Create coupon codes, discount %, minimum spends, and expiry.</li>
+          <li><strong>Raffle Draws Administration:</strong> Initialize lucky draw contests and execute random winner selection.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 7: Database Architecture & Schema
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">Relational Data Modeling</div>
+        <div class="header-title">Database Schema & Entity Relationships</div>
+      </div>
+      <div class="slide-badge">Slide 07 / 10</div>
+    </div>
+    <div class="slide-body" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+      <div class="card" style="border-left: 4px solid #2563eb;">
+        <h3>1. Authentication & Role Entities</h3>
+        <ul>
+          <li><strong>admins:</strong> admin_id (PK), full_name, email (Unique), password, role, created_at</li>
+          <li><strong>managers:</strong> manager_id (PK), full_name, email (Unique), password, phone, address</li>
+          <li><strong>users:</strong> user_id (PK), full_name, email (Unique), password, phone, address, created_at</li>
+          <li><em>Integrity:</em> Passwords stored as 60-char bcrypt hashes; strict email uniqueness constraints.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left: 4px solid #10b981;">
+        <h3>2. Inventory & Liquidation Logic</h3>
+        <ul>
+          <li><strong>products:</strong> product_id (PK), manager_id (FK), product_name, category, brand, bin_number, condition_type, original_price, price, quantity, image, is_active</li>
+          <li><strong>daily_price_schedule:</strong> schedule_id (PK), day_of_week (0-6), day_name, price, description</li>
+          <li><em>Integrity:</em> Foreign key to managers with ON DELETE SET NULL; condition as ENUM.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left: 4px solid #f59e0b;">
+        <h3>3. Commerce & Transactions</h3>
+        <ul>
+          <li><strong>cart & wishlist:</strong> cart_id / wishlist_id (PK), user_id (FK), product_id (FK), quantity</li>
+          <li><strong>orders:</strong> order_id (PK), user_id (FK), total, discount, final_amount, status, shipping</li>
+          <li><strong>order_items:</strong> order_item_id (PK), order_id (FK), product_id (FK), quantity, price</li>
+          <li><strong>payments:</strong> payment_id (PK), order_id (FK), razorpay_id, status, amount, timestamp</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-left: 4px solid #e11d48;">
+        <h3>4. Gamification & Retention</h3>
+        <ul>
+          <li><strong>promotional_offers:</strong> offer_id (PK), code (Unique), title, discount_percentage, min_order_amount, start_date, end_date, status</li>
+          <li><strong>lucky_draws:</strong> draw_id (PK), draw_name, prize, draw_date, description, status</li>
+          <li><strong>lucky_draw_winners:</strong> winner_id (PK), draw_id (FK), user_id (FK), prize_won</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 8: Technology Stack Used
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">Tools & Frameworks</div>
+        <div class="header-title">Technology Stack Used</div>
+      </div>
+      <div class="slide-badge">Slide 08 / 10</div>
+    </div>
+    <div class="slide-body" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+      <div class="card" style="border-top: 4px solid #2563eb;">
+        <h3 style="font-size: 15px; color: #2563eb;">🎨 Frontend Layer</h3>
+        <ul>
+          <li><strong>HTML5:</strong> Semantic markup for accessible layouts.</li>
+          <li><strong>CSS3:</strong> Glassmorphism styling and responsive flex/grid layouts.</li>
+          <li><strong>Bootstrap 5:</strong> Responsive navigation, modals, and tables.</li>
+          <li><strong>JavaScript ES6+:</strong> Asynchronous fetch calls and dynamic DOM manipulation.</li>
+          <li><strong>FontAwesome 6:</strong> Vector iconography.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #10b981;">
+        <h3 style="font-size: 15px; color: #10b981;">⚙️ Backend Layer</h3>
+        <ul>
+          <li><strong>Node.js:</strong> Fast, non-blocking asynchronous event loop runtime.</li>
+          <li><strong>Express.js:</strong> Minimalist RESTful API framework and routing engine.</li>
+          <li><strong>Multer:</strong> Multipart form-data handling for product photo uploads.</li>
+          <li><strong>CORS & Body-Parser:</strong> Cross-origin resource sharing and JSON parsing.</li>
+          <li><strong>Dotenv:</strong> Environment variable security.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #f59e0b;">
+        <h3 style="font-size: 15px; color: #f59e0b;">🗄️ Database & Security</h3>
+        <ul>
+          <li><strong>MySQL 8.0:</strong> Relational ACID-compliant transactional database engine.</li>
+          <li><strong>mysql2:</strong> Connection pooling with native Promise support.</li>
+          <li><strong>JWT:</strong> Stateless user token authorization.</li>
+          <li><strong>Bcrypt.js:</strong> Cryptographic password hashing (10 salt rounds).</li>
+          <li><strong>Integrity:</strong> Cascading foreign keys.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-top: 4px solid #8b5cf6;">
+        <h3 style="font-size: 15px; color: #8b5cf6;">🛠️ APIs & Tools</h3>
+        <ul>
+          <li><strong>Razorpay API:</strong> Real-time payment gateway integration for cards/UPI.</li>
+          <li><strong>Postman:</strong> REST API endpoint testing and validation.</li>
+          <li><strong>VS Code:</strong> Source code development.</li>
+          <li><strong>Git & GitHub:</strong> Version control management.</li>
+          <li><strong>Nodemon:</strong> Server hot-reloading tool.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 9: Future Enhancements
+       ========================================================================= -->
+  <section class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="header-tag">System Scalability & Vision</div>
+        <div class="header-title">Future Enhancements & Roadmap</div>
+      </div>
+      <div class="slide-badge">Slide 09 / 10</div>
+    </div>
+    <div class="slide-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="card" style="display: flex; align-items: center; gap: 20px; padding: 16px 24px; border-left: 5px solid #2563eb;">
+        <div style="font-size: 28px;">🤖</div>
+        <div>
+          <h3 style="margin-bottom: 4px;">AI-Powered Computer Vision Inspection</h3>
+          <p style="font-size: 13.5px; color: #475569;">
+            Train deep learning models (YOLOv8 / ResNet) to scan returned items via camera, detect packaging tears or cosmetic defects, and automate condition grading (Brand New vs. Open Box).
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; align-items: center; gap: 20px; padding: 16px 24px; border-left: 5px solid #10b981;">
+        <div style="font-size: 28px;">📱</div>
+        <div>
+          <h3 style="margin-bottom: 4px;">Native Cross-Platform Mobile Application</h3>
+          <p style="font-size: 13.5px; color: #475569;">
+            Develop Flutter / React Native apps equipped with push notification services to alert shoppers at midnight the instant new daily liquidation price drops occur.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; align-items: center; gap: 20px; padding: 16px 24px; border-left: 5px solid #0ea5e9;">
+        <div style="font-size: 28px;">📷</div>
+        <div>
+          <h3 style="margin-bottom: 4px;">In-Store Omnichannel QR Code Scanner</h3>
+          <p style="font-size: 13.5px; color: #475569;">
+            Place QR code tags on physical warehouse bins so in-store walk-in customers can scan items on their phones to view price drop histories, original MSRP, and online reviews.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; align-items: center; gap: 20px; padding: 16px 24px; border-left: 5px solid #f59e0b;">
+        <div style="font-size: 28px;">🔨</div>
+        <div>
+          <h3 style="margin-bottom: 4px;">Real-Time Pallet Auction & Bidding Engine</h3>
+          <p style="font-size: 13.5px; color: #475569;">
+            Integrate WebSocket connections via Socket.io to support real-time wholesale pallet auctions for bulk B2B liquidation buyers.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; align-items: center; gap: 20px; padding: 16px 24px; border-left: 5px solid #8b5cf6;">
+        <div style="font-size: 28px;">🌐</div>
+        <div>
+          <h3 style="margin-bottom: 4px;">Multi-Branch & Regional Warehouse Synchronization</h3>
+          <p style="font-size: 13.5px; color: #475569;">
+            Extend database architecture to synchronize stock, daily price curves, and manager assignments across multiple physical branch outlets nationwide.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SLIDE 10: Conclusion & Q&A (Dark Theme)
+       ========================================================================= -->
+  <section class="slide slide-dark">
+    <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+      <div class="dark-tag">Project Summary & Conclusion</div>
+      <h1 class="dark-title" style="font-size: 48px; margin-bottom: 6px;">Thank You!</h1>
+      <h2 class="dark-subtitle" style="font-size: 18px; margin-bottom: 28px;">SmartBin – Smart Liquidation Bin Store E-Commerce Management System</h2>
+
+      <div class="dark-card" style="text-align: left; margin-bottom: 28px; background: #1e293b;">
+        <div class="dark-card-title" style="color: #34d399; font-size: 13px; margin-bottom: 12px;">Key Project Takeaways:</div>
+        <div class="dark-card-body" style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+          <div>✔ <strong>Digitized Reverse Logistics:</strong> Successfully converted an unorganized, physical liquidation model into an automated, accessible 24/7 web platform.</div>
+          <div>✔ <strong>Full-Stack Architecture:</strong> Engineered a clean 3-tier system with responsive frontend, RESTful Node.js backend, and 13-table 3NF MySQL database.</div>
+          <div>✔ <strong>Proven Business Value:</strong> Delivered automated price drops, bin location mapping, coupon vouchers, Razorpay payments, and gamification.</div>
+        </div>
+      </div>
+
+      <div style="display: inline-block; background: #2563eb; color: #ffffff; padding: 12px 36px; border-radius: 30px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);">
+        💬 Questions & Answers Session — Open for Discussion
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

@@ -1,12 +1,13 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
+const { isValidEmail, isValidPhone, isValidPassword, isValidText } = require("../utils/validator");
 
 // =============================
 // GET ALL USERS
 // =============================
 const getAllUsers = (req, res) => {
-    const sql = "SELECT * FROM users";
+    const sql = "SELECT user_id, full_name, email, phone, address, created_at FROM users";
 
     db.query(sql, (err, result) => {
         if (err) {
@@ -27,21 +28,43 @@ const getAllUsers = (req, res) => {
 };
 
 // =============================
-// REGISTER USER
+// REGISTER USER (With Comprehensive Validation)
 // =============================
 const registerUser = async (req, res) => {
     const { full_name, email, password, phone, address } = req.body;
 
-    if (!full_name || !email || !password) {
+    if (!isValidText(full_name, 2)) {
         return res.status(400).json({
             success: false,
-            message: "Full name, email and password are required."
+            message: "Please provide a valid full name (minimum 2 characters)."
         });
     }
 
-    const checkEmailQuery = "SELECT * FROM users WHERE email = ?";
+    if (!isValidEmail(email)) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide a valid email address."
+        });
+    }
 
-    db.query(checkEmailQuery, [email], async (err, result) => {
+    if (!isValidPassword(password)) {
+        return res.status(400).json({
+            success: false,
+            message: "Password must be at least 6 characters long."
+        });
+    }
+
+    if (phone && !isValidPhone(phone)) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide a valid 10-digit phone number."
+        });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const checkEmailQuery = "SELECT * FROM users WHERE LOWER(email) = ?";
+
+    db.query(checkEmailQuery, [cleanEmail], async (err, result) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -52,7 +75,7 @@ const registerUser = async (req, res) => {
         if (result.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: "Email already exists."
+                message: "An account with this email already exists."
             });
         }
 
@@ -62,7 +85,7 @@ const registerUser = async (req, res) => {
 
             db.query(
                 insertQuery,
-                [full_name, email, hashedPassword, phone || null, address || null],
+                [full_name.trim(), cleanEmail, hashedPassword, phone ? String(phone).trim() : null, address ? address.trim() : null],
                 (err, result) => {
                     if (err) {
                         return res.status(500).json({
@@ -73,7 +96,7 @@ const registerUser = async (req, res) => {
 
                     res.status(201).json({
                         success: true,
-                        message: "User registered successfully.",
+                        message: "Account created successfully.",
                         userId: result.insertId
                     });
                 }
@@ -88,21 +111,29 @@ const registerUser = async (req, res) => {
 };
 
 // =============================
-// LOGIN USER
+// LOGIN USER (With Validation)
 // =============================
 const loginUser = (req, res) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (!isValidEmail(email)) {
         return res.status(400).json({
             success: false,
-            message: "Email and password are required."
+            message: "Please enter a valid email address."
         });
     }
 
-    const sql = "SELECT * FROM users WHERE email = ?";
+    if (!password) {
+        return res.status(400).json({
+            success: false,
+            message: "Password is required."
+        });
+    }
 
-    db.query(sql, [email], async (err, result) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const sql = "SELECT * FROM users WHERE LOWER(email) = ?";
+
+    db.query(sql, [cleanEmail], async (err, result) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -111,41 +142,33 @@ const loginUser = (req, res) => {
         }
 
         if (result.length === 0) {
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
-                message: "Invalid email or password."
+                message: "No user found with this email address."
             });
         }
 
         const user = result[0];
         let isMatch = false;
 
-        try {
+        if (user.password && user.password.startsWith("$2")) {
             isMatch = await bcrypt.compare(password, user.password);
-        } catch (e) {
-            isMatch = false;
-        }
-
-        if (!isMatch && user.password === password) {
-            isMatch = true;
-        }
-
-        if (!isMatch && user.email === "fidha@gmail.com" && (password === "user123" || password === "123456")) {
-            isMatch = true;
+        } else {
+            isMatch = (password === user.password);
         }
 
         if (!isMatch) {
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
-                message: "Invalid email or password."
+                message: "Incorrect password."
             });
         }
 
-        const token = generateToken(user, "User");
+        const token = generateToken(user.user_id, "User");
 
         res.status(200).json({
             success: true,
-            message: "Login successful",
+            message: "Login successful.",
             token,
             user: {
                 user_id: user.user_id,
@@ -160,13 +183,70 @@ const loginUser = (req, res) => {
 };
 
 // =============================
-// USER PROFILE
+// GET USER PROFILE
 // =============================
 const getUserProfile = (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Protected Route Access Granted",
-        loggedInUser: req.user
+    const { id } = req.params;
+
+    const sql = "SELECT user_id, full_name, email, phone, address, created_at FROM users WHERE user_id = ?";
+
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User profile not found."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: result[0]
+        });
+    });
+};
+
+// =============================
+// UPDATE USER PROFILE
+// =============================
+const updateUser = (req, res) => {
+    const { id } = req.params;
+    const { full_name, phone, address } = req.body;
+
+    if (phone && !isValidPhone(phone)) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide a valid 10-digit phone number."
+        });
+    }
+
+    const sql = "UPDATE users SET full_name = COALESCE(?, full_name), phone = COALESCE(?, phone), address = COALESCE(?, address) WHERE user_id = ?";
+
+    db.query(sql, [full_name ? full_name.trim() : null, phone ? String(phone).trim() : null, address ? address.trim() : null, id], (err, result) => {
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully."
+        });
     });
 };
 
@@ -174,5 +254,6 @@ module.exports = {
     getAllUsers,
     registerUser,
     loginUser,
-    getUserProfile
+    getUserProfile,
+    updateUser
 };

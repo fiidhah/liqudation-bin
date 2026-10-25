@@ -95,7 +95,7 @@
                         Join SmartBin & Unlock <span class="fst-italic" style="color: var(--color-yellow-dark);">Friday Restock</span> Perks
                     </h1>
                     <p class="text-secondary lead fs-6 mb-4" style="line-height: 1.7;">
-                        Create your customer profile to enjoy real-time reverse markdown price tracking, free automatic entry into weekend Lucky Draws, and instant 1-click hauls.
+                        Create your verified customer profile to enjoy real-time reverse markdown price tracking, free automatic entry into weekend Lucky Draws, and instant 1-click hauls.
                     </p>
 
                     <!-- Trust Points -->
@@ -135,43 +135,48 @@
                     </div>
 
                     <div class="card-body p-4 p-md-5">
-                        <form id="registerForm">
+                        <form id="registerForm" novalidate>
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Full Name</label>
-                                <div class="input-group">
+                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Full Name *</label>
+                                <div class="input-group has-validation">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-person text-muted"></i></span>
-                                    <input type="text" class="form-control rounded-end-3 py-2 bg-light border-0" id="regName" placeholder="e.g. Fidha Rahman" required autocomplete="name">
+                                    <input type="text" class="form-control rounded-end-3 py-2 bg-light border-0" id="regName" placeholder="e.g. Fidha Rahman" required minlength="2" autocomplete="name">
                                 </div>
+                                <div class="invalid-feedback d-none text-danger small mt-1" id="regNameError">Please enter a valid full name (minimum 2 characters).</div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Email Address</label>
-                                <div class="input-group">
+                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Email Address *</label>
+                                <div class="input-group has-validation">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-envelope text-muted"></i></span>
-                                    <input type="email" class="form-control rounded-end-3 py-2 bg-light border-0" id="regEmail" placeholder="fidha@gmail.com" required autocomplete="email">
+                                    <input type="email" class="form-control rounded-end-3 py-2 bg-light border-0" id="regEmail" placeholder="name@gmail.com" required autocomplete="email">
                                 </div>
+                                <div class="invalid-feedback d-none text-danger small mt-1" id="regEmailError">Please enter a valid email address (e.g. name@domain.com).</div>
                             </div>
 
                             <div class="row g-2 mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Password</label>
-                                    <div class="input-group">
+                                    <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Password *</label>
+                                    <div class="input-group has-validation">
                                         <span class="input-group-text bg-light border-0"><i class="bi bi-key text-muted"></i></span>
-                                        <input type="password" class="form-control rounded-end-3 py-2 bg-light border-0" id="regPassword" placeholder="••••••••" required autocomplete="new-password">
+                                        <input type="password" class="form-control rounded-end-3 py-2 bg-light border-0" id="regPassword" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
                                     </div>
+                                    <div class="invalid-feedback d-none text-danger small mt-1" id="regPasswordError">Password must be at least 6 characters.</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Phone Number</label>
-                                    <div class="input-group">
+                                    <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Phone Number *</label>
+                                    <div class="input-group has-validation">
                                         <span class="input-group-text bg-light border-0"><i class="bi bi-telephone text-muted"></i></span>
-                                        <input type="tel" class="form-control rounded-end-3 py-2 bg-light border-0" id="regPhone" placeholder="9876543210" autocomplete="tel">
+                                        <input type="tel" class="form-control rounded-end-3 py-2 bg-light border-0" id="regPhone" placeholder="10-digit mobile" maxlength="10" required autocomplete="tel">
                                     </div>
+                                    <div class="invalid-feedback d-none text-danger small mt-1" id="regPhoneError">Please enter a valid 10-digit mobile number.</div>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Delivery Address & City</label>
-                                <textarea class="form-control rounded-3 py-2 bg-light border-0" id="regAddress" rows="2" placeholder="Malappuram, Kerala" autocomplete="street-address"></textarea>
+                                <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: 0.5px;">Delivery Address & City *</label>
+                                <textarea class="form-control rounded-3 py-2 bg-light border-0" id="regAddress" rows="2" placeholder="Street Address, City, State, PIN" required minlength="5" autocomplete="street-address"></textarea>
+                                <div class="invalid-feedback d-none text-danger small mt-1" id="regAddressError">Please provide your complete shipping address.</div>
                             </div>
 
                             <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold mb-3 text-white shadow-sm d-flex align-items-center justify-content-center gap-2" id="regSubmitBtn">
@@ -248,6 +253,48 @@
     <script src="/js/api.js"></script>
     <script src="/js/auth.js"></script>
     <script>
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const PHONE_REGEX = /^[6-9]\d{9}$/;
+
+        function setFieldState(inputId, errorId, isValid) {
+            const input = document.getElementById(inputId);
+            const err = document.getElementById(errorId);
+            if (!input || !err) return;
+
+            if (isValid) {
+                input.classList.remove("is-invalid", "border-danger");
+                input.classList.add("is-valid", "border-success");
+                err.classList.add("d-none");
+            } else {
+                input.classList.remove("is-valid", "border-success");
+                input.classList.add("is-invalid", "border-danger");
+                err.classList.remove("d-none");
+            }
+        }
+
+        // Live validation input listeners
+        document.getElementById("regName").addEventListener("input", (e) => {
+            setFieldState("regName", "regNameError", e.target.value.trim().length >= 2);
+        });
+
+        document.getElementById("regEmail").addEventListener("input", (e) => {
+            setFieldState("regEmail", "regEmailError", EMAIL_REGEX.test(e.target.value.trim()));
+        });
+
+        document.getElementById("regPassword").addEventListener("input", (e) => {
+            setFieldState("regPassword", "regPasswordError", e.target.value.length >= 6);
+        });
+
+        document.getElementById("regPhone").addEventListener("input", (e) => {
+            const val = e.target.value.replace(/\D/g, '');
+            e.target.value = val;
+            setFieldState("regPhone", "regPhoneError", PHONE_REGEX.test(val));
+        });
+
+        document.getElementById("regAddress").addEventListener("input", (e) => {
+            setFieldState("regAddress", "regAddressError", e.target.value.trim().length >= 5);
+        });
+
         document.getElementById("registerForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const full_name = document.getElementById("regName").value.trim();
@@ -256,6 +303,24 @@
             const phone = document.getElementById("regPhone").value.trim();
             const address = document.getElementById("regAddress").value.trim();
             const submitBtn = document.getElementById("regSubmitBtn");
+
+            // Validate all fields
+            const isNameValid = full_name.length >= 2;
+            const isEmailValid = EMAIL_REGEX.test(email);
+            const isPassValid = password.length >= 6;
+            const isPhoneValid = PHONE_REGEX.test(phone);
+            const isAddressValid = address.length >= 5;
+
+            setFieldState("regName", "regNameError", isNameValid);
+            setFieldState("regEmail", "regEmailError", isEmailValid);
+            setFieldState("regPassword", "regPasswordError", isPassValid);
+            setFieldState("regPhone", "regPhoneError", isPhoneValid);
+            setFieldState("regAddress", "regAddressError", isAddressValid);
+
+            if (!isNameValid || !isEmailValid || !isPassValid || !isPhoneValid || !isAddressValid) {
+                API.showToast("Please fill in all required fields correctly.", "warning");
+                return;
+            }
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Creating Account...`;
@@ -270,13 +335,13 @@
                 });
 
                 if (res.success) {
-                    API.showToast("Account created successfully! Please sign in.", "success");
+                    API.showToast("Account created successfully! Redirecting to sign in...", "success");
                     setTimeout(() => {
                         window.location.href = "/login.html";
                     }, 1200);
                 }
             } catch (err) {
-                API.showToast(err.message || "Registration failed.", "error");
+                API.showToast(err.message || "Registration failed. Please check your data.", "error");
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<span>Create Account</span> <i class="bi bi-arrow-right" style="color: var(--color-yellow);"></i>`;
             }

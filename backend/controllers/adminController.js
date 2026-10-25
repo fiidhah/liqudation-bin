@@ -264,13 +264,14 @@ const getSalesReport = (req, res) => {
 
     const salesSql = `
         SELECT
-            IFNULL(SUM(total_amount), 0) AS totalSales,
+            IFNULL(SUM(CASE WHEN LOWER(order_status) != 'cancelled' THEN total_amount ELSE 0 END), 0) AS totalSales,
             COUNT(*) AS totalOrders,
-            SUM(CASE WHEN order_status = 'Delivered' THEN 1 ELSE 0 END) AS deliveredOrders,
-            SUM(CASE WHEN order_status = 'Pending' THEN 1 ELSE 0 END) AS pendingOrders,
-            SUM(CASE WHEN order_status = 'Confirmed' THEN 1 ELSE 0 END) AS confirmedOrders,
-            SUM(CASE WHEN order_status = 'Shipped' THEN 1 ELSE 0 END) AS shippedOrders,
-            SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelledOrders
+            SUM(CASE WHEN LOWER(order_status) = 'delivered' THEN 1 ELSE 0 END) AS deliveredOrders,
+            SUM(CASE WHEN LOWER(order_status) = 'pending' THEN 1 ELSE 0 END) AS pendingOrders,
+            SUM(CASE WHEN LOWER(order_status) = 'confirmed' THEN 1 ELSE 0 END) AS confirmedOrders,
+            SUM(CASE WHEN LOWER(order_status) IN ('pending', 'confirmed') THEN 1 ELSE 0 END) AS processingOrders,
+            SUM(CASE WHEN LOWER(order_status) = 'shipped' THEN 1 ELSE 0 END) AS shippedOrders,
+            SUM(CASE WHEN LOWER(order_status) = 'cancelled' THEN 1 ELSE 0 END) AS cancelledOrders
         FROM orders
     `;
 
@@ -282,28 +283,32 @@ const getSalesReport = (req, res) => {
             });
         }
 
-        report.summary = statsResult[0];
+        report.summary = statsResult[0] || {};
 
         const dailySql = `
             SELECT 
                 DATE_FORMAT(order_date, '%Y-%m-%d') as date,
                 DATE_FORMAT(order_date, '%a') as day,
-                IFNULL(SUM(total_amount), 0) as revenue,
+                IFNULL(SUM(CASE WHEN LOWER(order_status) != 'cancelled' THEN total_amount ELSE 0 END), 0) as revenue,
                 COUNT(*) as orders
             FROM orders
-            WHERE order_status != 'Cancelled'
             GROUP BY DATE_FORMAT(order_date, '%Y-%m-%d'), DATE_FORMAT(order_date, '%a')
             ORDER BY date DESC
             LIMIT 7
         `;
 
         db.query(dailySql, (err, dailyResults) => {
-            report.dailyTrends = dailyResults || [];
+            report.dailyTrends = (dailyResults || []).reverse();
 
             const catSql = `
-                SELECT p.category, COUNT(oi.order_item_id) as items_sold, IFNULL(SUM(oi.price * oi.quantity), 0) as revenue
+                SELECT 
+                    COALESCE(p.category, 'General') as category, 
+                    COUNT(oi.order_item_id) as items_sold, 
+                    IFNULL(SUM(oi.price * oi.quantity), 0) as revenue
                 FROM order_items oi
                 JOIN products p ON oi.product_id = p.product_id
+                JOIN orders o ON oi.order_id = o.order_id
+                WHERE LOWER(o.order_status) != 'cancelled'
                 GROUP BY p.category
                 ORDER BY revenue DESC
             `;
@@ -311,9 +316,29 @@ const getSalesReport = (req, res) => {
             db.query(catSql, (err, catResults) => {
                 report.categoryPerformance = catResults || [];
 
-                res.status(200).json({
-                    success: true,
-                    salesReport: report
+                const ordersSql = `
+                    SELECT 
+                        o.order_id,
+                        o.user_id,
+                        u.full_name,
+                        u.email,
+                        u.phone,
+                        o.total_amount,
+                        o.order_status,
+                        o.order_date,
+                        (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) AS items_count
+                    FROM orders o
+                    LEFT JOIN users u ON o.user_id = u.user_id
+                    ORDER BY o.order_id DESC
+                `;
+
+                db.query(ordersSql, (err, ordersList) => {
+                    report.allOrders = ordersList || [];
+
+                    res.status(200).json({
+                        success: true,
+                        salesReport: report
+                    });
                 });
             });
         });

@@ -22,11 +22,11 @@ const placeOrder = (req, res) => {
         });
     }
 
-    // Optional: update user phone / address if provided
-    if (shipping_phone || shipping_address) {
+    // Optional: update user name / phone / address if provided
+    if (shipping_name || shipping_phone || shipping_address) {
         db.query(
-            "UPDATE users SET phone = COALESCE(?, phone), address = COALESCE(?, address) WHERE user_id = ?",
-            [shipping_phone || null, shipping_address || null, user_id]
+            "UPDATE users SET full_name = COALESCE(?, full_name), phone = COALESCE(?, phone), address = COALESCE(?, address) WHERE user_id = ?",
+            [shipping_name || null, shipping_phone || null, shipping_address || null, user_id]
         );
     }
 

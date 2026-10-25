@@ -64,13 +64,13 @@ const App = {
         if (!container) return;
 
         const days = [
-            { day: "Friday", price: 999, desc: "Restock" },
-            { day: "Saturday", price: 799, desc: "Weekend" },
-            { day: "Sunday", price: 599, desc: "Drop" },
-            { day: "Monday", price: 399, desc: "Markdown" },
-            { day: "Tuesday", price: 299, desc: "Value" },
-            { day: "Wednesday", price: 199, desc: "Blowout" },
-            { day: "Thursday", price: 99, desc: "Clearance" }
+            { day: "Friday", price: 2499, desc: "Restock" },
+            { day: "Saturday", price: 1999, desc: "Weekend" },
+            { day: "Sunday", price: 1499, desc: "Drop" },
+            { day: "Monday", price: 999, desc: "Markdown" },
+            { day: "Tuesday", price: 699, desc: "Value" },
+            { day: "Wednesday", price: 399, desc: "Blowout" },
+            { day: "Thursday", price: 199, desc: "Clearance" }
         ];
 
         const activeDayName = this.activeDay || this.todayDayName;

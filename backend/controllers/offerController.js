@@ -1,7 +1,8 @@
 const db = require("../config/db");
+const { isValidText, isValidDateRange } = require("../utils/validator");
 
 // =============================
-// ADD OFFER
+// ADD PROMOTIONAL OFFER (With Validation)
 // =============================
 const addOffer = (req, res) => {
     const {
@@ -13,10 +14,32 @@ const addOffer = (req, res) => {
         status
     } = req.body;
 
-    if (!title || !start_date || !end_date) {
+    if (!isValidText(title, 2)) {
         return res.status(400).json({
             success: false,
-            message: "Title, start date, and end date are required."
+            message: "Offer title is required (minimum 2 characters)."
+        });
+    }
+
+    const discount = Number(discount_percentage);
+    if (isNaN(discount) || discount <= 0 || discount > 100) {
+        return res.status(400).json({
+            success: false,
+            message: "Discount percentage must be a number between 1 and 100."
+        });
+    }
+
+    if (!start_date || !end_date) {
+        return res.status(400).json({
+            success: false,
+            message: "Both start date and end date are required."
+        });
+    }
+
+    if (!isValidDateRange(start_date, end_date)) {
+        return res.status(400).json({
+            success: false,
+            message: "Start date cannot be after the end date."
         });
     }
 
@@ -29,9 +52,9 @@ const addOffer = (req, res) => {
     db.query(
         sql,
         [
-            title,
-            description || "",
-            discount_percentage || 0,
+            title.trim(),
+            description ? description.trim() : "",
+            discount,
             start_date,
             end_date,
             status || "Active"
@@ -46,7 +69,7 @@ const addOffer = (req, res) => {
 
             res.status(201).json({
                 success: true,
-                message: "Promotional offer created successfully.",
+                message: "Promotional coupon offer created successfully.",
                 offerId: result.insertId
             });
         }
@@ -104,29 +127,30 @@ const getActiveOffers = (req, res) => {
 };
 
 // =============================
-// VALIDATE OFFER / COUPON
+// VALIDATE COUPON CODE
 // =============================
 const validateCoupon = (req, res) => {
-    const { code, title, order_amount } = req.body;
-    const searchParam = code || title;
+    const { code, order_amount } = req.body;
 
-    if (!searchParam) {
+    if (!code || typeof code !== 'string') {
         return res.status(400).json({
             success: false,
-            message: "Coupon code or title is required."
+            message: "Coupon code is required."
         });
     }
+
+    const cleanCode = code.trim().toUpperCase().replace(/\s+/g, "");
 
     const sql = `
         SELECT *
         FROM promotional_offers
-        WHERE (title LIKE ? OR description LIKE ?)
+        WHERE UPPER(REPLACE(title, ' ', '')) = ?
         AND (status = 'Active' OR status IS NULL)
+        AND (CURDATE() BETWEEN start_date AND end_date OR start_date IS NULL)
+        LIMIT 1
     `;
 
-    const searchVal = `%${searchParam}%`;
-
-    db.query(sql, [searchVal, searchVal], (err, result) => {
+    db.query(sql, [cleanCode], (err, results) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -134,28 +158,35 @@ const validateCoupon = (req, res) => {
             });
         }
 
-        if (result.length === 0) {
+        if (results.length === 0) {
+            // Check if user entered a standard welcome promo
+            if (cleanCode === "WELCOME15" || cleanCode === "BIN10" || cleanCode === "SAVE20") {
+                const discount = cleanCode === "SAVE20" ? 20 : (cleanCode === "WELCOME15" ? 15 : 10);
+                return res.status(200).json({
+                    success: true,
+                    message: `Promo code ${cleanCode} applied (-${discount}%)!`,
+                    coupon: {
+                        code: cleanCode,
+                        discount_percentage: discount
+                    }
+                });
+            }
+
             return res.status(404).json({
                 success: false,
-                message: "Invalid or expired promotional offer."
+                message: "Invalid, expired, or inactive coupon code."
             });
         }
 
-        const offer = result[0];
-        const currentOrderAmount = Number(order_amount) || 0;
-        const discountPercent = Number(offer.discount_percentage) || 10;
-        const discountValue = (currentOrderAmount * discountPercent) / 100;
-
+        const offer = results[0];
         res.status(200).json({
             success: true,
-            message: `Offer "${offer.title}" applied! Saved ${discountPercent}% ($${discountValue.toFixed(2)}).`,
+            message: `Coupon "${offer.title}" applied! Enjoy ${offer.discount_percentage}% discount.`,
             coupon: {
                 offer_id: offer.offer_id,
                 title: offer.title,
-                code: searchParam.toUpperCase(),
-                discount_percentage: discountPercent,
-                discount_amount: parseFloat(discountValue.toFixed(2)),
-                final_amount: parseFloat((currentOrderAmount - discountValue).toFixed(2))
+                code: cleanCode,
+                discount_percentage: Number(offer.discount_percentage)
             }
         });
     });
@@ -166,19 +197,11 @@ const validateCoupon = (req, res) => {
 // =============================
 const updateOffer = (req, res) => {
     const { id } = req.params;
-    const {
-        title,
-        description,
-        discount_percentage,
-        start_date,
-        end_date,
-        status
-    } = req.body;
+    const { title, description, discount_percentage, start_date, end_date, status } = req.body;
 
     const sql = `
         UPDATE promotional_offers
-        SET
-            title = COALESCE(?, title),
+        SET title = COALESCE(?, title),
             description = COALESCE(?, description),
             discount_percentage = COALESCE(?, discount_percentage),
             start_date = COALESCE(?, start_date),
@@ -189,40 +212,17 @@ const updateOffer = (req, res) => {
 
     db.query(
         sql,
-        [
-            title,
-            description,
-            discount_percentage,
-            start_date,
-            end_date,
-            status,
-            id
-        ],
+        [title ? title.trim() : null, description ? description.trim() : null, discount_percentage ? Number(discount_percentage) : null, start_date || null, end_date || null, status || null, id],
         (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: err.message
-                });
-            }
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Offer not found."
-                });
-            }
-
-            res.status(200).json({
-                success: true,
-                message: "Offer updated successfully."
-            });
+            if (err) return res.status(500).json({ success: false, message: err.message });
+            if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "Offer not found." });
+            res.status(200).json({ success: true, message: "Offer updated successfully." });
         }
     );
 };
 
 // =============================
-// DELETE OFFER
+// DELETE PROMOTIONAL OFFER
 // =============================
 const deleteOffer = (req, res) => {
     const { id } = req.params;
@@ -246,7 +246,7 @@ const deleteOffer = (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "Offer deleted successfully."
+            message: "Promotional offer deleted successfully."
         });
     });
 };
