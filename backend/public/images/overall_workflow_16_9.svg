@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" style="background: #0B0F19; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;">
+    <defs>
+        <!-- Gradients -->
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0B0F19"/>
+            <stop offset="50%" stop-color="#111827"/>
+            <stop offset="100%" stop-color="#0F172A"/>
+        </linearGradient>
+
+        <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1E293B"/>
+            <stop offset="100%" stop-color="#0F172A"/>
+        </linearGradient>
+
+        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#3B82F6"/>
+            <stop offset="100%" stop-color="#2563EB"/>
+        </linearGradient>
+
+        <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#8B5CF6"/>
+            <stop offset="100%" stop-color="#6D28D9"/>
+        </linearGradient>
+
+        <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#EF4444"/>
+            <stop offset="100%" stop-color="#DC2626"/>
+        </linearGradient>
+
+        <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#F59E0B"/>
+            <stop offset="100%" stop-color="#D97706"/>
+        </linearGradient>
+
+        <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#10B981"/>
+            <stop offset="100%" stop-color="#059669"/>
+        </linearGradient>
+
+        <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#06B6D4"/>
+            <stop offset="100%" stop-color="#0891B2"/>
+        </linearGradient>
+
+        <!-- Drop Shadows -->
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+        </filter>
+
+        <!-- Arrow Markers -->
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#3B82F6"/>
+        </marker>
+        <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#8B5CF6"/>
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#EF4444"/>
+        </marker>
+        <marker id="arrow-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#10B981"/>
+        </marker>
+        <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#F59E0B"/>
+        </marker>
+        <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748B"/>
+        </marker>
+    </defs>
+
+    <!-- Canvas Background -->
+    <rect width="1600" height="900" fill="url(#bgGrad)"/>
+
+    <!-- Subtle Grid Lines -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.75" stroke-opacity="0.3"/>
+    </pattern>
+    <rect width="1600" height="900" fill="url(#grid)"/>
+
+    <!-- ============================================================== -->
+    <!-- HEADER BAR (16:9 Title Section) -->
+    <!-- ============================================================== -->
+    <rect x="40" y="25" width="1520" height="65" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5" filter="url(#shadow)"/>
+    <circle cx="75" cy="57" r="18" fill="#EF4444"/>
+    <text x="75" y="63" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">📦</text>
+    <text x="105" y="52" font-size="20" font-weight="900" fill="#FFFFFF" letter-spacing="0.5">SMARTBIN — OVERALL SYSTEM ARCHITECTURE &amp; WORKFLOW</text>
+    <text x="105" y="72" font-size="12" font-weight="500" fill="#94A3B8">End-to-End Operational Pipeline, Core Functional Modules &amp; Relational Data Flows (16:9 Widescreen)</text>
+    <rect x="1400" y="42" width="140" height="30" rx="15" fill="#0F172A" stroke="#475569" stroke-width="1"/>
+    <text x="1470" y="62" font-size="12" font-weight="bold" fill="#38BDF8" text-anchor="middle">ASPECT RATIO 16:9</text>
+
+    <!-- ============================================================== -->
+    <!-- COLUMN 1: ACTORS & AUTHENTICATION (Left: x = 40 to 320) -->
+    <!-- ============================================================== -->
+
+    <!-- ACTOR 1: CUSTOMER -->
+    <rect x="40" y="115" width="260" height="85" rx="10" fill="#1E293B" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="52" y="125" width="34" height="34" rx="8" fill="#3B82F6"/>
+    <text x="69" y="148" font-size="16" fill="#FFFFFF" text-anchor="middle">👤</text>
+    <text x="96" y="140" font-size="15" font-weight="bold" fill="#60A5FA">Customer / Shopper</text>
+    <text x="96" y="158" font-size="11" fill="#94A3B8">Online Public Buyer</text>
+    <text x="52" y="185" font-size="11" fill="#CBD5E1">• Browses Bins • Places Orders • Tracks Hauls</text>
+
+    <!-- ACTOR 2: STORE MANAGER -->
+    <rect x="40" y="225" width="260" height="85" rx="10" fill="#1E293B" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="52" y="235" width="34" height="34" rx="8" fill="#8B5CF6"/>
+    <text x="69" y="258" font-size="16" fill="#FFFFFF" text-anchor="middle">👔</text>
+    <text x="96" y="250" font-size="15" font-weight="bold" fill="#A78BFA">Store Manager</text>
+    <text x="96" y="268" font-size="11" fill="#94A3B8">Warehouse &amp; Bin Staff</text>
+    <text x="52" y="295" font-size="11" fill="#CBD5E1">• Stocks Manifests • AI Images • Dispatches Orders</text>
+
+    <!-- ACTOR 3: SYSTEM ADMIN -->
+    <rect x="40" y="335" width="260" height="85" rx="10" fill="#1E293B" stroke="#EF4444" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="52" y="345" width="34" height="34" rx="8" fill="#EF4444"/>
+    <text x="69" y="368" font-size="16" fill="#FFFFFF" text-anchor="middle">👑</text>
+    <text x="96" y="360" font-size="15" font-weight="bold" fill="#F87171">System Administrator</text>
+    <text x="96" y="378" font-size="11" fill="#94A3B8">Executive Controller</text>
+    <text x="52" y="405" font-size="11" fill="#CBD5E1">• Onboards Staff • Controls Pricing • Draws Winners</text>
+
+    <!-- MODULE 1: AUTHENTICATION & ACCESS GATEWAY -->
+    <rect x="40" y="455" width="260" height="190" rx="10" fill="#1E293B" stroke="#475569" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="40" y="455" width="260" height="32" rx="10" fill="#0F172A"/>
+    <rect x="40" y="475" width="260" height="12" fill="#0F172A"/>
+    <text x="52" y="476" font-size="12" font-weight="bold" fill="#38BDF8">MODULE 1: AUTH &amp; ACCESS CONTROL</text>
+
+    <text x="52" y="510" font-size="11" font-weight="bold" fill="#E2E8F0">Key Functions &amp; Logic:</text>
+    <text x="52" y="530" font-size="10.5" fill="#94A3B8">1. User Register &amp; Login (JWT Tokens)</text>
+    <text x="52" y="550" font-size="10.5" fill="#94A3B8">2. Bcrypt Salt Password Hashing</text>
+    <text x="52" y="570" font-size="10.5" fill="#94A3B8">3. Role-Based Middleware Protection</text>
+    <text x="52" y="590" font-size="10.5" fill="#94A3B8">4. Profile Management &amp; Persistence</text>
+    <text x="52" y="615" font-size="10" fill="#38BDF8">Input: Credentials | Output: Bearer JWT</text>
+
+    <!-- Connectors from Actors to Auth Module -->
+    <path d="M 170 200 L 170 455" fill="none" stroke="#3B82F6" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+    <path d="M 300 267 L 340 267 L 340 500 L 300 500" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arrow-purple)"/>
+    <path d="M 300 377 L 350 377 L 350 540 L 300 540" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arrow-red)"/>
+
+    <!-- ============================================================== -->
+    <!-- COLUMN 2: CORE APPLICATION MODULES (Center-Left: x = 370 to 730) -->
+    <!-- ============================================================== -->
+
+    <!-- MODULE 2: CUSTOMER STOREFRONT & CATALOG -->
+    <rect x="370" y="115" width="360" height="200" rx="10" fill="#1E293B" stroke="#3B82F6" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="370" y="115" width="360" height="32" rx="10" fill="#1D4ED8"/>
+    <rect x="370" y="135" width="360" height="12" fill="#1D4ED8"/>
+    <text x="382" y="136" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 2: STOREFRONT &amp; CATALOG OPERATIONS</text>
+
+    <text x="385" y="170" font-size="11" font-weight="bold" fill="#E2E8F0">Functions:</text>
+    <text x="385" y="190" font-size="11" fill="#CBD5E1">• Live Bin Browsing (General, Tech, Fashion, Home)</text>
+    <text x="385" y="210" font-size="11" fill="#CBD5E1">• Multi-Token Fuzzy Search Engine (IDs, Brand, Keywords)</text>
+    <text x="385" y="230" font-size="11" fill="#CBD5E1">• Real-Time Day Price Tag Calculation</text>
+    <text x="385" y="250" font-size="11" fill="#CBD5E1">• Wishlist Bookmark &amp; 1-Click "Buy Now" Direct Checkout</text>
+    <text x="385" y="270" font-size="11" fill="#CBD5E1">• Shopping Cart Quantity Sync &amp; Stock Locking</text>
+    <text x="385" y="295" font-size="10.5" fill="#60A5FA">Endpoints: GET /api/products, /api/cart, /api/wishlist</text>
+
+    <!-- MODULE 3: REVERSE LIQUIDATION PRICING ENGINE -->
+    <rect x="370" y="340" width="360" height="185" rx="10" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="370" y="340" width="360" height="32" rx="10" fill="#B45309"/>
+    <rect x="370" y="360" width="360" height="12" fill="#B45309"/>
+    <text x="382" y="361" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 3: REVERSE LIQUIDATION PRICING ENGINE</text>
+
+    <text x="385" y="395" font-size="11" font-weight="bold" fill="#E2E8F0">Markdown Rollover Logic:</text>
+    <text x="385" y="415" font-size="11" fill="#FDE68A">• Fri (Restock ₹2,499) → Sat (₹1,999) → Sun (₹1,499)</text>
+    <text x="385" y="435" font-size="11" fill="#FDE68A">• Mon (₹999) → Tue (₹699) → Wed (₹399) → Thu (₹199)</text>
+    <text x="385" y="455" font-size="11" fill="#CBD5E1">• Midnight Automated Price Transition Cron Service</text>
+    <text x="385" y="475" font-size="11" fill="#CBD5E1">• Dynamic Fallback to Retail Price If Not Discounted</text>
+    <text x="385" y="505" font-size="10.5" fill="#F59E0B">Tables: daily_prices, products | Syncs Every 60s</text>
+
+    <!-- Arrow from Pricing Engine to Storefront -->
+    <path d="M 550 340 L 550 315" fill="none" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-amber)"/>
+
+    <!-- MODULE 4: ORDER PLACEMENT & PAYMENT GATEWAY -->
+    <rect x="370" y="550" width="360" height="190" rx="10" fill="#1E293B" stroke="#10B981" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="370" y="550" width="360" height="32" rx="10" fill="#047857"/>
+    <rect x="370" y="570" width="360" height="12" fill="#047857"/>
+    <text x="382" y="571" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 4: ORDER CHECKOUT &amp; PAYMENT SIMULATOR</text>
+
+    <text x="385" y="605" font-size="11" font-weight="bold" fill="#E2E8F0">Functions &amp; Verification:</text>
+    <text x="385" y="625" font-size="11" fill="#CBD5E1">• Validates Recipient (Name, Phone, Address)</text>
+    <text x="385" y="645" font-size="11" fill="#CBD5E1">• Promotional Coupon Code Validation &amp; Discount</text>
+    <text x="385" y="665" font-size="11" fill="#CBD5E1">• Simulated Razorpay Gateway (Cards, UPI, COD)</text>
+    <text x="385" y="685" font-size="11" fill="#CBD5E1">• Atomic Order Insertion &amp; Instant Stock Decrement</text>
+    <text x="385" y="715" font-size="10.5" fill="#34D399">Output: Order #ID Generated → Enters Pending Queue</text>
+
+    <!-- Arrow from Storefront to Order Checkout -->
+    <path d="M 450 315 L 450 550" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+    <!-- ============================================================== -->
+    <!-- COLUMN 3: MANAGEMENT & ADMIN MODULES (Center-Right: x = 770 to 1130) -->
+    <!-- ============================================================== -->
+
+    <!-- MODULE 5: STORE MANAGER INVENTORY & AI IMAGE -->
+    <rect x="770" y="115" width="360" height="200" rx="10" fill="#1E293B" stroke="#8B5CF6" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="770" y="115" width="360" height="32" rx="10" fill="#6D28D9"/>
+    <rect x="770" y="135" width="360" height="12" fill="#6D28D9"/>
+    <text x="782" y="136" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 5: STORE MANAGER INVENTORY INTAKE</text>
+
+    <text x="785" y="170" font-size="11" font-weight="bold" fill="#E2E8F0">Functions:</text>
+    <text x="785" y="190" font-size="11" fill="#CBD5E1">• Stock Manifest Ingestion &amp; Liquidation Bin Allocation</text>
+    <text x="785" y="210" font-size="11" fill="#A78BFA">• ✨ AI Smart Image Generator (Zero URL Dependency)</text>
+    <text x="785" y="230" font-size="11" fill="#CBD5E1">• Local File Upload Integration via Multer Storage</text>
+    <text x="785" y="250" font-size="11" fill="#CBD5E1">• 7-Day Custom Daily Price Override Manager</text>
+    <text x="785" y="270" font-size="11" fill="#CBD5E1">• Low-Stock Audit Thresholds (&lt;= 5 Units Alert)</text>
+    <text x="785" y="295" font-size="10.5" fill="#C4B5FD">Endpoints: POST /api/products/add, /upload-image</text>
+
+    <!-- MODULE 6: FULFILLMENT & LIVE DISPATCH PIPELINE -->
+    <rect x="770" y="340" width="360" height="185" rx="10" fill="#1E293B" stroke="#06B6D4" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="770" y="340" width="360" height="32" rx="10" fill="#0E7490"/>
+    <rect x="770" y="360" width="360" height="12" fill="#0E7490"/>
+    <text x="782" y="361" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 6: ORDER FULFILLMENT &amp; LIVE TRACKING</text>
+
+    <text x="785" y="395" font-size="11" font-weight="bold" fill="#E2E8F0">5-Stage Status Lifecycle:</text>
+    <text x="785" y="415" font-size="11" fill="#67E8F9">🟡 Pending → 🔵 Confirmed → 🚚 Shipped → 🟢 Delivered</text>
+    <text x="785" y="435" font-size="11" fill="#CBD5E1">• Manager Dispatch Status Switcher &amp; Order Audit</text>
+    <text x="785" y="455" font-size="11" fill="#CBD5E1">• Customer 4-Step Interactive Tracking UI</text>
+    <text x="785" y="475" font-size="11" fill="#CBD5E1">• Real-Time Carrier Milestone &amp; Cancellation Handling</text>
+    <text x="785" y="505" font-size="10.5" fill="#22D3EE">Pages: /manager/index.html, /order-tracking.html</text>
+
+    <!-- Connector: Order Placed -> Fulfillment Queue -->
+    <path d="M 730 645 L 750 645 L 750 435 L 770 435" fill="none" stroke="#06B6D4" stroke-width="2" marker-end="url(#arrow-emerald)"/>
+
+    <!-- MODULE 7: ADMIN SALES ANALYTICS & AUDIT -->
+    <rect x="770" y="550" width="360" height="190" rx="10" fill="#1E293B" stroke="#EF4444" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="770" y="550" width="360" height="32" rx="10" fill="#B91C1C"/>
+    <rect x="770" y="570" width="360" height="12" fill="#B91C1C"/>
+    <text x="782" y="571" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 7: ADMIN EXECUTIVE ANALYTICS</text>
+
+    <text x="785" y="605" font-size="11" font-weight="bold" fill="#E2E8F0">Central Control &amp; Reporting:</text>
+    <text x="785" y="625" font-size="11" fill="#FCA5A5">• Live Fulfillment Cards: Delivered, Pending, Shipped, Cancelled</text>
+    <text x="785" y="645" font-size="11" fill="#CBD5E1">• 7-Day Revenue &amp; Volume Trajectory Charts (Chart.js)</text>
+    <text x="785" y="665" font-size="11" fill="#CBD5E1">• Category Performance &amp; Units Sold Breakdown</text>
+    <text x="785" y="685" font-size="11" fill="#CBD5E1">• Store Manager Staff Directory CRUD</text>
+    <text x="785" y="715" font-size="10.5" fill="#EF4444">Endpoint: GET /api/admin/sales-report, /dashboard</text>
+
+    <!-- ============================================================== -->
+    <!-- COLUMN 4: ENGAGEMENT & MARKETING (Right: x = 1170 to 1560) -->
+    <!-- ============================================================== -->
+
+    <!-- MODULE 8: PROMOTIONAL OFFERS & COUPONS -->
+    <rect x="1170" y="115" width="390" height="200" rx="10" fill="#1E293B" stroke="#EC4899" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="1170" y="115" width="390" height="32" rx="10" fill="#BE185D"/>
+    <rect x="1170" y="135" width="390" height="12" fill="#BE185D"/>
+    <text x="1182" y="136" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 8: PROMOTIONAL OFFERS &amp; COUPONS</text>
+
+    <text x="1185" y="170" font-size="11" font-weight="bold" fill="#E2E8F0">Voucher Engine:</text>
+    <text x="1185" y="190" font-size="11" fill="#CBD5E1">• Admin Coupon Creation (Discount %, Start &amp; End Dates)</text>
+    <text x="1185" y="210" font-size="11" fill="#CBD5E1">• Automated Date Range Validation Engine</text>
+    <text x="1185" y="230" font-size="11" fill="#CBD5E1">• Real-Time Checkout Coupon Application</text>
+    <text x="1185" y="250" font-size="11" fill="#CBD5E1">• Customer Voucher Showcase (/offers.html)</text>
+    <text x="1185" y="295" font-size="10.5" fill="#F472B6">Endpoints: /api/offers/active, /api/offers/validate</text>
+
+    <!-- MODULE 9: LUCKY DRAW & CUSTOMER RETENTION -->
+    <rect x="1170" y="340" width="390" height="185" rx="10" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="1170" y="340" width="390" height="32" rx="10" fill="#B45309"/>
+    <rect x="1170" y="360" width="390" height="12" fill="#B45309"/>
+    <text x="1182" y="361" font-size="12" font-weight="bold" fill="#FFFFFF">MODULE 9: LUCKY DRAW &amp; WINNERS ENGINE</text>
+
+    <text x="1185" y="395" font-size="11" font-weight="bold" fill="#E2E8F0">Gamification Features:</text>
+    <text x="1185" y="415" font-size="11" fill="#FDE68A">• Automated Entry for Every Checkout Customer</text>
+    <text x="1185" y="435" font-size="11" fill="#CBD5E1">• Pseudo-Random Cryptographic Winner Picker Algorithm</text>
+    <text x="1185" y="455" font-size="11" fill="#CBD5E1">• Public Winner Wall (/lucky-draw.html) &amp; Admin Audit Log</text>
+    <text x="1185" y="475" font-size="11" fill="#CBD5E1">• Friday Restock Alert Email Subscribers Management</text>
+    <text x="1185" y="505" font-size="10.5" fill="#F59E0B">Tables: lucky_draws, winners, subscribers</text>
+
+    <!-- Connectors from Admin to Modules 8 and 9 -->
+    <path d="M 1130 580 L 1150 580 L 1150 215 L 1170 215" fill="none" stroke="#EC4899" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    <path d="M 1130 620 L 1150 620 L 1150 435 L 1170 435" fill="none" stroke="#F59E0B" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+
+    <!-- ============================================================== -->
+    <!-- DATABASE LAYER (Bottom Full Width: y = 765 to 875) -->
+    <!-- ============================================================== -->
+    <rect x="40" y="765" width="1520" height="105" rx="12" fill="#0F172A" stroke="#0284C7" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="55" y="780" width="32" height="32" rx="6" fill="#0284C7"/>
+    <text x="71" y="801" font-size="16" fill="#FFFFFF" text-anchor="middle">🗄️</text>
+
+    <text x="98" y="795" font-size="15" font-weight="bold" fill="#38BDF8">CENTRAL PERSISTENCE LAYER: MySQL Relational Database (`liquidation_bin`)</text>
+    <text x="98" y="812" font-size="11" fill="#94A3B8">Connection Pool Architecture (mysql2) • Normalized Schema • Foreign Key Cascades • ACID Compliant Transactions</text>
+
+    <!-- Table Tags (Interactive look) -->
+    <g transform="translate(98, 825)">
+        <rect x="0" y="0" width="70" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="35" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">users</text>
+
+        <rect x="80" y="0" width="85" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="122" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">managers</text>
+
+        <rect x="175" y="0" width="75" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="212" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">admins</text>
+
+        <rect x="260" y="0" width="80" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="300" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">products</text>
+
+        <rect x="350" y="0" width="95" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="397" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">daily_prices</text>
+
+        <rect x="455" y="0" width="65" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="487" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">cart</text>
+
+        <rect x="530" y="0" width="85" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="572" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">wishlist</text>
+
+        <rect x="625" y="0" width="75" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="662" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">orders</text>
+
+        <rect x="710" y="0" width="95" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="757" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">order_items</text>
+
+        <rect x="815" y="0" width="85" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="857" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">payments</text>
+
+        <rect x="910" y="0" width="135" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="977" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">promotional_offers</text>
+
+        <rect x="1055" y="0" width="95" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="1102" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">lucky_draws</text>
+
+        <rect x="1160" y="0" width="75" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="1197" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">winners</text>
+
+        <rect x="1245" y="0" width="95" height="24" rx="4" fill="#1E293B" stroke="#475569"/>
+        <text x="1292" y="16" font-size="10" font-weight="bold" fill="#E2E8F0" text-anchor="middle">subscribers</text>
+    </g>
+
+    <!-- Up/Down connectors from DB to modules -->
+    <path d="M 550 740 L 550 765" fill="none" stroke="#0284C7" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <path d="M 950 740 L 950 765" fill="none" stroke="#0284C7" stroke-width="2" marker-end="url(#arrow-blue)"/>
+</svg>

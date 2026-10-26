@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBin — Overall System Workflow & Architecture (16:9)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0B0F19;
+            color: #F8FAFC;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 20px 40px;
+        }
+        .header {
+            width: 100%;
+            max-width: 1600px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 14px 24px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 14px;
+            backdrop-filter: blur(12px);
+        }
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #EF4444;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+        }
+        h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #FFFFFF;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .badge-ratio {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38BDF8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1E293B;
+            color: #F1F5F9;
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            background: #334155;
+            border-color: #64748B;
+            color: #FFFFFF;
+            transform: translateY(-1px);
+        }
+        .btn-primary {
+            background: #EF4444;
+            border-color: #EF4444;
+        }
+        .btn-primary:hover {
+            background: #DC2626;
+            border-color: #DC2626;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        .diagram-container {
+            width: 100%;
+            max-width: 1600px;
+            aspect-ratio: 16 / 9;
+            background: #0B0F19;
+            border: 1px solid #1E293B;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+        .diagram-container svg, .diagram-container img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+        }
+        .footer-note {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #64748B;
+            text-align: center;
+        }
+        @media (max-width: 900px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .actions {
+                width: 100%;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
+        }
+        @media print {
+            body {
+                background: #FFFFFF !important;
+                color: #000000 !important;
+                padding: 0;
+            }
+            .header, .footer-note {
+                display: none;
+            }
+            .diagram-container {
+                border: none;
+                box-shadow: none;
+                max-width: 100%;
+                aspect-ratio: 16 / 9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="title-group">
+            <div class="logo-icon">📦</div>
+            <div>
+                <h1>SmartBin — System Workflow Architecture</h1>
+                <div class="subtitle">16:9 Presentation-Ready Operational Flow &amp; Relational Data Pipeline</div>
+            </div>
+        </div>
+        <div class="actions">
+            <span class="badge-ratio">RATIO 16:9 (1600 × 900)</span>
+            <button class="btn" onclick="toggleFullscreen()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                Fullscreen
+            </button>
+            <a class="btn btn-primary" href="/images/overall_workflow_16_9.svg" download="smartbin_overall_workflow_16_9.svg">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download SVG
+            </a>
+            <a class="btn" href="/">Return to Store</a>
+        </div>
+    </header>
+
+    <main class="diagram-container" id="diagramWrapper">
+        <img src="/images/overall_workflow_16_9.svg" alt="SmartBin Overall System Workflow (16:9)" />
+    </main>
+
+    <div class="footer-note">
+        Tip: Press <b>Fullscreen</b> for presentations or zoom with browser controls. Right-click &rarr; "Save Image As" to export directly.
+    </div>
+
+    <script>
+        function toggleFullscreen() {
+            const elem = document.getElementById('diagramWrapper');
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
